@@ -1,0 +1,8 @@
+# From https://github.com/github/gitignore/blob/master/Django.gitignore
+*.log
+*.pot
+*.pyc
+local_settings.py
+
+# For Randy because he likes to use Emacs
+*~
