@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     # See https://docs.djangoproject.com/en/1.3/ref/contrib/webdesign/#ref-contrib-webdesign
     'django.contrib.webdesign',
+    'about',
 )
 
 # A sample logging configuration. The only tangible logging
