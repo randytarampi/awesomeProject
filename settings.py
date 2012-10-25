@@ -1,6 +1,6 @@
 import os
 
-# Django settings for proj project.
+# Django settings for awesomeProject.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
