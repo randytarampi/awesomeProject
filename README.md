@@ -14,4 +14,4 @@ Our CMPT 307 prof & textbook, without both of which we probably wouldn't have se
 
 Our CMPT 470 prof, who will hopefully approve of the idea.
 
-Our friends (for [Randy](https://github.com/randytarampi), especially [Kevin](https://github.com/kevinmannn) and [Derek](https://github.com/derekfong)) and loved ones who will presumingly bear with our frustrations/ranting during the building process.
+Our friends (for [Randy](https://github.com/randytarampi), especially [Kevin](https://github.com/kevinmannn) and [Derek](https://github.com/derekfong)) who will presumingly bear with our frustrations/ranting during the building process.
