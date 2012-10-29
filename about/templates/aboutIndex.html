@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>About This Project</h1>
+
+<p>This isn't really much of a web application - it's more like a
+  project containing disparate pluggable Django "apps". This page is
+  actually an app all on its own - it's probably the most portable
+  (or applicable) module of this project as we're probably porting it
+  over to our final project.</p>
+
+<p>We're actually very boring and unimaginative people - hence the
+  lack of content - hell, we couldn't even come up with our own CSS,
+  we borrowed it from the Django Admin pages. If you've got any ideas
+  for project ideas, please don't hesitate to email us at 
+  <a href="mailto:cmpt470-team-awesome@sfu.ca">cmpt470-team-awesome@sfu.ca</a></p>
+
+<p>Anyways, we've got a few apps here. Right now, there's 
+  this <a href="/about">about</a> page, the <a href="/admin">admin</a>
+  site, and a <a href="/polls">polls</a> app, <del>with a few more
+  (hopefully) on the way</del> and a half finished <a href="/blog">
+  blog</a>.</p>
+
+<h1>About This "App"</h1>
+
+<p>If you're looking at the source code for this page on
+  our <a href="https://github.com/randytarampi/awesomeTechEval">GitHub
+  Repo</a> then you might have noticed
+  that <a href="https://github.com/randytarampi/awesomeTechEval/blob/master/about/templates/about.html">this
+  page</a> (more like template for this page) exists in a different
+  templates directory - the
+  one <a href="https://github.com/randytarampi/awesomeTechEval/blob/master/about/templates">inside</a>
+  the "about" app, not the one in the project's
+  root <a href="https://github.com/randytarampi/awesomeTechEval/tree/master/templates">
+  directory</a>. This is because of portability reasons. Just in case
+  you want to recycle a particular Django app, i.e. port it to another
+  app, but want to keep the view (template) the same, you can. You can
+  even control the granularity like we did, making this page rely on
+  our project's
+  "<a href="https://github.com/randytarampi/awesomeTechEval/blob/master/templates/base.html"><code>base.html</code></a>".</p>
+
+<p>Cool stuff eh?</p>
+
+{% endblock %}

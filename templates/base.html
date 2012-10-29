@@ -7,10 +7,21 @@
 </head>
 
 <body>
+
+<header>
+  {% block header %}
+  {% endblock %}
+</header>
+
 <div id="container">
   
-  <div id="header">
-    {% block header %}
+  <div id="navigation">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+  <div id="sidebar">
+    {% block content %}
     {% endblock %}
   </div>
   
@@ -19,11 +30,12 @@
     {% endblock %}
   </div>
 
-  <div id="footer">
-    {% block footer %}
-    {% endblock %}
-  </div>
-
 </div>
+
+<footer>
+  {% block footer %}
+  {% endblock %}
+</footer>
+
 </body>
 </html>
