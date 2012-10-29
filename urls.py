@@ -1,5 +1,10 @@
 from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from dajaxice.core import dajaxice_autodiscover, dajaxice_config
+
+# Dajax/Dajaxice configuration
+dajaxice_autodiscover()
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -16,7 +21,12 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
+    # Dajax/Dajaxice URLs
+    url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
+
     # Project URLs
     url(r'^$', direct_to_template, {'template': 'index.html'}, name="index"),
     url(r'^about/', include('about.urls')),
 )
+
+urlpatterns += staticfiles_urlpatterns()

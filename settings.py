@@ -59,7 +59,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(PROJECT_DIR, "static")
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -75,7 +75,8 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_DIR, "static"),
+    os.path.join(STATIC_ROOT, "styles"),
+    os.path.join(STATIC_ROOT, "libs"),
 )
 
 # List of finder classes that know how to find static files in
@@ -84,6 +85,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    'dajaxice.finders.DajaxiceFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -93,7 +95,17 @@ SECRET_KEY = 'nuege*syc*f#muz8opzw=dy1++&q1ut==+e#vz$yaw3o3w&@q@'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    'django.template.loaders.eggs.Loader',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -126,6 +138,8 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     # See https://docs.djangoproject.com/en/1.3/ref/contrib/webdesign/#ref-contrib-webdesign
     'django.contrib.webdesign',
+    'dajaxice',
+    'dajax',
     'about',
 )
 
