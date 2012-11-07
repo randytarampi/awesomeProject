@@ -6,6 +6,9 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 PROJECT_DIR = os.path.dirname(__file__)
 
+# Add the debug_toolbar to the python path
+sys.path.append(os.path.join(PROJECT_DIR, "debug_toolbar"))
+
 ADMINS = (
     ('Randy Tarampi', 'rtarampi@sfu.ca'), ('Steven Evans', 'stevene@sfu.ca'), ('Conrad Locke', 'clocke@sfu.ca')
 )
@@ -114,6 +117,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -138,6 +142,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     # See https://docs.djangoproject.com/en/1.3/ref/contrib/webdesign/#ref-contrib-webdesign
     'django.contrib.webdesign',
+    'debug_toolbar',
     'dajaxice',
     'dajax',
     'about',
@@ -165,3 +170,5 @@ LOGGING = {
         },
     }
 }
+
+INTERNAL_IPS = ('127.0.0.1', )
