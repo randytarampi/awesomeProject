@@ -4,16 +4,27 @@
 
 <!DOCTYPE html>
 <html>
+
+{% block head %}
 <head>
   <link rel="stylesheet" type="text/css" href="{{STATIC_PREFIX}}reset.css" />
   <link rel="stylesheet" type="text/css" href="{{STATIC_PREFIX}}style.css" />
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
   <title>{% block title %}{% endblock %}</title>
-  <script src="{{STATIC_PREFIX}}jquery-1.7.2.min.js" type="text/javascript" charset="utf-8"></script>
-  <script src="{{STATIC_PREFIX}}dajax/jquery.dajax.core.js" type="text/javascript" charset="utf-8"></script>
+  <script src="{{STATIC_PREFIX}}jquery-1.7.2.min.js"
+  type="text/javascript" charset="utf-8"></script>
+  <script src="{{STATIC_PREFIX}}jquery.ba-serializeobject.min.js"
+  type="text/javascript" charset="utf-8"></script>
+  <script src="{{STATIC_PREFIX}}dajax/jquery.dajax.core.js"
+  type="text/javascript" charset="utf-8"></script>
   {% dajaxice_js_import %}
+  {% block extracss %}{% endblock %}
+  {% block extrajs %}{% endblock %}
+  {% block headExt %}{% endblock %}
 </head>
+{% endblock %}
 
+{% block body %}
 <body>
 
 <header>
@@ -21,8 +32,9 @@
   {% endblock %}
 </header>
 
+{% block container %}
 <div id="container">
-  
+
   <div id="navigation">
     {% block navigation %}
     {% endblock %}
@@ -39,6 +51,7 @@
   </div>
 
 </div>
+{% endblock %}
 
 <footer>
   {% block footer %}
@@ -46,4 +59,6 @@
 </footer>
 
 </body>
+{% endblock %}
+
 </html>
