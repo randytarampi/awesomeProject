@@ -10,8 +10,9 @@ We're supposedly making some sort of class schedule optimizer - it'll probably u
 Dependenices:
 -------------
 
-Requires Dajax & Dajaxice which can be found [here](http://www.dajaxproject.com/).
+Requires [Dajax & Dajaxice](http://www.dajaxproject.com/).
 Also requires [jQuery 1.7.2](http://code.jquery.com/jquery-1.7.2.js) and [jquery.ba-serializeobject](https://github.com/cowboy/jquery-misc/blob/master/jquery.ba-serializeobject.min.js).
+Makes use of the [django-debug-toolbar](https://github.com/django-debug-toolbar/django-debug-toolbar).
 
 
 This project uses the HTML5 Boilerplate CSS reset, which can be found [here](https://github.com/h5bp/html5-boilerplate/blob/master/css/main.css).
