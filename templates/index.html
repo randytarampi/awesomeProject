@@ -1,7 +1,15 @@
 {% extends "base.html" %}
 
+{% load webdesign %}
+
+{% block header %}<h1>NOT A REAL SFU WEBSITE!!!</h1>{% endblock %}
+
+{% block navigation %}{% lorem 1 p %}{% endblock %}
+{% block sidebar %}{% lorem 1 p %}{% endblock %}
+
 {% block content %}
 <h1>Go Away!</h1>
-<p>Nothing to see here...</p>
-<p>Now scram!</p>
+{% lorem 3 p %}
 {% endblock %}
+
+{% block footer %}{% lorem 2 w random %}{% endblock %}

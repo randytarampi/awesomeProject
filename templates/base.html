@@ -7,20 +7,20 @@
 
 {% block head %}
 <head>
-  <link rel="stylesheet" type="text/css" href="{{STATIC_PREFIX}}reset.css" />
-  <link rel="stylesheet" type="text/css" href="{{STATIC_PREFIX}}style.css" />
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-  <title>{% block title %}{% endblock %}</title>
-  <script src="{{STATIC_PREFIX}}jquery-1.7.2.min.js"
-  type="text/javascript" charset="utf-8"></script>
-  <script src="{{STATIC_PREFIX}}jquery.ba-serializeobject.min.js"
-  type="text/javascript" charset="utf-8"></script>
-  <script src="{{STATIC_PREFIX}}dajax/jquery.dajax.core.js"
-  type="text/javascript" charset="utf-8"></script>
-  {% dajaxice_js_import %}
-  {% block extracss %}{% endblock %}
-  {% block extrajs %}{% endblock %}
-  {% block headExt %}{% endblock %}
+	<link rel="stylesheet" type="text/css" href="{{STATIC_PREFIX}}reset.css" />
+	<link rel="stylesheet" type="text/css" href="{{STATIC_PREFIX}}style.css" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<title>{% block title %}{% endblock %}</title>
+	<script src="{{STATIC_PREFIX}}jquery-1.7.2.min.js"
+	type="text/javascript" charset="utf-8"></script>
+	<script src="{{STATIC_PREFIX}}jquery.ba-serializeobject.min.js"
+	type="text/javascript" charset="utf-8"></script>
+	<script src="{{STATIC_PREFIX}}dajax/jquery.dajax.core.js"
+	type="text/javascript" charset="utf-8"></script>
+	{% dajaxice_js_import %}
+	{% block extracss %}{% endblock %}
+	{% block extrajs %}{% endblock %}
+	{% block headExt %}{% endblock %}
 </head>
 {% endblock %}
 
@@ -29,30 +29,27 @@
 
 {% block container %}
 <div id="container">
-  <div id="header">
-    {% block header %}
-    {% endblock %}
-  </div id="header">
+	<div id="header">
+		{% block header %}{% endblock %}
+	</div>
 
-  <div id="navigation">
-    {% block navigation %}
-    {% endblock %}
-  </div>
+	<div id="middle">
+		<div id="navigation">
+			{% block navigation %}{% endblock %}
+		</div>
 
-  <div id="sidebar">
-    {% block sidebar %}
-    {% endblock %}
-  </div>
-  
-  <div id="content">
-    {% block content %}
-    {% endblock %}
-  </div>
+		<div id="sidebar">
+			{% block sidebar %}{% endblock %}
+		</div>
 
-  <div id="footer">
-    {% block footer %}
-    {% endblock %}
-  </div id="footer">
+		<div id="content">
+			{% block content %}{% endblock %}
+		</div>
+	</div>
+
+	<div id="footer">
+		{% block footer %}{% endblock %}
+	</div>
 </div>
 {% endblock %}
 
