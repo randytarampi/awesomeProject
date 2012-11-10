@@ -147,6 +147,7 @@ INSTALLED_APPS = (
     'dajaxice',
     'dajax',
     'about',
+    'scheduler',
 )
 
 # A sample logging configuration. The only tangible logging
