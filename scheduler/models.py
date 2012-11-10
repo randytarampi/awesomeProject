@@ -21,6 +21,23 @@ CAMPUS_CHOICES = (
 	('OFFST', 'Offsite'),
 )
 
+WEEKDAY_CHOICES = (
+	(0, 'Monday'),
+	(1, 'Tuesday'),
+	(2, 'Wednesday'),
+	(3, 'Thursday'),
+	(4, 'Friday'),
+	(5, 'Saturday'),
+	(6, 'Sunday'),
+)
+
+TYPE_CHOICES = (
+	('MIDT', 'Midterm'),
+	('LEC', 'Lecture'),
+	('EXAM', 'Exam'),
+	('LAB', 'Lab'),
+)
+
 # Create your models here.
 class Course (models.Model):
 	title = models.CharField(max_length=200)
@@ -49,12 +66,12 @@ class Instructor (models.Model):
 		return self.name
 
 class MeetingTime (models.Model):
-	start_day = models.CharField(max_length = 50)
+	start_day = models.DateField('Start Date')
 	room = models.CharField(max_length = 50)
-	start_time = models.CharField(max_length = 50)
-	end_day = models.CharField(max_length = 50)
-	weekday = models.IntegerField()
-	type = models.CharField(max_length = 10)
-	end_time = models.CharField(max_length = 50)
+	start_time = models.TimeField('Start Time')
+	end_day = models.DateField('End Date')
+	weekday = models.IntegerField(choices=WEEKDAY_CHOICES)
+	type = models.CharField(max_length = 10, choices=TYPE_CHOICES)
+	end_time = models.TimeField('End Time')
 	course = models.ForeignKey(Course)
 
