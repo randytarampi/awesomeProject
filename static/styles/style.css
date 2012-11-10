@@ -27,14 +27,19 @@ footer {
 	text-align: center;
 }
 
+footer a {
+	color: white;
+	text-decoration: underline;
+}
+
 h1 {
-	margin: 12px 0;
+	margin: 12px;
 	color: #B5111B;
 	font: bold 18px/21px "Lucida Grande", Lucida, Arial, Verdana, sans-serif;
 }
 
 a {
-	color: #0054a6;
+	color: #0054A6;
 	text-decoration: none;
 }
 
@@ -43,7 +48,7 @@ a:hover {
 }
 
 p {
-	padding: 8px 0;
+	margin: 8px;
 }
 
 #container {
@@ -61,7 +66,7 @@ p {
 
 #centerDisclaimer { 
 	position: relative;
-	top:33%;
+	top: 33%;
 }
 
 #navigation {
@@ -69,6 +74,11 @@ p {
 	padding: 6px 0px 30px 0px;
 	width: 170px;
 	overflow: hidden;
+}
+
+#navigation ul {
+	padding: 4px 8px 4px 8px;
+	list-style-type: none;
 }
 
 #sidebar {
@@ -80,8 +90,10 @@ p {
 }
 
 #content {
-	height: 100%;
-	margin: 0 170px;
 	background-color: white;
 	overflow: hidden;
+}
+
+#footerCenter {
+	text-align: center;
 }
