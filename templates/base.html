@@ -6,7 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="{{STATIC_PREFIX}}reset.css" />
 	<link rel="stylesheet" type="text/css" href="{{STATIC_PREFIX}}style.css" />
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-	<title>{% block title %}Scheduler | Class Schedule Optimization{% endblock %}</title>
+	<title>{% block title %}Optimal Class Scheduling{% endblock %}</title>
 	<script src="{{STATIC_PREFIX}}jquery-1.7.2.min.js"
 	type="text/javascript" charset="utf-8"></script>
 	<script src="{{STATIC_PREFIX}}jquery.ba-serializeobject.min.js"
@@ -43,9 +43,9 @@
 {% block container %}
 	<div id="navigation">
 	{% block navigation %}
-		<ul>
+		<ul class="side">
 			<li><a href="{% url index %}">Home</a></li>
-			<li><a href="{% url scheduler_index %}">Class Scheduler</a></li>
+			<li><a href="{% url scheduler_index %}">Scheduler</a></li>
 			<li><a href="{% url about_index %}">About</a></li>
 			{% block extranav %}{% endblock %}
 			<li class="break"></li>
@@ -58,7 +58,14 @@
 	</div>
 	
 	<div id="sidebar">
-		{% block sidebar %}{% endblock %}
+		{% block sidebar %}
+		<ul class="side">
+			<li>{% now "H:i" %}</li>
+			{% block extraside %}{% endblock %}
+			<li class="break"></li>
+			<li>{% now "jS F Y" %}</li>
+		</ul>
+		{% endblock %}
 	</div>
 
 	<div id="content">
@@ -75,7 +82,7 @@
 		<a href="https://github.com/clocke">Conrad Locke</a> |
 		As pulled
 		from <a href="https://github.com/randytarampi/awesomeProject">GitHub</a>
-		| © Team Awesome
+		| © Team Awesome & Simon Fraser University
     </span>
 {% endblock %}
 </footer>
