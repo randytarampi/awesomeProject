@@ -14,6 +14,19 @@ body {
 	line-height: 1.3em;
 }
 
+header {
+	height: 70px;
+	border-left: 25px solid #A43E31;
+	background: #6D6D64 url(/media/logo_main.gif) no-repeat left
+}
+
+footer {
+	clear: both;
+	color: white;
+	background-color: #B6B7B1;
+	text-align: center;
+}
+
 h1 {
 	margin: 12px 0;
 	color: #B5111B;
@@ -33,16 +46,22 @@ p {
 	padding: 8px 0;
 }
 
-#header {
-	border-left: 25px solid #CB5A60;
+#container {
+	min-height: 100%;
+	background-color: white;
+	overflow: hidden;
 }
 
-#middle {
-	height: 100%;
+#disclaimer {
+	height: 40px;
+	border-left: 25px solid #CB5A60;
+	background-color: #B5111B;
+	color: white;
+	vertical-align: middle;
+	text-align: center;
 }
 
 #navigation {
-	min-height: 100%;
 	float: left;
 	border-left: 25px solid #E3E4E1;
 	padding: 6px 0px 30px 0px;
@@ -51,7 +70,6 @@ p {
 }
 
 #sidebar {
-	min-height: 100%;
 	float: right;
 	padding: 6px 0px 30px 0px;
 	width: 170px;
@@ -60,12 +78,4 @@ p {
 }
 
 #content {
-	min-height: 100%;
-}
-
-#footer {
-	clear: both;
-	color: white;
-	background-color: #B6B7B1;
-	text-align: center;
 }

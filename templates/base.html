@@ -1,7 +1,4 @@
-{% load static %}
-{% get_static_prefix as STATIC_PREFIX %}
-{% load dajaxice_templatetags %}
-
+{% load static %}{% get_static_prefix as STATIC_PREFIX %}{% load dajaxice_templatetags %}
 <!DOCTYPE html>
 <html>
 
@@ -27,31 +24,33 @@
 {% block body %}
 <body>
 
+<header>
+	{% block header %}{% endblock %}
+</header>
+
 {% block container %}
-<div id="container">
-	<div id="header">
-		{% block header %}{% endblock %}
+<div id="container">	
+	<div id="disclaimer">
+		{% block disclaimer %}{% endblock %}
 	</div>
 
-	<div id="middle">
-		<div id="navigation">
-			{% block navigation %}{% endblock %}
-		</div>
-
-		<div id="sidebar">
-			{% block sidebar %}{% endblock %}
-		</div>
-
-		<div id="content">
-			{% block content %}{% endblock %}
-		</div>
+	<div id="navigation">
+		{% block navigation %}{% endblock %}
 	</div>
 
-	<div id="footer">
-		{% block footer %}{% endblock %}
+	<div id="sidebar">
+		{% block sidebar %}{% endblock %}
+	</div>
+
+	<div id="content">
+		{% block content %}{% endblock %}
 	</div>
 </div>
 {% endblock %}
+
+<footer>
+	{% block footer %}{% endblock %}
+</footer>
 
 </body>
 {% endblock %}

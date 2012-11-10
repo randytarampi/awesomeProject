@@ -2,14 +2,15 @@
 
 {% load webdesign %}
 
-{% block header %}<h1>NOT A REAL SFU WEBSITE!!!</h1>{% endblock %}
+{% block header %}{% endblock %}
 
+{% block disclaimer %}{% lorem 5 w random %}{% endblock %}
 {% block navigation %}{% lorem 1 p %}{% endblock %}
 {% block sidebar %}{% lorem 1 p %}{% endblock %}
 
 {% block content %}
-<h1>Go Away!</h1>
+<h1>NOT A REAL SFU WEBSITE!!!</h1>
 {% lorem 3 p %}
 {% endblock %}
 
-{% block footer %}{% lorem 2 w random %}{% endblock %}
+{% block footer %}{% lorem 10 w random %}{% endblock %}
