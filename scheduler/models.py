@@ -38,13 +38,18 @@ TYPE_CHOICES = (
 	('LAB', 'Lab'),
 )
 
+SEMESTER_CHOICES = (
+	('1127', 'Fall 2012'),
+	('1131', 'Winter 2013'),
+)
+
 # Create your models here.
 class Course (models.Model):
 	title = models.CharField(max_length=200)
 	section = models.CharField(max_length=50)
 	component = models.CharField(max_length=3, choices=COMPONENT_CHOICES)
 	number = models.CharField(max_length = 10)
-	semester = models.CharField(max_length = 4) 
+	semester = models.CharField(max_length = 4, choices=SEMESTER_CHOICES) 
         campus = models.CharField(max_length=5, choices=CAMPUS_CHOICES)
 	subject = models.CharField(max_length=10) #cmpt etc...
 
@@ -75,3 +80,8 @@ class MeetingTime (models.Model):
 	end_time = models.TimeField('End Time')
 	course = models.ForeignKey(Course)
 
+	def __unicode__(self):
+		"""
+        	Return the instructor's name.
+		"""
+		return WEEKDAY_CHOICES[self.weekday][1] + " - " + str(self.start_time) + " to " + str(self.end_time)
