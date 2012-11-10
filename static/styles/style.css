@@ -52,17 +52,23 @@ p {
 }
 
 #disclaimer {
+	position: relative;
 	height: 40px;
 	border-left: 25px solid #CB5A60;
 	background-color: #B5111B;
 	color: white;
-	text-align: center;
+}
+
+#centerDisclaimer { 
+	position: relative;
+	top:33%;
 }
 
 #navigation {
 	float: left;
 	padding: 6px 0px 30px 0px;
 	width: 170px;
+	overflow: hidden;
 }
 
 #sidebar {
@@ -70,10 +76,12 @@ p {
 	padding: 6px 0px 30px 0px;
 	width: 170px;
 	text-align: right;
+	overflow: hidden;
 }
 
 #content {
 	height: 100%;
 	margin: 0 170px;
 	background-color: white;
+	overflow: hidden;
 }

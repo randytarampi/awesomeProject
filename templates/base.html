@@ -29,7 +29,11 @@
 </header>
 
 <div id="disclaimer">
-	{% block disclaimer %}{% endblock %}
+	{% block disclaimer %}
+	<div id="centerDisclaimer">
+		{% block centerDisclaimer %}{% endblock%}
+	</div>
+	{% endblock %}
 </div>
 
 {% block container %}
