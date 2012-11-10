@@ -47,9 +47,8 @@ p {
 }
 
 #container {
-	min-height: 100%;
-	background-color: white;
-	overflow: hidden;
+	border-left: 25px solid #E3E4E1;
+	background-color: #C7C8C3;
 }
 
 #disclaimer {
@@ -57,25 +56,24 @@ p {
 	border-left: 25px solid #CB5A60;
 	background-color: #B5111B;
 	color: white;
-	vertical-align: middle;
 	text-align: center;
 }
 
 #navigation {
 	float: left;
-	border-left: 25px solid #E3E4E1;
 	padding: 6px 0px 30px 0px;
 	width: 170px;
-	background-color: #C7C8C3;
 }
 
 #sidebar {
 	float: right;
 	padding: 6px 0px 30px 0px;
 	width: 170px;
-	background-color: #C7C8C3;
 	text-align: right;
 }
 
 #content {
+	height: 100%;
+	margin: 0 170px;
+	background-color: white;
 }
