@@ -27,13 +27,12 @@
 {% block body %}
 <body>
 
-<header>
-  {% block header %}
-  {% endblock %}
-</header>
-
 {% block container %}
 <div id="container">
+  <div id="header">
+    {% block header %}
+    {% endblock %}
+  </div id="header">
 
   <div id="navigation">
     {% block navigation %}
@@ -50,13 +49,12 @@
     {% endblock %}
   </div>
 
+  <div id="footer">
+    {% block footer %}
+    {% endblock %}
+  </div id="footer">
 </div>
 {% endblock %}
-
-<footer>
-  {% block footer %}
-  {% endblock %}
-</footer>
 
 </body>
 {% endblock %}
