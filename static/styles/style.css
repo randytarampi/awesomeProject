@@ -27,14 +27,19 @@ footer {
 	text-align: center;
 }
 
+footer a {
+	color: white;
+	text-decoration: underline;
+}
+
 h1 {
-	margin: 12px 0;
+	margin: 12px;
 	color: #B5111B;
 	font: bold 18px/21px "Lucida Grande", Lucida, Arial, Verdana, sans-serif;
 }
 
 a {
-	color: #0054a6;
+	color: #0054A6;
 	text-decoration: none;
 }
 
@@ -43,39 +48,52 @@ a:hover {
 }
 
 p {
-	padding: 8px 0;
+	margin: 8px;
 }
 
 #container {
-	min-height: 100%;
-	background-color: white;
-	overflow: hidden;
+	border-left: 25px solid #E3E4E1;
+	background-color: #C7C8C3;
 }
 
 #disclaimer {
+	position: relative;
 	height: 40px;
 	border-left: 25px solid #CB5A60;
 	background-color: #B5111B;
 	color: white;
-	vertical-align: middle;
-	text-align: center;
+}
+
+#centerDisclaimer { 
+	position: relative;
+	top: 33%;
 }
 
 #navigation {
 	float: left;
-	border-left: 25px solid #E3E4E1;
 	padding: 6px 0px 30px 0px;
 	width: 170px;
-	background-color: #C7C8C3;
+	overflow: hidden;
+}
+
+#navigation ul {
+	padding: 4px 8px 4px 8px;
+	list-style-type: none;
 }
 
 #sidebar {
 	float: right;
 	padding: 6px 0px 30px 0px;
 	width: 170px;
-	background-color: #C7C8C3;
 	text-align: right;
+	overflow: hidden;
 }
 
 #content {
+	background-color: white;
+	overflow: hidden;
+}
+
+#footerCenter {
+	text-align: center;
 }

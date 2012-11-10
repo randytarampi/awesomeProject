@@ -1,9 +1,8 @@
 {% load static %}{% get_static_prefix as STATIC_PREFIX %}{% load dajaxice_templatetags %}
 <!DOCTYPE html>
 <html>
-
-{% block head %}
 <head>
+{% block head %}
 	<link rel="stylesheet" type="text/css" href="{{STATIC_PREFIX}}reset.css" />
 	<link rel="stylesheet" type="text/css" href="{{STATIC_PREFIX}}style.css" />
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
@@ -18,41 +17,60 @@
 	{% block extracss %}{% endblock %}
 	{% block extrajs %}{% endblock %}
 	{% block headExt %}{% endblock %}
-</head>
 {% endblock %}
+</head>
 
-{% block body %}
 <body>
+{% block body %}
 
 <header>
 	{% block header %}{% endblock %}
 </header>
 
+<div id="disclaimer">
+{% block disclaimer %}
+	<div id="centerDisclaimer">
+		{% block centerDisclaimer %}{% endblock%}
+	</div>
+{% endblock %}
+</div>
+
+<div id="container">		
 {% block container %}
-<div id="container">	
-	<div id="disclaimer">
-		{% block disclaimer %}{% endblock %}
-	</div>
-
 	<div id="navigation">
-		{% block navigation %}{% endblock %}
+	{% block navigation %}
+		<ul>
+			<li><a href="{% url index %}">Home</a></li>
+			<li><a href="/blog">Blog</a></li>
+			<li><a href="/contact">Contact Us</a></li>
+			<li><a href="{% url about_index %}">About Us</a></li>
+		</ul>
+	{% endblock %}
 	</div>
-
+	
 	<div id="sidebar">
 		{% block sidebar %}{% endblock %}
 	</div>
 
 	<div id="content">
-		{% block content %}{% endblock %}
+		{% block content %}	{% endblock %}
 	</div>
-</div>
 {% endblock %}
+</div>
 
 <footer>
-	{% block footer %}{% endblock %}
+{% block footer %}
+	<span id="footerCenter">
+     	By <a href="https://github.com/randytarampi">Randy Tarampi</a>,
+		<a href="https://github.com/FaceBones">Steven Evans</a> &
+		<a href="https://github.com/clocke">Conrad Locke</a> |
+		As pulled
+		from <a href="https://github.com/randytarampi/awesomeProject">GitHub</a>
+		| © Team Awesome
+    </span>
+{% endblock %}
 </footer>
 
-</body>
 {% endblock %}
-
+</body>
 </html>
