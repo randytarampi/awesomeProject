@@ -17,7 +17,7 @@ body {
 header {
 	height: 70px;
 	border-left: 25px solid #A43E31;
-	background: #6D6D64 url(/media/logo_main.gif) no-repeat left;
+	background: #6D6D64 url(/media/img/logo_main.gif) no-repeat left;
 }
 
 footer {
@@ -51,6 +51,22 @@ p {
 	margin: 8px;
 }
 
+ul.side {
+	padding: 4px 8px 4px 8px;
+	list-style-type: none;
+}
+
+li.break {
+	display: block;
+	margin: 4px 12px;
+	border-top: 1px dotted #777;
+}
+
+.side a:hover {
+	color: #B5111B;
+	text-decoration: none;	
+}
+
 #container {
 	min-height: 600px;
 	border-left: 25px solid #E3E4E1;
@@ -82,24 +98,12 @@ p {
 	overflow: hidden;
 }
 
-#navigation ul {
-	padding: 4px 8px 4px 8px;
-	list-style-type: none;
-}
-
-#navigation li.break {
-	display: block;
-	margin: 4px 12px;
-	border-top: 1px dotted #777;
-}
-
-#navigation li a {
+#navigation .side li {
 	padding: 4px 8px 4px 20px;
 }
 
-#navigation li a:hover {
-	color: #B5111B;
-	text-decoration: none;	
+#navigation li.break {
+	padding: 0;
 }
 
 #sidebar {
@@ -108,6 +112,14 @@ p {
 	width: 170px;
 	text-align: right;
 	overflow: hidden;
+}
+
+#sidebar .side li {
+	padding: 4px 20px 4px 8px;
+}
+
+#sidebar li.break {
+	padding: 0;
 }
 
 #content {
