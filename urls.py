@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     # Project URLs
     url(r'^$', direct_to_template, {'template': 'index.html'}, name="index"),
     url(r'^about/', include('about.urls')),
+    url(r'^scheduler/', include('scheduler.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()

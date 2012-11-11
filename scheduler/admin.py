@@ -12,5 +12,8 @@ class MeetingTimeInline(admin.StackedInline):
 class CourseAdmin(admin.ModelAdmin):
     model = Course
     inlines = [InstructorInline, MeetingTimeInline]
+    search_fields = ['title']
+    list_display = ('title', 'subject', 'number', 'section', 'component','campus', 'semester')
+    list_filter = ['semester', 'campus', 'subject', 'number']
 
 admin.site.register(Course, CourseAdmin)

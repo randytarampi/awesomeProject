@@ -6,7 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="{{STATIC_PREFIX}}reset.css" />
 	<link rel="stylesheet" type="text/css" href="{{STATIC_PREFIX}}style.css" />
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-	<title>{% block title %}{% endblock %}</title>
+	<title>{% block title %}Scheduler | Class Schedule Optimization{% endblock %}</title>
 	<script src="{{STATIC_PREFIX}}jquery-1.7.2.min.js"
 	type="text/javascript" charset="utf-8"></script>
 	<script src="{{STATIC_PREFIX}}jquery.ba-serializeobject.min.js"
@@ -30,7 +30,11 @@
 <div id="disclaimer">
 {% block disclaimer %}
 	<div id="centerDisclaimer">
-		{% block centerDisclaimer %}{% endblock%}
+		{% block centerDisclaimer %}
+		<span>Interested in what you see here? Want to know how you can
+		help? Check out the project
+		on <a href="https://github.com/randytarampi/awesomeProject">GitHub</a>!</span>
+		{% endblock%}
 	</div>
 {% endblock %}
 </div>
@@ -41,9 +45,14 @@
 	{% block navigation %}
 		<ul>
 			<li><a href="{% url index %}">Home</a></li>
-			<li><a href="/blog">Blog</a></li>
-			<li><a href="/contact">Contact Us</a></li>
-			<li><a href="{% url about_index %}">About Us</a></li>
+			<li><a href="{% url scheduler_index %}">Class Scheduler</a></li>
+			<li><a href="{% url about_index %}">About</a></li>
+			{% block extranav %}{% endblock %}
+			<li class="break"></li>
+			<li><a href="http://www.sfu.ca">SFU Home</a></li>
+			<li><a href="http://students.sfu.ca/">Student
+			Services</a></li>
+			<li><a href="https://students.sfu.ca/deadlines.html">Student Deadlines</a></li>
 		</ul>
 	{% endblock %}
 	</div>

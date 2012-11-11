@@ -17,7 +17,7 @@ body {
 header {
 	height: 70px;
 	border-left: 25px solid #A43E31;
-	background: #6D6D64 url(/media/logo_main.gif) no-repeat left
+	background: #6D6D64 url(/media/logo_main.gif) no-repeat left;
 }
 
 footer {
@@ -25,11 +25,11 @@ footer {
 	color: white;
 	background-color: #B6B7B1;
 	text-align: center;
+	font-size: 10px;
 }
 
 footer a {
 	color: white;
-	text-decoration: underline;
 }
 
 h1 {
@@ -52,6 +52,7 @@ p {
 }
 
 #container {
+	min-height: 600px;
 	border-left: 25px solid #E3E4E1;
 	background-color: #C7C8C3;
 }
@@ -64,14 +65,19 @@ p {
 	color: white;
 }
 
+#disclaimer a {
+    color: #0a7ed7;
+}
+
 #centerDisclaimer { 
 	position: relative;
 	top: 33%;
+	text-align: center;
 }
 
 #navigation {
 	float: left;
-	padding: 6px 0px 30px 0px;
+	padding: 6px 0 30px 0;
 	width: 170px;
 	overflow: hidden;
 }
@@ -81,15 +87,32 @@ p {
 	list-style-type: none;
 }
 
+#navigation li.break {
+	display: block;
+	margin: 4px 12px;
+	border-top: 1px dotted #777;
+}
+
+#navigation li a {
+	padding: 4px 8px 4px 20px;
+}
+
+#navigation li a:hover {
+	color: #B5111B;
+	text-decoration: none;	
+}
+
 #sidebar {
 	float: right;
-	padding: 6px 0px 30px 0px;
+	padding: 6px 0 30px 0;
 	width: 170px;
 	text-align: right;
 	overflow: hidden;
 }
 
 #content {
+	min-height: 600px;
+	padding: 12px;
 	background-color: white;
 	overflow: hidden;
 }
