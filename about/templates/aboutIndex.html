@@ -1,9 +1,14 @@
 {% extends "aboutBase.html" %}
 
 {% block content %}
-
+<h1>About the Scheduler</h1>
+<p>There really isn't much to say here, it just schedules tries to schedule a selection of classes "optimally". You can find our proposal <a href="{{MEDIA_URL}}docs/projectProposal.pdf">here</a>.</p>
+<h2>"Optimallly" You Say?</h2>
+<p>Okay okay, it's not really, "optimal" in any sense. What we do here is take a set of specified classes, say 10, and finds a time optimal schedule (including transit time!) for a given number of classes.</p>
+<p>At least, that's what we hope it does. The math is kind of shoddy. At the very least though, this app will show you what your weekly schedule will look like for a given set of classes.</p>
+<h2>Plans for the Future?</h2>
+<p>As cool as it would be to carry on developing this in the future, it probably won't happen. We're busy people (with lives!) and in order to make this all functional and stable would probably take a boatload of time that we wouldn't want to see go to this. That said, if you're interested in forking the project, please do! If you need help, drop <a href="https://github.com/randytarampi">Randy</a> a line, he'll be more than glad to give you a few pointers.</p>
 <h1>About This "App"</h1>
-
 <p>If you're looking at the source code for this page on
   our <a href="https://github.com/randytarampi/awesomeProject">GitHub
   Repo</a> then you might have noticed
@@ -19,7 +24,5 @@
   even control the granularity like we did, making this page rely on
   our project's
   "<a href="https://github.com/randytarampi/awesomeProject/blob/master/templates/base.html"><code>base.html</code></a>".</p>
-
 <p>Cool stuff eh?</p>
-
 {% endblock %}
