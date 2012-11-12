@@ -60,7 +60,7 @@ class Course (models.Model):
 		return self.subject + " " + self.number + ": " + self.title
 
 class Instructor (models.Model):
-	userid = models.CharField(max_length = 100)
+	userid = models.CharField(max_length = 100, null=True)
 	name = models.CharField(max_length = 100)
 	course = models.ForeignKey(Course)
 
