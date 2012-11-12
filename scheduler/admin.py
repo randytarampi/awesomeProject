@@ -12,7 +12,7 @@ class MeetingTimeInline(admin.StackedInline):
 class CourseAdmin(admin.ModelAdmin):
     model = Course
     inlines = [InstructorInline, MeetingTimeInline]
-    search_fields = ['title']
+    search_fields = ['title', 'subject', 'number', 'component']
     list_display = ('title', 'subject', 'number', 'section', 'component','campus', 'semester')
     list_filter = ['semester', 'campus', 'subject', 'number']
 
