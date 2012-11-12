@@ -22,7 +22,7 @@ outputSQL = ""
 # Parse the JSON, Build the SQL
 for course in inputJSON['courses']:
 	courseSQL += coursesSQL + "VALUES ("
-	courseSQL += "'" + course['title'] + "', "
+	courseSQL += "'" + course['title'].replace("'", "''") + "', "
 	courseSQL += "'" + course['section'] + "', "
 	courseSQL += "'" + course['component'] + "', "
 	courseSQL += "'" + course['number'] + "', "
@@ -36,15 +36,15 @@ for course in inputJSON['courses']:
 	# Add the instructor(s)
 	for instructor in course['instructors']:
 		courseSQL += instructorSQL + "VALUES ("
-		courseSQL += "'" + instructor['userid'] + "', " if instructor['userid'] else "NULL, "
-		courseSQL += "'" + instructor['name'] + "', "
+		courseSQL += "'" + instructor['userid'].replace("'", "''") + "', " if instructor['userid'] else "NULL, "
+		courseSQL += "'" + instructor['name'].replace("'", "''") + "', "
 		courseSQL += " @course_id);\n"
 	
 	# Add the meeting time(s)
 	for meetingtime in course['meetingtimes']:
 		courseSQL += meetingtimeSQL + "VALUES ("
 		courseSQL += "'" + meetingtime['start_day'] + "', "
-		courseSQL += "'" + meetingtime['room'] + "', "
+		courseSQL += "'" + meetingtime['room'].replace("'", "''") + "', "
 		courseSQL += "'" + meetingtime['start_time'] + "', "
 		courseSQL += "'" + meetingtime['end_day'] + "', "
 		courseSQL += str(meetingtime['weekday']) + ", "
