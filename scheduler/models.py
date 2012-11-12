@@ -1,17 +1,17 @@
 from django.db import models
 
 COMPONENT_CHOICES = (
-	('STD', 'STD'),
+	('STD', 'Studio'),
 	('LEC', 'Lecture'),
-	('PRA', 'PRA'),
+	('PRA', 'Practicum'),
 	('TUT', 'Tutorial'),
-	('LAB', 'Lab'),
-	('WKS', 'WKS'),
-	('OLC', 'OLC'),
-	('SEC', 'SEC'),
-	('IND', 'IND'),
+	('LAB', 'Laboratory'),
+	('WKS', 'Workshop'),
+	('OLC', 'Online Conference'),
+	('SEC', 'Section'),
+	('IND', 'Independent Study'),
 	('SEM', 'Seminar'),
-	('FLD', 'FLD'),
+	('FLD', 'Field School'),
 )
 
 CAMPUS_CHOICES = (
@@ -19,6 +19,8 @@ CAMPUS_CHOICES = (
       	('SURRY', 'Surrey'),
        	('VANCR', 'Vancouver'),
 	('OFFST', 'Offsite'),
+	('METRO', 'Metro Vancouver'),
+	('GNWC', 'Great Northern Way'),
 )
 
 WEEKDAY_CHOICES = (
@@ -41,6 +43,8 @@ TYPE_CHOICES = (
 SEMESTER_CHOICES = (
 	('1127', 'Fall 2012'),
 	('1131', 'Winter 2013'),
+	('1134', 'Summer 2013'),
+	('1137', 'Fall 2013'),
 )
 
 # Create your models here.
@@ -60,7 +64,7 @@ class Course (models.Model):
 		return self.subject + " " + self.number + ": " + self.title
 
 class Instructor (models.Model):
-	userid = models.CharField(max_length = 100)
+	userid = models.CharField(max_length = 100, null=True)
 	name = models.CharField(max_length = 100)
 	course = models.ForeignKey(Course)
 
