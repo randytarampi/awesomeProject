@@ -17,7 +17,7 @@ meetingtimeSQL = "INSERT INTO `scheduler_meetingtime` (`start_day`, `room`, `sta
 #INSERT INTO `scheduler_meetingtime` (`start_day`, `room`, `start_time`, `end_day`, `weekday`, `type`, `end_time`, `course_id`) VALUES ('2012-11-01', 'School', '10:30:00', '2012-11-30', 3, 'LEC', '13:30:00', 2)
 instructorSQL = "INSERT INTO `scheduler_instructor` (`userid`, `name`, `course_id`) "
 courseSQL = ""
-outputSQL = "BEGIN;\n"
+outputSQL = ""
 
 # Parse the JSON, Build the SQL
 for course in inputJSON['courses']:
@@ -55,9 +55,6 @@ for course in inputJSON['courses']:
 	# Concatenate to outputSQL
 	outputSQL += courseSQL
 	courseSQL = ""
-
-# Finalize
-outputSQL += "COMMIT;"
 
 # Write to file
 outputFile = open(sys.argv[2], "wb")
