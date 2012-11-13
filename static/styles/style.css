@@ -38,6 +38,18 @@ h1 {
 	font: bold 18px/21px "Lucida Grande", Lucida, Arial, Verdana, sans-serif;
 }
 
+h2 {
+	margin: 12px;
+	color: #777;
+	font: bold 16px/19px "Lucida Grande", Lucida, Arial, Verdana, sans-serif;
+}
+
+h3 {
+	margin: 10px;
+	color: #555;
+	font: bold 14px/17px "Lucida Grande", Lucida, Arial, Verdana, sans-serif;
+}
+
 a {
 	color: #0054A6;
 	text-decoration: none;
