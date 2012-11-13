@@ -6,3 +6,9 @@ from django.template import RequestContext
 # Create your views here.
 def index(request):
     return render_to_response('schedulerIndex.html')
+
+def instructions(request):
+    return render_to_response('schedulerInstructions.html')
+
+def examples(request):
+    return render_to_response('schedulerExamples.html')
