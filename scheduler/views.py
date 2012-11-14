@@ -12,3 +12,6 @@ def instructions(request):
 
 def examples(request):
     return render_to_response('schedulerExamples.html')
+
+def infoSubmit(request):
+    return render_to_response('500.html')

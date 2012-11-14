@@ -1,7 +1,12 @@
 {% extends "schedulerBase.html" %}
 
 {% block content %}
-<p>How many classes do you wish to take? &nbsp;
+<h1>Build a Schedule</h1>
+<div id="scheduleFormDiv">
+<form id="scheduleForm" method="POST" action="{% url scheduler_infoSubmit %}">
+{% csrf_token %}
+<span>
+&nbsp;How many classes do you wish to take?
 <select onchange="Dajaxice.scheduler.updatingCourseForm(Dajax.process, {'option':this.value})" size="1">
 	<option value="1">1</option>
 	<option value="2">2</option>
@@ -10,7 +15,11 @@
 	<option value="5">5</option>
 	<option value="6">6</option>
 </select>
-</p>
-
+</span>
+&nbsp;
 <div id="listClasses" onchange=""></div>
+&nbsp;
+<input id="scheduleSubmit" type="button" value="Get Schedule" />
+</form>
+</div>
 {% endblock %}
