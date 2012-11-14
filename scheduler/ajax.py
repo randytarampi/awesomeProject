@@ -10,14 +10,18 @@ def listOfSubjects():
 		datList.append("<option value='%s'>%s</option>" % (i, i))
 	return ''.join(datList)
 
-def listOfNumbers(request, option):
+@dajaxice_register
+def listOfNumbers(request, option, idNum):
+	dajax = Dajax()
+	out = []
+
 	daList = Course.objects.filter(subject=option).values_list('number', flat=True)
-	htmlList = []
-	j = 0
 	for i in daList:
-		htmlList.append("<option value='%s'>%s</option>" % (i, i))
-		dajax.assign('#courseNumber%d' % str(j), 'innerHTML', ''.join(htmlList))
-		j += 1;
+		out.append("<option value='%s'>%s</option>" % (i, i))
+
+	dajax.assign(idNum, 'innerHTML', ''.join(out))
+#	dajax.alert('option: %s, idNum: %s' % (option, idNum))		
+	return dajax.json()
 
 @dajaxice_register
 def updatingCourseForm(request, option):
@@ -26,7 +30,7 @@ def updatingCourseForm(request, option):
 	out = []
 	# several select tags are made, each with a complete list of subjects with value = 1 through aClass
 	for aClass in range(1, int(option)+1):
-		out.append('<div>Course %s: <select id="courseSubject%s" onchange=%s>%s</select> &nbsp<select id="courseNumber%s"></select></div>' % (str(aClass), str(aClass), "Dajaxice.scheduler.listOfNumbers(Dajax.process, {'option':this.value})", listOfSubjects(), str(aClass)))
+		out.append('<div>Course %s: <select id="courseSubject%s" onchange="Dajaxice.scheduler.listOfNumbers(Dajax.process, {\'option\':this.value, \'idNum\':\'#courseNumber%s\'})">%s</select> &nbsp<select id="courseNumber%s"></select></div>' % (str(aClass), str(aClass), str(aClass), listOfSubjects(), str(aClass)))
 
 	dajax.assign('#listClasses', 'innerHTML', ''.join(out))
 	return dajax.json()
