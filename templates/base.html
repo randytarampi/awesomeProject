@@ -1,4 +1,4 @@
-{% load static %}{% get_static_prefix as STATIC_PREFIX %}{% load dajaxice_templatetags %}
+{% load static %}{% get_static_prefix as STATIC_PREFIX %}{% load dajaxice_templatetags %}{% spaceless %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -69,8 +69,9 @@
 		<ul class="side">
 			<li>Current as of: {% now "H:i" %}</li>
 			{% block extraside %}{% endblock %}
-			<li class="break"></li>
 			<li>{% now "jS F Y" %}</li>
+			<li class="break"></li>
+			<li><a href="https://go.sfu.ca/">Student Information System</a></li>
 		</ul>
 		{% endblock %}
 	</div>
@@ -97,3 +98,4 @@
 {% endblock %}
 </body>
 </html>
+{% endspaceless %}
