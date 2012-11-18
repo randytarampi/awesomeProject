@@ -18,7 +18,8 @@ def functionForRandy(numberOfCourses, listofCourses):
     newListOfCourses = []
     for i in range (0, len(listofCourses)):
         newCourse = convertCourseModelToCourseObject(listofCourses[i])
-        newListOfCourses.append(newCourse)
+	if (newCourse != False):
+	    newListOfCourses.append(newCourse)
     #print "size of newListOfCourses =" + str(len(newListOfCourses))
     #print "new newlistcourse = " + str(newListOfCourses[0])
     newCourse = newListOfCourses[0]
@@ -36,25 +37,48 @@ def functionForRandy(numberOfCourses, listofCourses):
     
     return outPutListOfCourses
 
+# need a function that handles the case when the scheduler can't handle a certain course
 
 #Turns a course model object into a course object that we can use in the scheduler
 #Converts : course from database --> course usable by scheduler
 def convertCourseModelToCourseObject(inputCourse):
     id = inputCourse.id		
     listofmeetingTimes = MeetingTime.objects.filter(course = id)
-    courseInfo = inputCourse.subject
-    courseInfo += inputCourse.number
-    courseMeetingTimes = []
-    #print "len newListoFmeetingtimes = " +  str(len(listofmeetingTimes))
-    for i in range (0, len(listofmeetingTimes)):
-        meetingTime = convertModelMeetingTimeToScheduleMeetingTime(listofmeetingTimes[i])
+    if (len (listofmeetingTimes) == 0):
+	return False
+    else:
+	courseInfo = inputCourse.subject
+	courseInfo += inputCourse.number
+	courseMeetingTimes = []
+	courseCampus = inputCourse.campus
+	courseCampusNumber = convertCampusModelToInt(courseCampus)
+	#print "len newListoFmeetingtimes = " +  str(len(listofmeetingTimes))
+	for i in range (0, len(listofmeetingTimes)):
+	    meetingTime = convertModelMeetingTimeToScheduleMeetingTime(listofmeetingTimes[i])
 	#meetingTime = convertStringToMeetingTime(listofmeetingTimes[i])
-        courseMeetingTimes.append(meetingTime)
-    #print "aftermath ListoFmeetingtimes = " +  str(len(courseMeetingTimes))
-    outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes)
-    #print "aftermath len course's meetingTimes = " +  str(len(outputCourse.meetingTimes)) 
+	courseMeetingTimes.append(meetingTime)
+	#print "aftermath ListoFmeetingtimes = " +  str(len(courseMeetingTimes))
+	outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseCampusNumber)
+	#print "aftermath len course's meetingTimes = " +  str(len(outputCourse.meetingTimes)) 
     return outputCourse
 
+def convertCampusModelToInt(campus):
+    if campus == "BRNBY":
+	return 1
+    if campus == "SURRY":
+	return 2
+    if campus == "VANCR" or campus == "GNWC" :
+	return 3
+    else :
+	return 0
+#CAMPUS_CHOICES = (
+#	('BRNBY', 'Burnaby'),covered
+#      	('SURRY', 'Surrey'),covered
+#       ('VANCR', 'Vancouver'),covered
+#	('OFFST', 'Offsite'),
+#	('METRO', 'Metro Vancouver'), weird to handle
+#	('GNWC', 'Great Northern Way'),covered
+#)
 
 #converts a meeting time from the table into a meeting time object that we can use it in the scheduling algorithm
 #Converts : meeting time from database --> meetingtime usable by scheduler
@@ -249,6 +273,14 @@ def convertDayStringToDayInt(inputString):
         return 6
 
 
+def simpleTest():
+    testinput = []
+    c = Course.objects.get(id = 1L)
+    testinput.append(c)
+    functionForRandy(1, testinput)
+    output = functionForRandy(1, testinput)
+
+simpleTest()
 #print "howdy"
 #c = Course.objects.get(id = 1L)
 #testinput = []
