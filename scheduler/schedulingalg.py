@@ -249,12 +249,12 @@ def convertDayStringToDayInt(inputString):
         return 6
 
 
-print "howdy"
-c = Course.objects.get(id = 1L)
-testinput = []
-testinput.append(c)
+#print "howdy"
+#c = Course.objects.get(id = 1L)
+#testinput = []
+#testinput.append(c)
 #functionForRandy(1, testinput)
-output = functionForRandy(1, testinput)
+#output = functionForRandy(1, testinput)
 
 #dead code
 
