@@ -5,13 +5,10 @@ from django.template import RequestContext
 
 # Create your views here.
 def index(request):
-    return render_to_response('schedulerIndex.html')
+    return render_to_response('schedulerIndex.html', context_instance=RequestContext(request))
 
 def instructions(request):
     return render_to_response('schedulerInstructions.html')
 
 def examples(request):
     return render_to_response('schedulerExamples.html')
-
-def infoSubmit(request):
-    return render_to_response('500.html')

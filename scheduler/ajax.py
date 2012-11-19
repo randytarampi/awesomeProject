@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404, render_to_response
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
 from scheduler.models import *
@@ -11,6 +12,14 @@ def listOfSubjects():
 	return ''.join(datList)
 
 @dajaxice_register
+def generateSchedule(request, form):
+	dajax = Dajax()
+	dajax.clear('#scheduleViewDiv', 'innerHTML')
+	scheduleInfo = render_to_response('schedulerSchedule.html').content
+	dajax.assign('#scheduleViewDiv', 'innerHTML', scheduleInfo)
+	return dajax.json()
+
+@dajaxice_register
 def listOfNumbers(request, option, idNum):
 	dajax = Dajax()
 	out = []
@@ -19,8 +28,7 @@ def listOfNumbers(request, option, idNum):
 	for i in daList:
 		out.append("<option value='%s'>%s</option>" % (i, i))
 
-	dajax.assign(idNum, 'innerHTML', ''.join(out))
-#	dajax.alert('option: %s, idNum: %s' % (option, idNum))		
+	dajax.assign(idNum, 'innerHTML', ''.join(out))	
 	return dajax.json()
 
 @dajaxice_register
