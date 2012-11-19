@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404, render_to_response
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
 from scheduler.models import *
@@ -14,7 +15,8 @@ def listOfSubjects():
 def generateSchedule(request, form):
 	dajax = Dajax()
 	dajax.clear('#scheduleViewDiv', 'innerHTML')
-	dajax.assign('#scheduleViewDiv', 'innerHTML', '<h1>View Your Schedule</h1><div id="scheduleViewList"></div><div id="scheduleViewWeek"><h2>Your Typical Week</h2></div><div id="scheduleViewExams"><h2>Your Exam Schedule</h2></div>')
+	scheduleInfo = render_to_response('schedulerSchedule.html').content
+	dajax.assign('#scheduleViewDiv', 'innerHTML', scheduleInfo)
 	return dajax.json()
 
 @dajaxice_register
