@@ -19,10 +19,10 @@ def functionForRandy(numberOfCourses, listofCourses):
     for i in range (0, len(listofCourses)):
         newCourse = convertCourseModelToCourseObject(listofCourses[i])
 	if (newCourse != False):
-	    print "Course is acceptable"
+	    #print "Course is acceptable"
 	    newListOfCourses.append(newCourse)
     print "size of newListOfCourses =" + str(len(newListOfCourses))
-    #print "new newlistcourse = " + str(newListOfCourses[0])
+    print "new newlistcourse = " + str(newListOfCourses[0])
     newCourse = newListOfCourses[0]
     newMeetingTimes = newCourse.meetingTimes
     for i in range (0, numberOfCourses):
@@ -34,7 +34,7 @@ def functionForRandy(numberOfCourses, listofCourses):
         outputCourse = Course.objects.get(id = temporaryID)
         outPutListOfCourses.append(outputCourse)
     print "size of output =" + str(len(outPutListOfCourses))
-    #print "new newlistcourse = " + str(newListOfCourses[0])
+    print "new newlistcourse = " + str(newListOfCourses[0])
     
     return outPutListOfCourses
 
@@ -53,14 +53,14 @@ def convertCourseModelToCourseObject(inputCourse):
 	courseMeetingTimes = []
 	courseCampus = inputCourse.campus
 	courseCampusNumber = convertCampusModelToInt(courseCampus)
-	#print "len newListoFmeetingtimes = " +  str(len(listofmeetingTimes))
+	print "len newListoFmeetingtimes = " +  str(len(listofmeetingTimes))
 	for i in range (0, len(listofmeetingTimes)):
 	    meetingTime = convertModelMeetingTimeToScheduleMeetingTime(listofmeetingTimes[i])
 	#meetingTime = convertStringToMeetingTime(listofmeetingTimes[i])
-	courseMeetingTimes.append(meetingTime)
-	#print "aftermath ListoFmeetingtimes = " +  str(len(courseMeetingTimes))
+	    courseMeetingTimes.append(meetingTime)
+	print "aftermath ListoFmeetingtimes = " +  str(len(courseMeetingTimes))
 	outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseCampusNumber)
-	#print "aftermath len course's meetingTimes = " +  str(len(outputCourse.meetingTimes)) 
+	print "aftermath len course's meetingTimes = " +  str(len(outputCourse.meetingTimes)) 
     return outputCourse
 
 def convertCampusModelToInt(campus):
@@ -128,7 +128,7 @@ def checkCourseConflict(course, schedule):
 def lockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
     #print "Locking Course"
     if (checkCourseConflict(course, schedule) == False):
-        print "There is no conflict"
+        print "There is no course Conflict for lock"
         # lock the course
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
@@ -141,7 +141,7 @@ def lockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
 def unlockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
     #print "unlockingCourse"
     if (checkCourseConflict(course, schedule) == True):
-    #    print "There is no conflict"
+        print "There is a conflict for unlock"
         # unlock/free the course
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
@@ -153,7 +153,7 @@ def unlockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
 def setCourse(course, schedule):
     #print "Setting Course"
     if (checkCourseConflict(course, schedule) == False):
-        #print "There is no conflict"
+        print "There is no conflict for set"
         # Set the course
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
@@ -163,7 +163,8 @@ def setCourse(course, schedule):
 def freeCourse(course, schedule):
     #print "freeingupcourse"
     if (checkCourseConflict(course, schedule) == True):
-    	#print "There is no conflict"
+	#print "There is a conflict for unlock"    	
+	#print "There is no conflict"
         # unlock/free the course
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
@@ -199,7 +200,7 @@ def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, maxSi
         
         choiceStatsList = []
 	
-        if len(poolOfPotentialCourses) > 2:
+        if len(poolOfPotentialCourses) >= 2:
             #Gather information on all possible choices:
 	    #First temporarily add the course to the schedule and gather stats about the new schedule
             for i in range (0, len(poolOfPotentialCourses)):
@@ -280,10 +281,38 @@ def simpleTest():
     testinput = []
     c = Course.objects.get(id = 1L)
     testinput.append(c)
-    functionForRandy(1, testinput)
+    return functionForRandy(1, testinput)
     #output = functionForRandy(1, testinput)
 
-simpleTest()
+def largeTest():
+    return functionForRandy(5, Course.objects.all())
+def conradTest():
+    testCourseList = []
+    testCourse1 = Course.objects.get(id = 1L)
+    testCourseList.append(testCourse1)    
+    testCourse2 = Course.objects.get(id = 4L)
+    testCourseList.append(testCourse2)
+    #print testCourseList
+    #print functionForRandy(2, testCourseList)
+    return functionForRandy(2, testCourseList)
+
+#output = conradTest()
+#simpleTest()
+output = largeTest()
+c1 = output[0]
+c2 = output[1]
+c3 = output[2]
+c4 = output[3]
+c5 = output[4]
+mt1 = MeetingTime.objects.filter(course = c1.id)
+mt2 = MeetingTime.objects.filter(course = c2.id)
+mt3 = MeetingTime.objects.filter(course = c3.id)
+mt4 = MeetingTime.objects.filter(course = c4.id)
+mt5 = MeetingTime.objects.filter(course = c5.id)
+
+#1l, 4l, 5l, 78l, 147l
+
+#c2 = output[1]
 #print "howdy"
 #c = Course.objects.get(id = 1L)
 #testinput = []
