@@ -21,20 +21,20 @@ def functionForRandy(numberOfCourses, listofCourses):
 	if (newCourse != False):
 	    #print "Course is acceptable"
 	    newListOfCourses.append(newCourse)
-    print "size of newListOfCourses =" + str(len(newListOfCourses))
-    print "new newlistcourse = " + str(newListOfCourses[0])
+    #print "size of newListOfCourses =" + str(len(newListOfCourses))
+    #print "new newlistcourse = " + str(newListOfCourses[0])
     newCourse = newListOfCourses[0]
     newMeetingTimes = newCourse.meetingTimes
     for i in range (0, numberOfCourses):
         iterateBEHEMOTH(schedule, poolOfLockedCourses, newListOfCourses, numberOfCourses)
     outPutListOfCourses = []
-    print "size of lockedCourses =" + str(len(poolOfLockedCourses))
+    #print "size of lockedCourses =" + str(len(poolOfLockedCourses))
     for i in range (0, len(poolOfLockedCourses)):
 	temporaryID = poolOfLockedCourses[i].courseID
         outputCourse = Course.objects.get(id = temporaryID)
         outPutListOfCourses.append(outputCourse)
-    print "size of output =" + str(len(outPutListOfCourses))
-    print "new newlistcourse = " + str(newListOfCourses[0])
+    #print "size of output =" + str(len(outPutListOfCourses))
+    #print "new newlistcourse = " + str(newListOfCourses[0])
     
     return outPutListOfCourses
 
@@ -47,20 +47,21 @@ def convertCourseModelToCourseObject(inputCourse):
     listofmeetingTimes = MeetingTime.objects.filter(course = id)
     if (len (listofmeetingTimes) == 0):
 	return False
-    else:
-	courseInfo = inputCourse.subject
-	courseInfo += inputCourse.number
-	courseMeetingTimes = []
-	courseCampus = inputCourse.campus
-	courseCampusNumber = convertCampusModelToInt(courseCampus)
-	print "len newListoFmeetingtimes = " +  str(len(listofmeetingTimes))
-	for i in range (0, len(listofmeetingTimes)):
-	    meetingTime = convertModelMeetingTimeToScheduleMeetingTime(listofmeetingTimes[i])
+    if inputCourse.component == "PRA":
+	return False
+    courseInfo = inputCourse.subject
+    courseInfo += inputCourse.number
+    courseMeetingTimes = []
+    courseCampus = inputCourse.campus
+    courseCampusNumber = convertCampusModelToInt(courseCampus)
+    #print "len newListoFmeetingtimes = " +  str(len(listofmeetingTimes))
+    for i in range (0, len(listofmeetingTimes)):
+	meetingTime = convertModelMeetingTimeToScheduleMeetingTime(listofmeetingTimes[i])
 	#meetingTime = convertStringToMeetingTime(listofmeetingTimes[i])
-	    courseMeetingTimes.append(meetingTime)
-	print "aftermath ListoFmeetingtimes = " +  str(len(courseMeetingTimes))
-	outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseCampusNumber)
-	print "aftermath len course's meetingTimes = " +  str(len(outputCourse.meetingTimes)) 
+	courseMeetingTimes.append(meetingTime)
+    #print "aftermath ListoFmeetingtimes = " +  str(len(courseMeetingTimes))
+    outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseCampusNumber)
+    #print "aftermath len course's meetingTimes = " +  str(len(outputCourse.meetingTimes)) 
     return outputCourse
 
 def convertCampusModelToInt(campus):
@@ -119,7 +120,7 @@ def checkCourseConflict(course, schedule):
 	#print "checkcourseconflict course id = " + str(course.courseID)
 	#print "checkcourseconflict meetingtimes = " + str(course.meetingTimes)
         if (schedule.checkTimeWeekConflict(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday) == True):
-            print "I found a course conflict"
+            #print "I found a course conflict"
             return True
     return False
 
@@ -128,7 +129,7 @@ def checkCourseConflict(course, schedule):
 def lockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
     #print "Locking Course"
     if (checkCourseConflict(course, schedule) == False):
-        print "There is no course Conflict for lock"
+        #print "There is no course Conflict for lock"
         # lock the course
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
@@ -141,7 +142,7 @@ def lockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
 def unlockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
     #print "unlockingCourse"
     if (checkCourseConflict(course, schedule) == True):
-        print "There is a conflict for unlock"
+        #print "There is a conflict for unlock"
         # unlock/free the course
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
