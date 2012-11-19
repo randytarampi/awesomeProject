@@ -1,6 +1,5 @@
 <h1>View Your Schedule</h1>
 <div id="scheduleViewList">
-{% block scheduleList %}
 {% if optimalCourses %}
 	<ol>
 	{% for course in optimalCourses %}
@@ -11,29 +10,64 @@
 				<li>Instructor: {{ instructor }}</li>
 			{% endif %}
 		{% endfor %}
-			<li>Lecture Times:</li>
-			<ul>
-				{% for meetingTime in optimalMeetingTimes %}
-					{% if meetingTime.course == course and meetingTime.type == "LEC" %}
-						<li>{{ meetingTime }}</li>
+			<li>Campus: 
+				{% if course.campus == "BRNBY" %}
+					Burnaby
+				{% else %}
+					{% if course.campus == "VANCR" %}
+						Vancouver
+					{% else %}
+						{% if course.campus == "SURRY" %}
+							Surrey
+						{% else %}
+							{% if course.campus == "GNWC" %}
+								Great Northern Way
+							{% else %}
+								Off Campus
+							{% endif %}
+						{% endif %}
 					{% endif %}
-				{% endfor %}
-			</ul>
-			<li>Other Times:</li>
-			<ul>
-				{% for meetingTime in optimalMeetingTimes %}
-					{% if meetingTime.course == course and meetingTime.type != "LEC" %}
-						<li>{{meetingTime.type}} - {{ meetingTime }}</li>
-					{% endif %}
-				{% endfor %}
-			</ul>
+				{% endif %}
+			</li>
+			<li>Section : {{ course.section }}</li>
+			{% if optimalMeetingTimes %}
+				<li>Lecture Times:</li>
+				<ul>
+					{% for meetingTime in optimalMeetingTimes %}
+						{% if meetingTime.course == course and meetingTime.type == "LEC" %}
+							<li>{{ meetingTime.room }} - {{ meetingTime }}</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+				<li>Lab Times:</li>
+				<ul>
+					{% for meetingTime in optimalMeetingTimes %}
+						{% if meetingTime.course == course and meetingTime.type == "LAB" %}
+							<li>{{ meetingTime.room }} - {{ meetingTime }}</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+				<li>Exam Times:</li>
+				<ul>
+					{% for meetingTime in optimalMeetingTimes %}
+						{% if meetingTime.course == course and meetingTime.type == "MID" or meetingTime.type == "EXAM" %}
+							<li>{% if meetingTime.type == "MID" %} 
+									Midterm - 
+								{% else %}
+									Final - 
+								{% endif %}
+								{{ meetingTime.examDetails }}
+							</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			{% endif %}
 		</ul>
 	{% endfor %}
 	</ol>
 {% else %}
 	<span class="error">Please specify a set of classes.</span>
 {% endif %}
-{% endblock %}
 </div>
 <div id="scheduleViewWeek">
 <h2>Your Typical Week</h2>

@@ -89,3 +89,9 @@ class MeetingTime (models.Model):
         Return the Meeting Time.
 		"""
 		return WEEKDAY_CHOICES[self.weekday][1] + " - " + str(self.start_time) + " to " + str(self.end_time)
+	
+	def examDetails(self):
+		"""
+		Return the Meeting Time of the Exam
+		"""
+		return str(self.start_day) + " - " + str(self.start_time) + " to " + str(self.end_time)
