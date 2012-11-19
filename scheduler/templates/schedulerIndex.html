@@ -1,25 +1,35 @@
 {% extends "schedulerBase.html" %}
 
+{% block extrajs %}
+<script type="text/javascript">
+function generateSchedule() {
+	data = $('scheduleForm').serializeObject();
+	Dajaxice.scheduler.generateSchedule(Dajax.process, {'form': data});
+	return false;
+}
+</script>
+{% endblock %}
+
 {% block content %}
-<h1>Build a Schedule</h1>
 <div id="scheduleFormDiv">
-<form id="scheduleForm" method="POST" action="{% url scheduler_infoSubmit %}">
-{% csrf_token %}
-<span>
-&nbsp;How many classes do you wish to take?
-<select onchange="Dajaxice.scheduler.updatingCourseForm(Dajax.process, {'option':this.value})" size="1">
-	<option value="1">1</option>
-	<option value="2">2</option>
-	<option value="3">3</option>
-	<option value="4">4</option>
-	<option value="5">5</option>
-	<option value="6">6</option>
-</select>
-</span>
-&nbsp;
-<div id="listClasses" onchange=""></div>
-&nbsp;
-<input id="scheduleSubmit" type="button" value="Get Schedule" />
-</form>
+	<h1>Build a Schedule</h1>
+	<form id="scheduleForm" method="POST">
+	{% csrf_token %}
+		<span>How many classes do you wish to take?
+			<select onchange="Dajaxice.scheduler.updatingCourseForm(Dajax.process, {'option':this.value})" size="1">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+			</select>
+		</span>
+		<div id="listClasses" onchange="">
+		</div>
+	<input id="scheduleSubmit" type="button" value="Generate Schedule" onclick="generateSchedule()"/>
+	</form>
+</div>
+<div id="scheduleViewDiv">
 </div>
 {% endblock %}

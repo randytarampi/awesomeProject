@@ -11,6 +11,13 @@ def listOfSubjects():
 	return ''.join(datList)
 
 @dajaxice_register
+def generateSchedule(request, form):
+	dajax = Dajax()
+	dajax.clear('#scheduleViewDiv', 'innerHTML')
+	dajax.assign('#scheduleViewDiv', 'innerHTML', '<h1>View Your Schedule</h1><div id="scheduleViewList"></div><div id="scheduleViewWeek"><h2>Your Typical Week</h2></div><div id="scheduleViewExams"><h2>Your Exam Schedule</h2></div>')
+	return dajax.json()
+
+@dajaxice_register
 def listOfNumbers(request, option, idNum):
 	dajax = Dajax()
 	out = []
@@ -19,8 +26,7 @@ def listOfNumbers(request, option, idNum):
 	for i in daList:
 		out.append("<option value='%s'>%s</option>" % (i, i))
 
-	dajax.assign(idNum, 'innerHTML', ''.join(out))
-#	dajax.alert('option: %s, idNum: %s' % (option, idNum))		
+	dajax.assign(idNum, 'innerHTML', ''.join(out))	
 	return dajax.json()
 
 @dajaxice_register
