@@ -1,17 +1,18 @@
 #course.py
 
-class Course:
-    def __init__(self, title, meetingTimes):
+class SchedulingCourse:
+    def __init__(self, title, courseID, meetingTimes):
         self.title = title
+        self.courseID = courseID
         self.meetingTimes = meetingTimes# list of meeting times
-
+        #we may want to include the id in course here...
     def addMeetingTimes(self, meetingTime):
         self.meetingTimes.append(meetingTime)
     #priority ... number
     #has priority? boolean
 
 
-class MeetingTime:
+class SchedulingMeetingTime:
     #def __init__(self, startTime, endTime, weekday, startDate, endDate):
     def __init__(self, startTime, endTime, weekday):
         self.startTime = startTime
@@ -19,12 +20,4 @@ class MeetingTime:
         self.weekday = weekday
         #self.startDate = startDate
         #self.endDate = endDate
-
-
-#because python is much more.... flexible and not as tightly cast as java
-# I find it hard to write certain functions
-
-#def addMTToSingleCourse(course, meetingTime):
-#    course.meetingTimes.append(meetingTime)
-
 

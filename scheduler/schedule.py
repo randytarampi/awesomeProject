@@ -3,6 +3,7 @@
 
 
 class Schedule:
+    #def __init__(self):  
     mondayTimeSlotAvailability = [0] * 144
     tuesdayTimeSlotAvailability = [0] * 144
     wednesdayTimeSlotAvailability = [0] * 144
@@ -10,6 +11,15 @@ class Schedule:
     fridayTimeSlotAvailability = [0] * 144
     saturdayTimeSlotAvailability = [0] * 144
     sundayTimeSlotAvailability = [0] * 144
+
+    def __init__(self):  
+   	self.mondayTimeSlotAvailability = [0] * 144
+   	self.tuesdayTimeSlotAvailability = [0] * 144
+   	self.wednesdayTimeSlotAvailability = [0] * 144
+   	self.thursdayTimeSlotAvailability = [0] * 144
+   	self.fridayTimeSlotAvailability = [0] * 144
+   	self.saturdayTimeSlotAvailability = [0] * 144
+   	self.sundayTimeSlotAvailability = [0] * 144
     #def getTotalDays(self):
 
     #see if the timeslice conflicts with the current weekly schedule
@@ -91,7 +101,7 @@ class Schedule:
             totalDays += 1
         #print totalDays
         return totalDays
-        
+    
     def totalPurge(self):
         self.mondayTimeSlotAvailability = [0] * 144
         self.tuesdayTimeSlotAvailability = [0] * 144
@@ -130,12 +140,6 @@ def checkIfTimeDayConflict(startTime, endTime, timeSlotArray):
         if timeSlotArray[i] != 0:
             return True
     return False
-
-#def checkIfTimeSpaceOpen(startTime, endTime, timeSlotArray):
-##     for i in range (startTime, endTime):
- #       if timeSlotArray[i] != 0:
- #           return true
- #   return f
 
 
 def lockSlotThrough(startTime, endTime, timeSlotArray):
