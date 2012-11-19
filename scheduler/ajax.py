@@ -17,8 +17,15 @@ def listOfSubjects():
 def generateSchedule(request, form):
 	dajax = Dajax()
 	dajax.clear('#scheduleViewDiv', 'innerHTML')
+	
+	# Get the data
 	optimalCourses = functionForRandy(4, list(chain(Course.objects.filter(subject="CMPT", number__gte=400, number__lte=470), Course.objects.filter(subject="POL", number__gte=410, number__lte=470))))
-	scheduleInfo = render_to_response('schedulerSchedule.html', {'optimalCourses': optimalCourses,}).content
+	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)
+	optimalMeetingTimes = MeetingTime.objects.filter(course__in = optimalCourses)
+	optimalData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes}
+	
+	# Serve the data
+	scheduleInfo = render_to_response('schedulerSchedule.html', optimalData).content
 	dajax.assign('#scheduleViewDiv', 'innerHTML', scheduleInfo)
 	return dajax.json()
 

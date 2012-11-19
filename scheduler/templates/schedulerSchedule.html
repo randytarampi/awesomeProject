@@ -5,6 +5,18 @@
 	<ol>
 	{% for course in optimalCourses %}
 		<li>{{ course }}</li>
+		<ul>
+		{% for instructor in optimalInstructors %}
+			{% if instructor.course == course %}
+				<li>Instructor: {{ instructor }}</li>
+			{% endif %}
+		{% endfor %}
+		{% for meetingTime in optimalMeetingTimes %}
+			{% if meetingTime.course == course %}
+				<li>{{ meetingTime }}</li>
+			{% endif %}
+		{% endfor %}
+		</ul>
 	{% endfor %}
 	</ol>
 {% else %}
