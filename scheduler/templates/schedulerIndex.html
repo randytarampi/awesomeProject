@@ -3,7 +3,7 @@
 {% block extrajs %}
 <script type="text/javascript">
 function generateSchedule() {
-	data = $('scheduleForm').serializeObject();
+	data = $('#scheduleForm').serializeObject();
 	Dajaxice.scheduler.generateSchedule(Dajax.process, {'form': data});
 	return false;
 }
@@ -16,11 +16,11 @@ function generateSchedule() {
 	<form id="scheduleForm" method="POST">
 	{% csrf_token %}
 		<span>How many classes do you wish to take?
-			<select onchange="Dajaxice.scheduler.updatingCourseForm(Dajax.process, {'option':this.value})" size="1">
+			<select name="numClasses" onchange="Dajaxice.scheduler.updatingCourseForm(Dajax.process, {'option':this.value})" size="1">
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
-				<option value="4">4</option>
+				<option value="4" selected="selected">4</option>
 				<option value="5">5</option>
 				<option value="6">6</option>
 			</select>

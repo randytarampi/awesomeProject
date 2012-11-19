@@ -1,3 +1,4 @@
+import json
 from itertools import chain
 from django.shortcuts import get_object_or_404, render_to_response
 from dajaxice.decorators import dajaxice_register
@@ -17,9 +18,9 @@ def listOfSubjects():
 def generateSchedule(request, form):
 	dajax = Dajax()
 	dajax.clear('#scheduleViewDiv', 'innerHTML')
-	
+	print form
 	# Get the data
-	optimalCourses = functionForRandy(4, list(chain(Course.objects.filter(subject="CMPT", number__gte=400, number__lte=470), Course.objects.filter(subject="POL", number__gte=410, number__lte=470))))
+	optimalCourses = []#functionForRandy(6, list(chain(Course.objects.filter(subject="CMPT", number__gte=400, number__lte=470), Course.objects.filter(subject="POL", number__gte=310, number__lte=380))))
 	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)
 	optimalMeetingTimes = MeetingTime.objects.filter(course__in = optimalCourses)
 	optimalData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes}
@@ -48,7 +49,7 @@ def updatingCourseForm(request, option):
 	out = []
 	# several select tags are made, each with a complete list of subjects with value = 1 through aClass
 	for aClass in range(1, int(option)+1):
-		out.append('<div>Course %s: <select id="courseSubject%s" onchange="Dajaxice.scheduler.listOfNumbers(Dajax.process, {\'option\':this.value, \'idNum\':\'#courseNumber%s\'})">%s</select> &nbsp<select id="courseNumber%s"></select></div>' % (str(aClass), str(aClass), str(aClass), listOfSubjects(), str(aClass)))
+		out.append('<div>Course %s: <select id="courseSubject%s" name="courseSubject%s" onchange="Dajaxice.scheduler.listOfNumbers(Dajax.process, {\'option\':this.value, \'idNum\':\'#courseNumber%s\'})">%s</select> &nbsp<select id="courseNumber%s" name="courseNumber%s"></select></div>' % (str(aClass), str(aClass), str(aClass), str(aClass), listOfSubjects(), str(aClass), str(aClass)))
 
 	dajax.assign('#listClasses', 'innerHTML', ''.join(out))
 	return dajax.json()
