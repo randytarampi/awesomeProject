@@ -18,13 +18,12 @@ def listOfSubjects():
 def generateSchedule(request, form):
 	dajax = Dajax()
 	dajax.clear('#scheduleViewDiv', 'innerHTML')
-	
+
 	# Get the data
 	selectedCourses = Course.objects.none()
 	numClasses =  int(form['numClasses'])
 	for i in range(numClasses):
-		selectedCourses = selectedCourses | Course.objects.filter(subject=form['courseSubject%i' % (i+1)], number=int(form['courseNumber%i' % (i+1)]))
-	print selectedCourses
+		selectedCourses = selectedCourses | Course.objects.filter(subject=form['courseSubject%i' % (i+1)], number=form['courseNumber%i' % (i+1)])
 
 	# Process the data
 	optimalCourses = functionForRandy(numClasses, selectedCourses)

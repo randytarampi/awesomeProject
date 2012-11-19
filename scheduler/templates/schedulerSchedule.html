@@ -11,11 +11,22 @@
 				<li>Instructor: {{ instructor }}</li>
 			{% endif %}
 		{% endfor %}
-		{% for meetingTime in optimalMeetingTimes %}
-			{% if meetingTime.course == course %}
-				<li>{{ meetingTime }}</li>
-			{% endif %}
-		{% endfor %}
+			<li>Lecture Times:</li>
+			<ul>
+				{% for meetingTime in optimalMeetingTimes %}
+					{% if meetingTime.course == course and meetingTime.type == "LEC" %}
+						<li>{{ meetingTime }}</li>
+					{% endif %}
+				{% endfor %}
+			</ul>
+			<li>Other Times:</li>
+			<ul>
+				{% for meetingTime in optimalMeetingTimes %}
+					{% if meetingTime.course == course and meetingTime.type != "LEC" %}
+						<li>{{meetingTime.type}} - {{ meetingTime }}</li>
+					{% endif %}
+				{% endfor %}
+			</ul>
 		</ul>
 	{% endfor %}
 	</ol>
