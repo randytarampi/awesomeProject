@@ -1,6 +1,16 @@
 <h1>View Your Schedule</h1>
 <div id="scheduleViewList">
-{% block scheduleList %}{% endblock %}
+{% block scheduleList %}
+{% if optimalCourses %}
+	<ol>
+	{% for course in optimalCourses %}
+		<li>{{ course }}</li>
+	{% endfor %}
+	</ol>
+{% else %}
+	<span class="error">Please specify a set of classes.</span>
+{% endif %}
+{% endblock %}
 </div>
 <div id="scheduleViewWeek">
 <h2>Your Typical Week</h2>

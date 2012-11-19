@@ -1,7 +1,9 @@
+from itertools import chain
 from django.shortcuts import get_object_or_404, render_to_response
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
 from scheduler.models import *
+from scheduler.schedulingalg import *
 
 def listOfSubjects():
 	allSubjects = Course.objects.values_list('subject', flat=True).distinct()
@@ -15,7 +17,8 @@ def listOfSubjects():
 def generateSchedule(request, form):
 	dajax = Dajax()
 	dajax.clear('#scheduleViewDiv', 'innerHTML')
-	scheduleInfo = render_to_response('schedulerSchedule.html').content
+	optimalCourses = functionForRandy(4, list(chain(Course.objects.filter(subject="CMPT", number__gte=400, number__lte=470), Course.objects.filter(subject="POL", number__gte=410, number__lte=470))))
+	scheduleInfo = render_to_response('schedulerSchedule.html', {'optimalCourses': optimalCourses,}).content
 	dajax.assign('#scheduleViewDiv', 'innerHTML', scheduleInfo)
 	return dajax.json()
 
