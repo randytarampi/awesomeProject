@@ -19,15 +19,16 @@ def functionForRandy(numberOfCourses, listofCourses):
     for i in range (0, len(listofCourses)):
         newCourse = convertCourseModelToCourseObject(listofCourses[i])
 	if (newCourse != False):
+	    print "Course is acceptable"
 	    newListOfCourses.append(newCourse)
-    #print "size of newListOfCourses =" + str(len(newListOfCourses))
+    print "size of newListOfCourses =" + str(len(newListOfCourses))
     #print "new newlistcourse = " + str(newListOfCourses[0])
     newCourse = newListOfCourses[0]
     newMeetingTimes = newCourse.meetingTimes
     for i in range (0, numberOfCourses):
         iterateBEHEMOTH(schedule, poolOfLockedCourses, newListOfCourses, numberOfCourses)
-
     outPutListOfCourses = []
+    print "size of lockedCourses =" + str(len(poolOfLockedCourses))
     for i in range (0, len(poolOfLockedCourses)):
 	temporaryID = poolOfLockedCourses[i].courseID
         outputCourse = Course.objects.get(id = temporaryID)
@@ -125,20 +126,20 @@ def checkCourseConflict(course, schedule):
 #locks a course into the schedule
 #(time is locked and the course is added to locked courses)
 def lockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
-    print "Locking Course"
+    #print "Locking Course"
     if (checkCourseConflict(course, schedule) == False):
         print "There is no conflict"
         # lock the course
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
-            print "Locking MeetingTime"
+            #print "Locking MeetingTime"
             schedule.lockMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)
         poolOfLockedCourses.append(course)
         poolOfPotentialCourses.remove(course)
 
 #unlocks the coures from the schedule (time is freed and the course is removed from locked courses)
 def unlockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
-    print "unlockingCourse"
+    #print "unlockingCourse"
     if (checkCourseConflict(course, schedule) == True):
     #    print "There is no conflict"
         # unlock/free the course
@@ -150,9 +151,9 @@ def unlockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
 
 #sets the course without any additional overhead
 def setCourse(course, schedule):
-    print "Setting Course"
+    #print "Setting Course"
     if (checkCourseConflict(course, schedule) == False):
-        print "There is no conflict"
+        #print "There is no conflict"
         # Set the course
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
@@ -160,9 +161,9 @@ def setCourse(course, schedule):
 
 #frees the course with updating the respective list of courses
 def freeCourse(course, schedule):
-    print "freeingupcourse"
+    #print "freeingupcourse"
     if (checkCourseConflict(course, schedule) == True):
-    #print "There is no conflict"
+    	#print "There is no conflict"
         # unlock/free the course
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
@@ -191,6 +192,7 @@ def updateCleanPotentialCourses(poolOfPotentialCourses, schedule):
 #the number of courses a student wants to take
 def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, maxSize):
     if len(poolOfLockedCourses) < maxSize:
+	#print "interBehe We have the right size" 
         orignialTimeGap = schedule.getTotalTimeGap()
         originalNumberDays =  schedule.getTotalDays()
         updateCleanPotentialCourses(poolOfPotentialCourses, schedule);
@@ -238,8 +240,9 @@ def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, maxSi
 
         elif len(poolOfPotentialCourses) == 1:
             onlyCourseOption = poolOfPotentialCourses[0]
-            lockCourse(onlyCourseOption, schedule, poolOfLockedCourses, poolOfPotentialCourses)
+	    lockCourse(onlyCourseOption, schedule, poolOfLockedCourses, poolOfPotentialCourses)
 
+	
 #Potentially obsolete code
 #<MeetingTime: Monday - 10:30:00 to 12:20:00>
 #parse string and turn it into a meetingtime
@@ -278,7 +281,7 @@ def simpleTest():
     c = Course.objects.get(id = 1L)
     testinput.append(c)
     functionForRandy(1, testinput)
-    output = functionForRandy(1, testinput)
+    #output = functionForRandy(1, testinput)
 
 simpleTest()
 #print "howdy"
