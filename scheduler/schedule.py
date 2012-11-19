@@ -250,6 +250,83 @@ def checkIfTimeDayConflictInterCampus(startTime, endTime, timeSlotArray, campus)
 #    return True
 #return False
 
+def lockSlotThroughCampus(startTime, endTime, timeSlotArray, campus):
+	if campus == 1:
+		for x in range (startTime, endTime+1):
+			timeSlotArray[x] = 5
+		#cover other parts
+		for x in range (endTime+1, endTime+7):
+			if timeSlotArray[x] == 0:	
+				timeSlotArray[x] = 3
+	if campus == 2:
+		for x in range (startTime, endTime+1):
+			timeSlotArray[x] = 8
+		for x in range (endTime+1, endTime+7):
+			if timeSlotArray[x] == 0:	
+				timeSlotArray[x] = 6
+	if campus == 3:
+		for x in range (startTime, endTime+1):
+			timeSlotArray[x] = 11
+		for x in range (endTime+1, endTime+7):
+			if timeSlotArray[x] == 0:	
+				timeSlotArray[x] = 9
+	else:
+		for x in range (startTime, endTime+1):
+			timeSlotArray[x] = 2
+
+def setSlotThroughCampus(startTime, endTime, timeSlotArray, campus):
+    	if campus == 1:
+		for x in range (startTime, endTime+1):
+			timeSlotArray[x] = 4
+		#cover other parts
+		for x in range (endTime+1, endTime+7):
+			if timeSlotArray[x] == 0:	
+				timeSlotArray[x] = 3
+	if campus == 2:
+		for x in range (startTime, endTime+1):
+			timeSlotArray[x] = 7
+		for x in range (endTime+1, endTime+7):
+			if timeSlotArray[x] == 0:	
+				timeSlotArray[x] = 6
+	if campus == 3:
+		for x in range (startTime, endTime+1):
+			timeSlotArray[x] = 10
+		for x in range (endTime+1, endTime+7):
+			if timeSlotArray[x] == 0:	
+				timeSlotArray[x] = 9
+	else:
+		for x in range (startTime, endTime+1):
+			timeSlotArray[x] = 1
+
+#unlocks a period of time with campus in mind... the order of it may seem strange at first
+def unlockSlotThroughCampus(startTime, endTime, timeSlotArray, campus):
+	#present		
+	for x in range (startTime, endtime+1):
+		timeSlotArray[x] = 0	
+	
+	if campus == 1:
+		#future
+		for x in range (endTime+1, endTime+7):
+			if timeSlotArray[x] == 3:	
+				timeSlotArray[x] = 0
+	if campus == 2:
+		for x in range (endTime+1, endTime+7):
+			if timeSlotArray[x] == 6:	
+				timeSlotArray[x] = 0
+	if campus == 3:
+		for x in range (endTime+1, endTime+7):
+			if timeSlotArray[x] == 9:	
+				timeSlotArray[x] = 0
+	#past				
+	for x in range (startTime-6, starttime):
+		if timeSlotArray[x] in [4,5]:
+			timeSlotArray[x+6] = 3
+		elif timeSlotArray[x] in [7,8]:
+			timeSlotArray[x+6] = 6
+		elif timeSlotArray[x] in [3,4]:
+			timeSlotArray[x+6] = 9
+
+
 def lockSlotThrough(startTime, endTime, timeSlotArray):
 	for x in range (startTime, endTime+1):
 		timeSlotArray[x] = 2
