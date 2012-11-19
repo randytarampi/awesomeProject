@@ -85,7 +85,7 @@ class Schedule:
 		return weekTotalTimeGap
 	def getTotalDays(self):
 		totalDays = 0
-		listtocompare = [1, 2]
+		listtocompare = [1, 2, 4, 5, 7,8,10,11]
 		if len(list(set(listtocompare) & set(self.mondayTimeSlotAvailability))) != 0:
 	    		totalDays += 1
 		if len(list(set(listtocompare) & set(self.tuesdayTimeSlotAvailability))) != 0:
@@ -125,7 +125,8 @@ class Schedule:
 		self.fridayTimeSlotAvailability = [0] * 144
 		self.saturdayTimeSlotAvailability = [0] * 144
 		self.sundayTimeSlotAvailability = [0] * 144
-    	def clearSchedule(self):
+	#needs to be reworked for ... multiple campuses    	
+	def clearSchedule(self):
         	for i in range (0, len(self.mondayTimeSlotAvailability)):
           		if self.mondayTimeSlotAvailability[i] == 1:
                 		self.mondayTimeSlotAvailability[i] = 0 
