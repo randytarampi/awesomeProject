@@ -10,54 +10,34 @@
 				<li>Instructor: {{ instructor }}</li>
 			{% endif %}
 		{% endfor %}
-			<li>Campus: 
-				{% if course.campus == "BRNBY" %}
-					Burnaby
-				{% else %}
-					{% if course.campus == "VANCR" %}
-						Vancouver
-					{% else %}
-						{% if course.campus == "SURRY" %}
-							Surrey
-						{% else %}
-							{% if course.campus == "GNWC" %}
-								Great Northern Way
-							{% else %}
-								Off Campus
-							{% endif %}
-						{% endif %}
-					{% endif %}
-				{% endif %}
-			</li>
+			<li>Campus: {{ course.campusChoice }}</li>
 			<li>Section : {{ course.section }}</li>
-			{% if optimalMeetingTimes %}
+			{% if optimalLectureTimes %}
 				<li>Lecture Times:</li>
 				<ul>
-					{% for meetingTime in optimalMeetingTimes %}
+					{% for meetingTime in optimalLectureTimes %}
 						{% if meetingTime.room and meetingTime.course == course and meetingTime.type == "LEC" %}
-							<li>{{ meetingTime.room }} - {{ meetingTime }}</li>
+							<li>{{ meetingTime.room }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
 						{% endif %}
 					{% endfor %}
 				</ul>
+			{% endif %}
+			{% if optimalLabTimes %}
 				<li>Lab Times:</li>
 				<ul>
-					{% for meetingTime in optimalMeetingTimes %}
+					{% for meetingTime in optimalLabTimes %}
 						{% if meetingTime.course == course and meetingTime.type == "LAB" %}
-							<li>{{ meetingTime.room }} - {{ meetingTime }}</li>
+							<li>{{ meetingTime.room }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
 						{% endif %}
 					{% endfor %}
 				</ul>
+			{% endif %}
+			{% if optimalTestTimes %}
 				<li>Exam Times:</li>
 				<ul>
-					{% for meetingTime in optimalMeetingTimes %}
-						{% if meetingTime.course == course and meetingTime.type == "MIDT" or meetingTime.type == "EXAM" %}
-							<li>{% if meetingTime.type == "MIDT" %} 
-									Midterm - 
-								{% else %}
-									Exam - 
-								{% endif %}
-								{{ meetingTime.examDetails }}
-							</li>
+					{% for meetingTime in optimalTestTimes %}
+						{% if meetingTime.course == course %}
+							<li>{{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
 						{% endif %}
 					{% endfor %}
 				</ul>

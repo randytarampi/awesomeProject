@@ -20,7 +20,7 @@ function generateSchedule() {
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
-				<option value="4" selected="selected">4</option>
+				<option value="4">4</option>
 				<option value="5">5</option>
 				<option value="6">6</option>
 				<option value="7">7</option>
@@ -31,15 +31,7 @@ function generateSchedule() {
 		</span>
 		<div id="listClasses" onchange="">
 		</div>
-		<span>Of these considered classes, how many would you like to take?
-			<select id="numTaking" name="numTaking" onchange="" size="1">
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="4">4</option>
-				<option value="5">5</option>
-				<option value="6">6</option>
-			</select>
+		<span id="numTakingSpan">
 		</span>
 		<br>
 	<input id="scheduleSubmit" type="button" value="Generate Schedule" onclick="generateSchedule()"/>

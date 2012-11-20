@@ -28,8 +28,10 @@ def generateSchedule(request, form):
 	# Process the data
 	optimalCourses = functionForRandy(numClasses, selectedCourses)[0]
 	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)
-	optimalMeetingTimes = MeetingTime.objects.filter(course__in = optimalCourses)
-	optimalData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes}
+	optimalLectureTimes = MeetingTime.objects.filter(course__in = optimalCourses, type="LEC")
+	optimalLabTimes = MeetingTime.objects.filter(course__in = optimalCourses, type="LAB")
+	optimalTestTimes = MeetingTime.objects.filter(course__in = optimalCourses, type="EXAM") | MeetingTime.objects.filter(course__in = optimalCourses, type="MIDT")
+	optimalData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalLectureTimes': optimalLectureTimes, 'optimalLabTimes': optimalLabTimes, 'optimalTestTimes': optimalTestTimes}
 	
 	# Serve the data
 	scheduleInfo = render_to_response('schedulerSchedule.html', optimalData).content
@@ -57,6 +59,17 @@ def updatingCourseForm(request, option):
 	for aClass in range(1, int(option)+1):
 		out.append('<div>Course %s: <select id="courseSubject%s" name="courseSubject%s" onchange="Dajaxice.scheduler.listOfNumbers(Dajax.process, {\'option\':this.value, \'idNum\':\'#courseNumber%s\'})">%s</select> &nbsp<select id="courseNumber%s" name="courseNumber%s"></select></div>' % (str(aClass), str(aClass), str(aClass), str(aClass), listOfSubjects(), str(aClass), str(aClass)))
 
+	moreOut = []
+	#more stuff to render to the template. This renders the select tag before options are added to it.
+	moreOut.append("Of these considered classes, how many would you like to take?<select id=\"numTaking\" name=\"numTaking\" onchange=\"\" size=\"1\"></select>")
+	dajax.assign('#numTakingSpan', 'innerHTML', ''.join(moreOut))
+
+	theList = []
+	#adds the options to the select tag rendered previously
+	for i in range(1, int(option)+1):
+		theList.append("<option value='%s'>%s</option>" % (i, i))
+
 	dajax.assign('#listClasses', 'innerHTML', ''.join(out))
+	dajax.assign('#numTaking', 'innerHTML', ''.join(theList))
 	return dajax.json()
 

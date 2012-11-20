@@ -36,7 +36,7 @@ WEEKDAY_CHOICES = (
 TYPE_CHOICES = (
 	('MIDT', 'Midterm'),
 	('LEC', 'Lecture'),
-	('EXAM', 'Exam'),
+	('EXAM', 'Final'),
 	('LAB', 'Lab'),
 )
 
@@ -55,13 +55,31 @@ class Course (models.Model):
 	number = models.CharField(max_length = 10)
 	semester = models.CharField(max_length = 4, choices=SEMESTER_CHOICES) 
 	campus = models.CharField(max_length=5, choices=CAMPUS_CHOICES)
-	subject = models.CharField(max_length=10) #cmpt etc...
+	subject = models.CharField(max_length=10)
 
 	def __unicode__(self):
 		"""
 		Return the course name.
 		"""
 		return self.subject + " " + self.number + ": " + self.title
+
+	def componentChoice(self):
+		"""
+        Return the component.
+		"""
+		return self.get_component_display()
+
+	def semesterChoice(self):
+		"""
+        Return the semester.
+		"""
+		return self.get_semester_display()
+
+	def campusChoice(self):
+		"""
+        Return the campus.
+		"""
+		return self.get_campus_display()
 
 class Instructor (models.Model):
 	userid = models.CharField(max_length = 100, null=True)
@@ -86,12 +104,18 @@ class MeetingTime (models.Model):
 
 	def __unicode__(self):
 		"""
-        Return the Meeting Time.
+        Return the meeting time.
 		"""
 		return WEEKDAY_CHOICES[self.weekday][1] + " - " + str(self.start_time) + " to " + str(self.end_time)
 	
-	def examDetails(self):
+	def dayChoice(self):
 		"""
-		Return the Meeting Time of the Exam
+        Return the weekday.
 		"""
-		return str(self.start_day) + " - " + str(self.start_time) + " to " + str(self.end_time)
+		return self.get_weekday_display()
+
+	def typeChoice(self):
+		"""
+        Return the type.
+		"""
+		return self.get_type_display()
