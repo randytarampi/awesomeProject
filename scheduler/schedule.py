@@ -42,6 +42,25 @@ class Schedule:
 
 		elif weekday ==6:
 		    	return checkIfTimeDayConflict(startTime, endTime, self.sundayTimeSlotAvailability)
+	def checkTimeWeekConflictCampus(self, startTime, endTime, weekday, campus):
+		if weekday ==0:
+			return checkIfTimeDayConflictV2(startTime, endTime, self.mondayTimeSlotAvailability, campus)
+		elif weekday ==1:
+		    	return checkIfTimeDayConflictV2(startTime, endTime, self.tuesdayTimeSlotAvailability, campus)
+		elif weekday ==2:
+		    	return checkIfTimeDayConflictV2(startTime, endTime, self.wednesdayTimeSlotAvailability, campus)
+	    
+		elif weekday ==3:
+		    	return checkIfTimeDayConflictV2(startTime, endTime, self.thursdayTimeSlotAvailability, campus)
+
+		elif weekday ==4:
+		    	return checkIfTimeDayConflictV2(startTime, endTime, self.fridayTimeSlotAvailability, campus)
+
+		elif weekday ==5:
+		    	return checkIfTimeDayConflictV2(startTime, endTime, self.saturdayTimeSlotAvailability, campus)
+
+		elif weekday ==6:
+		    	return checkIfTimeDayConflictV2(startTime, endTime, self.sundayTimeSlotAvailability, campus)
 
     #i.e. input 0 to get monday, 1 to get tuesday... 6 to get sunday
 	def convertWeekDayToProperArray(self, weekday):
@@ -63,12 +82,19 @@ class Schedule:
     #Locks slots start-->end, on the given workday
     	def lockMeetingTime(self, startTime, endTime, weekday):
         	lockSlotThrough(startTime, endTime, self.convertWeekDayToProperArray(weekday))
+	def lockMeetingTimeCampus(self, startTime, endTime, weekday, campus):
+        	lockSlotThroughCampus(startTime, endTime, self.convertWeekDayToProperArray(weekday), campus)
     #Frees slots start-->end, on the given workday
 	def unlockMeetingTime(self, startTime, endTime, weekday):
 		unlockSlotThrough(startTime, endTime, self.convertWeekDayToProperArray(weekday))
+	def unlockMeetingTimeCampus(self, startTime, endTime, weekday, campus):
+		unlockSlotThroughCampus(startTime, endTime, self.convertWeekDayToProperArray(weekday), campus)
 	#Sets slots start-->end, on the given workday
 	def setMeetingTime(self, startTime, endTime, weekday):
 		setSlotThrough(startTime, endTime, self.convertWeekDayToProperArray(weekday))
+	def setMeetingTimeCampus(self, startTime, endTime, weekday, campus):
+		setSlotThroughCampus(startTime, endTime, self.convertWeekDayToProperArray(weekday), campus)
+	
 	def freeMeetingTime(self, startTime, endTime, weekday):
 		freeSlotThrough(startTime, endTime, self.convertWeekDayToProperArray(weekday))
 
@@ -128,25 +154,25 @@ class Schedule:
 	#needs to be reworked for ... multiple campuses    	
 	def clearSchedule(self):
         	for i in range (0, len(self.mondayTimeSlotAvailability)):
-          		if self.mondayTimeSlotAvailability[i] == 1:
+          		if self.mondayTimeSlotAvailability[i] in [1, 4, 7, 10]:
                 		self.mondayTimeSlotAvailability[i] = 0 
         	for i in range (0, len(self.tuesdayTimeSlotAvailability)):
-           		if self.tuesdayTimeSlotAvailability[i] == 1:
+           		if self.tuesdayTimeSlotAvailability[i] in [1, 4, 7, 10]:
                 		self.tuesdayTimeSlotAvailability[i] = 0
 		for i in range (0, len(self.wednesdayTimeSlotAvailability)):
-		    	if self.wednesdayTimeSlotAvailability[i] == 1:
+		    	if self.wednesdayTimeSlotAvailability[i] in [1, 4, 7, 10]:
 		        	self.wednesdayTimeSlotAvailability[i] = 0
 		for i in range (0, len(self.thursdayTimeSlotAvailability)):
-			if self.thursdayTimeSlotAvailability[i] == 1:
+			if self.thursdayTimeSlotAvailability[i] in [1, 4, 7, 10]:
 				self.thursdayTimeSlotAvailability[i] = 0
 		for i in range (0, len(self.fridayTimeSlotAvailability)):
-		    	if self.fridayTimeSlotAvailability[i] == 1:
+		    	if self.fridayTimeSlotAvailability[i] in [1, 4, 7, 10]:
 		        	self.fridayTimeSlotAvailability[i] = 0
 		for i in range (0, len(self.saturdayTimeSlotAvailability)):
-		    	if self.saturdayTimeSlotAvailability[i] == 1:
+		    	if self.saturdayTimeSlotAvailability[i] in [1, 4, 7, 10]:
 		       		self.saturdayTimeSlotAvailability[i] = 0
 		for i in range (0, len(self.sundayTimeSlotAvailability)):
-			if self.sundayTimeSlotAvailability[i] == 1:
+			if self.sundayTimeSlotAvailability[i] in [1, 4, 7, 10]:
 		       		self.sundayTimeSlotAvailability[i] = 0
                 
     #totalPurge and clear schedule should be methods here
@@ -302,7 +328,7 @@ def setSlotThroughCampus(startTime, endTime, timeSlotArray, campus):
 #unlocks a period of time with campus in mind... the order of it may seem strange at first
 def unlockSlotThroughCampus(startTime, endTime, timeSlotArray, campus):
 	#present		
-	for x in range (startTime, endtime+1):
+	for x in range (startTime, endTime+1):
 		timeSlotArray[x] = 0	
 	
 	if campus == 1:
@@ -319,7 +345,7 @@ def unlockSlotThroughCampus(startTime, endTime, timeSlotArray, campus):
 			if timeSlotArray[x] == 9:	
 				timeSlotArray[x] = 0
 	#past				
-	for x in range (startTime-6, starttime):
+	for x in range (startTime-6, startTime):
 		if timeSlotArray[x] in [4,5]:
 			timeSlotArray[x+6] = 3
 		elif timeSlotArray[x] in [7,8]:

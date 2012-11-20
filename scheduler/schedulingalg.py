@@ -46,6 +46,11 @@ def functionForRandy(numberOfCourses, listofCourses):
     largerOutputArray = []
     largerOutputArray.append(outPutListOfLockedCourses)
     largerOutputArray.append(outPutListOfCutCourses)
+    #Schedule Stats
+    TotalDays = schedule.getTotalDays()
+    TotalTimeGap = schedule.getTotalTimeGap()
+    currentChoiceStats = ChoiceStats(TotalDays, TotalTimeGap)
+    largerOutputArray.append(currentChoiceStats)
     return largerOutputArray
 # need a function that handles the case when the scheduler can't handle a certain course
 
@@ -115,13 +120,16 @@ def convertTimeToTimeSlot(intputTime):
 
 #check to see if the coures conflicts with the schedule
 def checkCourseConflict(course, schedule):
+    campus = course.campus
     for i in range (0, len(course.meetingTimes)):
         meetingTime = course.meetingTimes[i]
 	#print "checkcourseconflict course title = " + str(course.title)
 	#print "checkcourseconflict course id = " + str(course.courseID)
 	#print "checkcourseconflict meetingtimes = " + str(course.meetingTimes)
-        if (schedule.checkTimeWeekConflict(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday) == True):
-            #print "I found a course conflict"
+        #if (schedule.checkTimeWeekConflict(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday) == True):
+        if (schedule.checkTimeWeekConflictCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus) == True):
+        
+	    #print "I found a course conflict"
             return True
     return False
 
@@ -132,10 +140,12 @@ def lockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
     if (checkCourseConflict(course, schedule) == False):
         #print "There is no course Conflict for lock"
         # lock the course
+	campus = course.campus
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
             #print "Locking MeetingTime"
             schedule.lockMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)
+	    #schedule.lockMeetingTimeCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus)
         poolOfLockedCourses.append(course)
         poolOfPotentialCourses.remove(course)
 
@@ -145,9 +155,11 @@ def unlockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
     if (checkCourseConflict(course, schedule) == True):
         #print "There is a conflict for unlock"
         # unlock/free the course
+	campus = course.campus
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
-            schedule.unlockMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)
+            schedule.unlockMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)	
+	    #schedule.unlockMeetingTimeCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus)
         poolOfPotentialCourses.append(course)
         poolOfLockedCourses.remove(course)
 
@@ -157,9 +169,11 @@ def setCourse(course, schedule):
     if (checkCourseConflict(course, schedule) == False):
         #print "There is no conflict for set"
         # Set the course
+	campus = course.campus
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
             schedule.setMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)
+	    #schedule.setMeetingTimeCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus)
 
 #frees the course with updating the respective list of courses
 def freeCourse(course, schedule):
@@ -168,9 +182,11 @@ def freeCourse(course, schedule):
 	#print "There is a conflict for unlock"    	
 	#print "There is no conflict"
         # unlock/free the course
+	campus = course.campus
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
-            schedule.unlockMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)
+            #schedule.unlockMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)
+            schedule.unlockMeetingTimeCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus)
 
 #find all courses that currently conflict with our schedule and remove them from the list of potential courses
 def updateCleanPotentialCourses(poolOfPotentialCourses, poolOfCutCourses, schedule):
@@ -209,9 +225,6 @@ def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, poolO
                 schedule.clearSchedule()
                 courseWeTryToAdd = poolOfPotentialCourses[i]
                 setCourse(courseWeTryToAdd, schedule)
-                #templockcourse
-                #What about clear... set course, then clear again?
-                #lockCourse(courseWeTryToAdd, schedule)
             
                 newTotalDays = schedule.getTotalDays()
                 newTotalTimeGap = schedule.getTotalTimeGap()
