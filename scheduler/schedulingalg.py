@@ -51,6 +51,7 @@ def functionForRandy(numberOfCourses, listofCourses):
     TotalTimeGap = schedule.getTotalTimeGap()
     currentChoiceStats = ChoiceStats(TotalDays, TotalTimeGap)
     largerOutputArray.append(currentChoiceStats)
+    largerOutputArray.append(schedule)
     return largerOutputArray
 # need a function that handles the case when the scheduler can't handle a certain course
 
@@ -80,12 +81,14 @@ def convertCourseModelToCourseObject(inputCourse):
 
 def convertCampusModelToInt(campus):
     if campus == "BRNBY":
+	print "setting Burnaby course"
 	return 1
     if campus == "SURRY":
 	return 2
     if campus == "VANCR" or campus == "GNWC" :
 	return 3
     else :
+	print "setting Course to be neutral"
 	return 0
 
 #converts a meeting time from the table into a meeting time object that we can use it in the scheduling algorithm
@@ -141,11 +144,12 @@ def lockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
         #print "There is no course Conflict for lock"
         # lock the course
 	campus = course.campus
+	print "lockCourse - course campus = " + str(campus)
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
             #print "Locking MeetingTime"
-            schedule.lockMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)
-	    #schedule.lockMeetingTimeCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus)
+            #schedule.lockMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)
+	    schedule.lockMeetingTimeCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus)
         poolOfLockedCourses.append(course)
         poolOfPotentialCourses.remove(course)
 
@@ -158,8 +162,8 @@ def unlockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
 	campus = course.campus
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
-            schedule.unlockMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)	
-	    #schedule.unlockMeetingTimeCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus)
+           # schedule.unlockMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)	
+	    schedule.unlockMeetingTimeCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus)
         poolOfPotentialCourses.append(course)
         poolOfLockedCourses.remove(course)
 
@@ -172,13 +176,12 @@ def setCourse(course, schedule):
 	campus = course.campus
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
-            schedule.setMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)
-	    #schedule.setMeetingTimeCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus)
+            #schedule.setMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)
+	    schedule.setMeetingTimeCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus)
 
 #frees the course with updating the respective list of courses
 def freeCourse(course, schedule):
     #print "freeingupcourse"
-    if (checkCourseConflict(course, schedule) == True):
 	#print "There is a conflict for unlock"    	
 	#print "There is no conflict"
         # unlock/free the course
@@ -222,7 +225,7 @@ def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, poolO
             #Gather information on all possible choices:
 	    #First temporarily add the course to the schedule and gather stats about the new schedule
             for i in range (0, len(poolOfPotentialCourses)):
-                schedule.clearSchedule()
+                #schedule.clearSchedule()
                 courseWeTryToAdd = poolOfPotentialCourses[i]
                 setCourse(courseWeTryToAdd, schedule)
             
@@ -232,7 +235,7 @@ def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, poolO
                 choiceStatsList.append(currentChoiceStats)
                 #free certain course
                 freeCourse(courseWeTryToAdd, schedule)
-                schedule.clearSchedule()
+                #schedule.clearSchedule()
 
             #try to make the best decision as to which course we should lock
             currentPositionOfChoice = 0

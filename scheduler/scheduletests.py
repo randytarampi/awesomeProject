@@ -39,6 +39,16 @@ stats = output[2]
 days = stats.changeNumberOfDays
 gap = stats.changeTotalGap
 
+schedule = output[3]
+
+monday = schedule.mondayTimeSlotAvailability
+tuesday = schedule.tuesdayTimeSlotAvailability
+wednesday = schedule.wednesdayTimeSlotAvailability
+thursday = schedule.thursdayTimeSlotAvailability
+friday = schedule.fridayTimeSlotAvailability
+saturday = schedule.saturdayTimeSlotAvailability
+sunday = schedule.sundayTimeSlotAvailability
+
 #1l, 4l, 5l, 78l, 147l
 
 #c2 = output[1]
