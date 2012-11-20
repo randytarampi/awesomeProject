@@ -67,11 +67,11 @@
 	<div id="sidebar">
 		{% block sidebar %}
 		<ul class="side">
-			<li>Current as of: {% now "g:i a" %}</li>
+			<li>Loaded at: {% now "g:i a" %}</li>
 			{% block extraside %}{% endblock %}
 			<li>{% now "F jS, Y" %}</li>
 			<li class="break"></li>
-			<li><a href="https://go.sfu.ca/">Student Information System</a></li>
+			<li><a href="https://go.sfu.ca/" target="_blank">Student Information System</a></li>
 		</ul>
 		{% endblock %}
 	</div>
