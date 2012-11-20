@@ -23,25 +23,25 @@ class Schedule:
     #def getTotalDays(self):
 
     #see if the timeslice conflicts with the current weekly schedule
-    	def checkTimeWeekConflict(self, startTime, endTime, weekday):
-		if weekday ==0:
-			return checkIfTimeDayConflict(startTime, endTime, self.mondayTimeSlotAvailability)
-		elif weekday ==1:
-		    	return checkIfTimeDayConflict(startTime, endTime, self.tuesdayTimeSlotAvailability)
-		elif weekday ==2:
-		    	return checkIfTimeDayConflict(startTime, endTime, self.wednesdayTimeSlotAvailability)
+    	#def checkTimeWeekConflict(self, startTime, endTime, weekday):
+#		if weekday ==0:
+#			return checkIfTimeDayConflict(startTime, endTime, self.mondayTimeSlotAvailability)#
+#		elif weekday ==1:
+#		    	return checkIfTimeDayConflict(startTime, endTime, self.tuesdayTimeSlotAvailability)
+#		elif weekday ==2:
+#		    	return checkIfTimeDayConflict(startTime, endTime, self.wednesdayTimeSlotAvailability)
 	    
-		elif weekday ==3:
-		    	return checkIfTimeDayConflict(startTime, endTime, self.thursdayTimeSlotAvailability)
+#		elif weekday ==3:
+#		    	return checkIfTimeDayConflict(startTime, endTime, self.thursdayTimeSlotAvailability)
 
-		elif weekday ==4:
-		    	return checkIfTimeDayConflict(startTime, endTime, self.fridayTimeSlotAvailability)
+#		elif weekday ==4:
+#		    	return checkIfTimeDayConflict(startTime, endTime, self.fridayTimeSlotAvailability)
 
-		elif weekday ==5:
-		    	return checkIfTimeDayConflict(startTime, endTime, self.saturdayTimeSlotAvailability)
+#		elif weekday ==5:
+#		    	return checkIfTimeDayConflict(startTime, endTime, self.saturdayTimeSlotAvailability)
 
-		elif weekday ==6:
-		    	return checkIfTimeDayConflict(startTime, endTime, self.sundayTimeSlotAvailability)
+#		elif weekday ==6:
+#		    	return checkIfTimeDayConflict(startTime, endTime, self.sundayTimeSlotAvailability)
 	def checkTimeWeekConflictCampus(self, startTime, endTime, weekday, campus):
 		if weekday ==0:
 			return checkIfTimeDayConflictV2(startTime, endTime, self.mondayTimeSlotAvailability, campus)
@@ -126,23 +126,19 @@ class Schedule:
 			totalDays += 1
 		if len(list(set(listtocompare) & set(self.sundayTimeSlotAvailability))) != 0:
 			totalDays += 1
-		#if 1 in self.mondayTimeSlotAvailability or 2 in self.mondayTimeSlotAvailability:
-		#	totalDays += 1
-		#if 1 in self.tuesdayTimeSlotAvailability or 2 in self.tuesdayTimeSlotAvailability:
-		#    	totalDays += 1
-		#if 1 in self.wednesdayTimeSlotAvailability or 2 in self.wednesdayTimeSlotAvailability:
-		#    	totalDays += 1
-		#if 1 in self.thursdayTimeSlotAvailability or 2 in self.thursdayTimeSlotAvailability:
-		#    	totalDays += 1
-		#if 1 in self.fridayTimeSlotAvailability or 2 in self.fridayTimeSlotAvailability:
-		#    	totalDays += 1
-		#if 1 in self.saturdayTimeSlotAvailability or 2 in self.saturdayTimeSlotAvailability:
-		#   	 totalDays += 1
-		#if 1 in self.sundayTimeSlotAvailability or 2 in self.sundayTimeSlotAvailability:
-		#   	 totalDays += 1
-		#print totalDays
 		return totalDays
     
+	def getTotalCrossCampusTravels(self):
+		weekTotalCampusTravels = 0
+		weekTotalCampusTravels += getNumberCampusTripsForDay(self.mondayTimeSlotAvailability)
+		weekTotalCampusTravels += getNumberCampusTripsForDay(self.tuesdayTimeSlotAvailability)
+		weekTotalCampusTravels += getNumberCampusTripsForDay(self.wednesdayTimeSlotAvailability)
+		weekTotalCampusTravels += getNumberCampusTripsForDay(self.thursdayTimeSlotAvailability)
+		weekTotalCampusTravels += getNumberCampusTripsForDay(self.fridayTimeSlotAvailability)
+		weekTotalCampusTravels += getNumberCampusTripsForDay(self.saturdayTimeSlotAvailability)
+		weekTotalCampusTravels += getNumberCampusTripsForDay(self.sundayTimeSlotAvailability)
+		return weekTotalCampusTravels
+
     	def totalPurge(self):
 		self.mondayTimeSlotAvailability = [0] * 144
 		self.tuesdayTimeSlotAvailability = [0] * 144
@@ -215,7 +211,7 @@ def checkIfTimeDayConflictV2(startTime, endTime, timeSlotArray, campus):
 	#vancouver
 	elif campus == 3:
 	        for i in range (startTime, endTime+1):
-	                if timeSlotArray[i] != 0 and timeSlotArray[i] != 8 :
+	                if timeSlotArray[i] != 0 and timeSlotArray[i] != 9 :
 	                        #here the timeslot can = 0 or ... 4
 	                        return True
 	        return False
@@ -235,33 +231,6 @@ def checkIfTimeDayConflictV2(startTime, endTime, timeSlotArray, campus):
 	#check ot make sure that we can get to this course...
 
 	#check that we can get from it... i.e. if we have courses afterwards taht we can 
-
-
-#start time will be 
-def checkIfTimeDayConflictInterCampus(startTime, endTime, timeSlotArray, campus):
-	if campus == 1:
-	        for i in range (startTime, endTime+1):
-	                if timeSlotArray[i] != 0 and timeSlotArray[i] != 4 :
-	                        #here the timeslot can = 0 or ... 4
-	                        return True
-	        return False
-	#surrey
-	elif campus == 2:
-	        for i in range (startTime, endTime+1):
-	                if timeSlotArray[i] != 0 and timeSlotArray[i] != 6 :
-	                        #here the timeslot can = 0 or ... 4
-	                        return True
-	        return False
-#...
-	#vancouver
-	elif campus == 3:
-	        for i in range (startTime, endTime+1):
-	                if timeSlotArray[i] != 0 and timeSlotArray[i] != 8 :
-	                        #here the timeslot can = 0 or ... 4
-	                        return True
-	        return False
-	else:
-		return False
 
 #burnaby
 #if campus == 0:
@@ -315,6 +284,7 @@ def setSlotThroughCampus(startTime, endTime, timeSlotArray, campus):
 		for x in range (startTime, endTime+1):
 			timeSlotArray[x] = 7
 		for x in range (endTime+1, endTime+7):
+			if timeSlotArray[x] == 0:				
 				timeSlotArray[x] = 6
 	elif campus == 3:
 		for x in range (startTime, endTime+1):
@@ -355,8 +325,7 @@ def unlockSlotThroughCampus(startTime, endTime, timeSlotArray, campus):
 			timeSlotArray[x+6] = 9
 
 
-def lockSlotThrough(startTime, endTime, timeSlotArray):
-	print "locking non campus"	
+def lockSlotThrough(startTime, endTime, timeSlotArray):	
 	for x in range (startTime, endTime+1):
 		timeSlotArray[x] = 2
 
@@ -390,5 +359,51 @@ def getTimeGapForDay(timeSlotArray):
 			if checkSlot(i, timeSlotArray) not in [0, 3, 6, 9]:
                 		marker = i
     	return totalGap
-        
+#finds the number of campuses we travel to in a day
+
+def getNumberCampusesForDay(timeSlotArray):
+	totalCampuses = 0 
+	if 4 in timeSlotArray or 5 in timeSlotArray:
+		totalCampuses += 1
+	if 7 in timeSlotArray or 8 in timeSlotArray:
+		totalCampuses += 1
+	if 10 in timeSlotArray or 11 in timeSlotArray:
+		totalCampuses += 1
+	return totalCampuses
+
+
+def getNumberCampusTripsForDay(timeSlotArray):
+	totalCampusTrips = 0 
+	burnabyFlag = False #whether or not we are in burnaby
+	surreyFlag = False #whether or not we are in surrey
+	vancouverFlag = False #whether or not we are in vancouver
+	for i in range (0, len(timeSlotArray)):
+		if timeSlotArray[i] in [4,5]:
+			if burnabyFlag == False:#if we just arrived in buraby
+				burnabyFlag = True#let the system know we are in burnaby		
+				if surreyFlag == True:
+					surreyFlag = False
+					totalCampusTrips += 1 # we just travelled from surrey to burnaby
+				elif vancouverFlag == True:			
+					vancouverFlag = False
+					totalCampusTrips += 1 # we just travelled from vancouver to burnaby
+		elif timeSlotArray[i] in [7,8]: 
+			if surreyFlag == False:#if we just arrived in surrey
+				surreyFlag = True#let the system know we are in surrey		
+				if burnabyFlag == True:
+					burnabyFlag = False
+					totalCampusTrips += 1 # we just travelled from  burnaby to surrey
+				elif vancouverFlag == True:			
+					vancouverFlag = False
+					totalCampusTrips += 1 # we just travelled from vancouver to surrey
+		elif timeSlotArray[i] in [10,11]:
+			if vancouverFlag == False:#if we just arrived in vancouver
+				vancouverFlag = True#let the system know we are in surrey		
+				if burnabyFlag == True:
+					burnabyFlag = False
+					totalCampusTrips += 1 # we just travelled from burnaby to vancouver 
+				elif surreyFlag == True:			
+					surreyFlag = False
+					totalCampusTrips += 1 # we just travelled from surrey to vancouver 
+	return totalCampusTrips
 

@@ -41,7 +41,7 @@ def functionForRandy(numberOfCourses, listofCourses):
         outPutListOfCutCourses.append(outputCourse)
     #print "size of output =" + str(len(outPutListOfCourses))
     #print "new newlistcourse = " + str(newListOfCourses[0])
-    print "size of poolcut =" + str(len(poolOfCutCourses))
+    #print "size of poolcut =" + str(len(poolOfCutCourses))
     #return outPutListOfCourses
     largerOutputArray = []
     largerOutputArray.append(outPutListOfLockedCourses)
@@ -49,7 +49,8 @@ def functionForRandy(numberOfCourses, listofCourses):
     #Schedule Stats
     TotalDays = schedule.getTotalDays()
     TotalTimeGap = schedule.getTotalTimeGap()
-    currentChoiceStats = ChoiceStats(TotalDays, TotalTimeGap)
+    crossCampusTravels = schedule.getTotalCrossCampusTravels()
+    currentChoiceStats = ChoiceStats(TotalDays, TotalTimeGap, crossCampusTravels)
     largerOutputArray.append(currentChoiceStats)
     largerOutputArray.append(schedule)
     return largerOutputArray
@@ -81,14 +82,12 @@ def convertCourseModelToCourseObject(inputCourse):
 
 def convertCampusModelToInt(campus):
     if campus == "BRNBY":
-	print "setting Burnaby course"
 	return 1
     if campus == "SURRY":
 	return 2
     if campus == "VANCR" or campus == "GNWC" :
 	return 3
     else :
-	print "setting Course to be neutral"
 	return 0
 
 #converts a meeting time from the table into a meeting time object that we can use it in the scheduling algorithm
@@ -152,6 +151,8 @@ def lockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
 	    schedule.lockMeetingTimeCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus)
         poolOfLockedCourses.append(course)
         poolOfPotentialCourses.remove(course)
+    else:
+	print "failed to lock course"
 
 #unlocks the coures from the schedule (time is freed and the course is removed from locked courses)
 def unlockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
@@ -162,7 +163,7 @@ def unlockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
 	campus = course.campus
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
-           # schedule.unlockMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)	
+            #schedule.unlockMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)	
 	    schedule.unlockMeetingTimeCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus)
         poolOfPotentialCourses.append(course)
         poolOfLockedCourses.remove(course)
@@ -207,11 +208,10 @@ def updateCleanPotentialCourses(poolOfPotentialCourses, poolOfCutCourses, schedu
 
 #This is the central algorithm
 # it requires:
-
-#pool of courses the user is interested in
-#pool of locked courses for a schedule
-#a "schedule" object to handle the time grid
-#the number of courses a student wants to take
+	#pool of courses the user is interested in
+	#pool of locked courses for a schedule
+	#a "schedule" object to handle the time grid
+	#the number of courses a student wants to take
 def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, poolOfCutCourses, maxSize):
     if len(poolOfLockedCourses) < maxSize:
 	#print "interBehe We have the right size" 
@@ -231,7 +231,8 @@ def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, poolO
             
                 newTotalDays = schedule.getTotalDays()
                 newTotalTimeGap = schedule.getTotalTimeGap()
-                currentChoiceStats = ChoiceStats(newTotalDays, newTotalDays)
+		newCrossCampusTravels = schedule.getTotalCrossCampusTravels()
+                currentChoiceStats = ChoiceStats(newTotalDays, newTotalDays, newCrossCampusTravels)
                 choiceStatsList.append(currentChoiceStats)
                 #free certain course
                 freeCourse(courseWeTryToAdd, schedule)
@@ -245,13 +246,19 @@ def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, poolO
             for i in range (1, len(poolOfPotentialCourses)):
                 currentChoiceStats = choiceStatsList[i]
                 # find the best course
-                if currentChoiceStats.changeNumberOfDays <= currentBestChoiceStats.changeNumberOfDays:
-                    if currentChoiceStats.changeNumberOfDays < currentBestChoiceStats.changeNumberOfDays:
+                if currentChoiceStats.numberOfDays <= currentBestChoiceStats.numberOfDays:
+                    if currentChoiceStats.numberOfDays < currentBestChoiceStats.numberOfDays:
                         currentBestChoiceStats = currentChoiceStats;
                         currentPositionOfChoice = i;
-                    elif (currentChoiceStats.changeTotalGap < currentBestChoiceStats.changeTotalGap):
+                    elif (currentChoiceStats.crossCampusTravels <= currentBestChoiceStats.crossCampusTravels):
                         currentBestChoiceStats = currentChoiceStats
                         currentPositionOfChoice = i
+			if (currentChoiceStats.crossCampusTravels < currentBestChoiceStats.crossCampusTravels):
+                            currentBestChoiceStats = currentChoiceStats
+                            currentPositionOfChoice = i
+		    	elif (currentChoiceStats.totalGap < currentBestChoiceStats.totalGap):
+                            currentBestChoiceStats = currentChoiceStats
+                            currentPositionOfChoice = i
             #get the Course that has risen above all others and solidify its position in the schedule
             courseThatHasRisenAboveAllOthers = poolOfPotentialCourses[currentPositionOfChoice]
             #also make sure to update here....

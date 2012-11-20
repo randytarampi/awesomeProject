@@ -36,8 +36,9 @@ mt4 = MeetingTime.objects.filter(course = c4.id)
 mt5 = MeetingTime.objects.filter(course = c5.id)
 
 stats = output[2]
-days = stats.changeNumberOfDays
-gap = stats.changeTotalGap
+days = stats.numberOfDays
+gap = stats.totalGap
+travels = stats.crossCampusTravels
 
 schedule = output[3]
 
@@ -48,6 +49,11 @@ thursday = schedule.thursdayTimeSlotAvailability
 friday = schedule.fridayTimeSlotAvailability
 saturday = schedule.saturdayTimeSlotAvailability
 sunday = schedule.sundayTimeSlotAvailability
+
+
+c = Course.objects.get(id = 2562)
+ac = convertCourseModelToCourseObject(c)
+s = Schedule()
 
 #1l, 4l, 5l, 78l, 147l
 
