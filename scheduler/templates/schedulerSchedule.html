@@ -34,7 +34,7 @@
 				<li>Lecture Times:</li>
 				<ul>
 					{% for meetingTime in optimalMeetingTimes %}
-						{% if meetingTime.course == course and meetingTime.type == "LEC" %}
+						{% if meetingTime.room and meetingTime.course == course and meetingTime.type == "LEC" %}
 							<li>{{ meetingTime.room }} - {{ meetingTime }}</li>
 						{% endif %}
 					{% endfor %}
@@ -50,8 +50,8 @@
 				<li>Exam Times:</li>
 				<ul>
 					{% for meetingTime in optimalMeetingTimes %}
-						{% if meetingTime.course == course and meetingTime.type == "MID" or meetingTime.type == "EXAM" %}
-							<li>{% if meetingTime.type == "MID" %} 
+						{% if meetingTime.course == course and meetingTime.type == "MIDT" or meetingTime.type == "EXAM" %}
+							<li>{% if meetingTime.type == "MIDT" %} 
 									Midterm - 
 								{% else %}
 									Final - 
