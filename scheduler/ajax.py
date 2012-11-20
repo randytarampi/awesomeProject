@@ -1,7 +1,10 @@
+import json
+from itertools import chain
 from django.shortcuts import get_object_or_404, render_to_response
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
 from scheduler.models import *
+from scheduler.schedulingalg import *
 
 def listOfSubjects():
 	allSubjects = Course.objects.values_list('subject', flat=True).distinct()
@@ -15,7 +18,21 @@ def listOfSubjects():
 def generateSchedule(request, form):
 	dajax = Dajax()
 	dajax.clear('#scheduleViewDiv', 'innerHTML')
-	scheduleInfo = render_to_response('schedulerSchedule.html').content
+
+	# Get the data
+	selectedCourses = Course.objects.none()
+	numClasses =  int(form['numClasses'])
+	for i in range(numClasses):
+		selectedCourses = selectedCourses | Course.objects.filter(subject=form['courseSubject%i' % (i+1)], number=form['courseNumber%i' % (i+1)])
+
+	# Process the data
+	optimalCourses = functionForRandy(numClasses, selectedCourses)
+	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)
+	optimalMeetingTimes = MeetingTime.objects.filter(course__in = optimalCourses)
+	optimalData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes}
+	
+	# Serve the data
+	scheduleInfo = render_to_response('schedulerSchedule.html', optimalData).content
 	dajax.assign('#scheduleViewDiv', 'innerHTML', scheduleInfo)
 	return dajax.json()
 
@@ -24,7 +41,7 @@ def listOfNumbers(request, option, idNum):
 	dajax = Dajax()
 	out = []
 
-	daList = Course.objects.filter(subject=option).values_list('number', flat=True)
+	daList = Course.objects.filter(subject=option).values_list('number', flat=True).distinct()
 	for i in daList:
 		out.append("<option value='%s'>%s</option>" % (i, i))
 
@@ -38,7 +55,7 @@ def updatingCourseForm(request, option):
 	out = []
 	# several select tags are made, each with a complete list of subjects with value = 1 through aClass
 	for aClass in range(1, int(option)+1):
-		out.append('<div>Course %s: <select id="courseSubject%s" onchange="Dajaxice.scheduler.listOfNumbers(Dajax.process, {\'option\':this.value, \'idNum\':\'#courseNumber%s\'})">%s</select> &nbsp<select id="courseNumber%s"></select></div>' % (str(aClass), str(aClass), str(aClass), listOfSubjects(), str(aClass)))
+		out.append('<div>Course %s: <select id="courseSubject%s" name="courseSubject%s" onchange="Dajaxice.scheduler.listOfNumbers(Dajax.process, {\'option\':this.value, \'idNum\':\'#courseNumber%s\'})">%s</select> &nbsp<select id="courseNumber%s" name="courseNumber%s"></select></div>' % (str(aClass), str(aClass), str(aClass), str(aClass), listOfSubjects(), str(aClass), str(aClass)))
 
 	dajax.assign('#listClasses', 'innerHTML', ''.join(out))
 	return dajax.json()

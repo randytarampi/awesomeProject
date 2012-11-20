@@ -16,8 +16,8 @@ COMPONENT_CHOICES = (
 
 CAMPUS_CHOICES = (
 	('BRNBY', 'Burnaby'),
-      	('SURRY', 'Surrey'),
-       	('VANCR', 'Vancouver'),
+	('SURRY', 'Surrey'),
+	('VANCR', 'Vancouver'),
 	('OFFST', 'Offsite'),
 	('METRO', 'Metro Vancouver'),
 	('GNWC', 'Great Northern Way'),
@@ -54,7 +54,7 @@ class Course (models.Model):
 	component = models.CharField(max_length=3, choices=COMPONENT_CHOICES)
 	number = models.CharField(max_length = 10)
 	semester = models.CharField(max_length = 4, choices=SEMESTER_CHOICES) 
-        campus = models.CharField(max_length=5, choices=CAMPUS_CHOICES)
+	campus = models.CharField(max_length=5, choices=CAMPUS_CHOICES)
 	subject = models.CharField(max_length=10) #cmpt etc...
 
 	def __unicode__(self):
@@ -70,7 +70,7 @@ class Instructor (models.Model):
 
 	def __unicode__(self):
 		"""
-        	Return the instructor's name.
+        Return the instructor's name.
 		"""
 		return self.name
 
@@ -86,6 +86,6 @@ class MeetingTime (models.Model):
 
 	def __unicode__(self):
 		"""
-        	Return the instructor's name.
+        Return the Meeting Time.
 		"""
 		return WEEKDAY_CHOICES[self.weekday][1] + " - " + str(self.start_time) + " to " + str(self.end_time)

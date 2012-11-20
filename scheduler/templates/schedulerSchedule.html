@@ -1,6 +1,39 @@
 <h1>View Your Schedule</h1>
 <div id="scheduleViewList">
-{% block scheduleList %}{% endblock %}
+{% block scheduleList %}
+{% if optimalCourses %}
+	<ol>
+	{% for course in optimalCourses %}
+		<li>{{ course }}</li>
+		<ul>
+		{% for instructor in optimalInstructors %}
+			{% if instructor.course == course %}
+				<li>Instructor: {{ instructor }}</li>
+			{% endif %}
+		{% endfor %}
+			<li>Lecture Times:</li>
+			<ul>
+				{% for meetingTime in optimalMeetingTimes %}
+					{% if meetingTime.course == course and meetingTime.type == "LEC" %}
+						<li>{{ meetingTime }}</li>
+					{% endif %}
+				{% endfor %}
+			</ul>
+			<li>Other Times:</li>
+			<ul>
+				{% for meetingTime in optimalMeetingTimes %}
+					{% if meetingTime.course == course and meetingTime.type != "LEC" %}
+						<li>{{meetingTime.type}} - {{ meetingTime }}</li>
+					{% endif %}
+				{% endfor %}
+			</ul>
+		</ul>
+	{% endfor %}
+	</ol>
+{% else %}
+	<span class="error">Please specify a set of classes.</span>
+{% endif %}
+{% endblock %}
 </div>
 <div id="scheduleViewWeek">
 <h2>Your Typical Week</h2>
