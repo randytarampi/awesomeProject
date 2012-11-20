@@ -6,7 +6,7 @@ from dajax.core import Dajax
 from scheduler.models import *
 from scheduler.schedulingalg import *
 
-def ListOfDays():
+def listOfDays():
 	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 	outString = []
 	for i in range(0, len(listOfDays)):
