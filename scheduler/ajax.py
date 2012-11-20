@@ -72,11 +72,12 @@ def generateSchedule(request, form):
 
 	# Process the data
 	optimalCourses = functionForRandy(numClasses, selectedCourses)[0]
-	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)
-	optimalLectureTimes = MeetingTime.objects.filter(course__in = optimalCourses, type="LEC")
-	optimalLabTimes = MeetingTime.objects.filter(course__in = optimalCourses, type="LAB")
-	optimalTestTimes = MeetingTime.objects.filter(course__in = optimalCourses, type="EXAM") | MeetingTime.objects.filter(course__in = optimalCourses, type="MIDT")
-	optimalData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalLectureTimes': optimalLectureTimes, 'optimalLabTimes': optimalLabTimes, 'optimalTestTimes': optimalTestTimes}
+	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)	
+	optimalMeetingTimes = MeetingTime.objects.filter(course__in = optimalCourses)
+	optimalLectureTimes = optimalMeetingTimes.filter(type="LEC")
+	optimalLabTimes = optimalMeetingTimes.filter(type="LAB")
+	optimalTestTimes = optimalMeetingTimes.filter(type="EXAM") | optimalMeetingTimes.filter(type="MIDT")
+	optimalData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'optimalLectureTimes': optimalLectureTimes, 'optimalLabTimes': optimalLabTimes, 'optimalTestTimes': optimalTestTimes}
 	
 	# Serve the data
 	scheduleInfo = render_to_response('schedulerSchedule.html', optimalData).content
