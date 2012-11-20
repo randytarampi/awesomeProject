@@ -16,6 +16,7 @@ def functionForRandy(numberOfCourses, listofCourses):
     schedule = Schedule()
     poolOfLockedCourses = []
     newListOfCourses = []
+    poolOfCutCourses = []
     for i in range (0, len(listofCourses)):
         newCourse = convertCourseModelToCourseObject(listofCourses[i])
 	if (newCourse != False):
@@ -26,18 +27,26 @@ def functionForRandy(numberOfCourses, listofCourses):
     newCourse = newListOfCourses[0]
     newMeetingTimes = newCourse.meetingTimes
     for i in range (0, numberOfCourses):
-        iterateBEHEMOTH(schedule, poolOfLockedCourses, newListOfCourses, numberOfCourses)
-    outPutListOfCourses = []
+        iterateBEHEMOTH(schedule, poolOfLockedCourses, newListOfCourses, poolOfCutCourses, numberOfCourses)
+    outPutListOfLockedCourses = []
     #print "size of lockedCourses =" + str(len(poolOfLockedCourses))
     for i in range (0, len(poolOfLockedCourses)):
 	temporaryID = poolOfLockedCourses[i].courseID
         outputCourse = Course.objects.get(id = temporaryID)
-        outPutListOfCourses.append(outputCourse)
+        outPutListOfLockedCourses.append(outputCourse)
+    outPutListOfCutCourses = []
+    for i in range (0, len(poolOfCutCourses)):
+	temporaryID = poolOfCutCourses[i].courseID
+        outputCourse = Course.objects.get(id = temporaryID)
+        outPutListOfCutCourses.append(outputCourse)
     #print "size of output =" + str(len(outPutListOfCourses))
     #print "new newlistcourse = " + str(newListOfCourses[0])
-    
-    return outPutListOfCourses
-
+    print "size of poolcut =" + str(len(poolOfCutCourses))
+    #return outPutListOfCourses
+    largerOutputArray = []
+    largerOutputArray.append(outPutListOfLockedCourses)
+    largerOutputArray.append(outPutListOfCutCourses)
+    return largerOutputArray
 # need a function that handles the case when the scheduler can't handle a certain course
 
 #Turns a course model object into a course object that we can use in the scheduler
@@ -73,14 +82,6 @@ def convertCampusModelToInt(campus):
 	return 3
     else :
 	return 0
-#CAMPUS_CHOICES = (
-#	('BRNBY', 'Burnaby'),covered
-#      	('SURRY', 'Surrey'),covered
-#       ('VANCR', 'Vancouver'),covered
-#	('OFFST', 'Offsite'),
-#	('METRO', 'Metro Vancouver'), weird to handle
-#	('GNWC', 'Great Northern Way'),covered
-#)
 
 #converts a meeting time from the table into a meeting time object that we can use it in the scheduling algorithm
 #Converts : meeting time from database --> meetingtime usable by scheduler
@@ -154,7 +155,7 @@ def unlockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
 def setCourse(course, schedule):
     #print "Setting Course"
     if (checkCourseConflict(course, schedule) == False):
-        print "There is no conflict for set"
+        #print "There is no conflict for set"
         # Set the course
         for i in range (0, len(course.meetingTimes)):
             meetingTime = course.meetingTimes[i]
@@ -172,7 +173,7 @@ def freeCourse(course, schedule):
             schedule.unlockMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)
 
 #find all courses that currently conflict with our schedule and remove them from the list of potential courses
-def updateCleanPotentialCourses(poolOfPotentialCourses, schedule):
+def updateCleanPotentialCourses(poolOfPotentialCourses, poolOfCutCourses, schedule):
     listOfCoursesToDelete = []
     #build a list of courses for us to remove
     for i in range (0, len(poolOfPotentialCourses)):
@@ -183,7 +184,7 @@ def updateCleanPotentialCourses(poolOfPotentialCourses, schedule):
     for i in range (0, len(listOfCoursesToDelete)):
         courseToDelete = listOfCoursesToDelete[i]
         poolOfPotentialCourses.remove(courseToDelete)
-
+	poolOfCutCourses.append(courseToDelete)
 
 #This is the central algorithm
 # it requires:
@@ -192,12 +193,12 @@ def updateCleanPotentialCourses(poolOfPotentialCourses, schedule):
 #pool of locked courses for a schedule
 #a "schedule" object to handle the time grid
 #the number of courses a student wants to take
-def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, maxSize):
+def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, poolOfCutCourses, maxSize):
     if len(poolOfLockedCourses) < maxSize:
 	#print "interBehe We have the right size" 
         orignialTimeGap = schedule.getTotalTimeGap()
         originalNumberDays =  schedule.getTotalDays()
-        updateCleanPotentialCourses(poolOfPotentialCourses, schedule);
+        updateCleanPotentialCourses(poolOfPotentialCourses, poolOfCutCourses, schedule);
         
         choiceStatsList = []
 	
@@ -277,65 +278,6 @@ def convertDayStringToDayInt(inputString):
     elif inputString == "Sunday":
         return 6
 
-
-def simpleTest():
-    testinput = []
-    c = Course.objects.get(id = 1L)
-    testinput.append(c)
-    return functionForRandy(1, testinput)
-    #output = functionForRandy(1, testinput)
-
-def largeTest():
-    return functionForRandy(5, Course.objects.all())
-def conradTest():
-    testCourseList = []
-    testCourse1 = Course.objects.get(id = 1L)
-    testCourseList.append(testCourse1)    
-    testCourse2 = Course.objects.get(id = 4L)
-    testCourseList.append(testCourse2)
-    #print testCourseList
-    #print functionForRandy(2, testCourseList)
-    return functionForRandy(2, testCourseList)
-
-#output = conradTest()
-#simpleTest()
-output = largeTest()
-c1 = output[0]
-c2 = output[1]
-c3 = output[2]
-c4 = output[3]
-c5 = output[4]
-mt1 = MeetingTime.objects.filter(course = c1.id)
-mt2 = MeetingTime.objects.filter(course = c2.id)
-mt3 = MeetingTime.objects.filter(course = c3.id)
-mt4 = MeetingTime.objects.filter(course = c4.id)
-mt5 = MeetingTime.objects.filter(course = c5.id)
-
-#1l, 4l, 5l, 78l, 147l
-
-#c2 = output[1]
-#print "howdy"
-#c = Course.objects.get(id = 1L)
-#testinput = []
-#testinput.append(c)
-#functionForRandy(1, testinput)
-#output = functionForRandy(1, testinput)
-
-#dead code
-
-#s = Schedule()
-#s.totalPurge()
-#c = Course()
-#m1 = MeetingTime(1,2,1)
-#c.addMeetingTimes(m1)
-#lockCourse(c, s)
-#poc = []
-#generateCourses(poc)
-#potc = poc
-#lockc = []
-#iterateBEHEMOTH(s, lockc, potc, 2)
-#iterateBEHEMOTH(s, lockc, potc, 2) 
-#testMT = convertStringToMeetingTime("<MeetingTime: Monday - 10:30:00 to 12:20:00>")
 
 
 
