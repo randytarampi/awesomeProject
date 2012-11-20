@@ -16,7 +16,7 @@ function generateSchedule() {
 	<form id="scheduleForm" method="POST">
 	{% csrf_token %}
 		<span>How many classes are you considering?
-			<select name="numClasses" onchange="Dajaxice.scheduler.updatingCourseForm(Dajax.process, {'option':this.value})" size="1">
+			<select id="numClasses" name="numClasses" onchange="Dajaxice.scheduler.updatingCourseForm(Dajax.process, {'option':this.value})" size="1">
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
@@ -32,13 +32,13 @@ function generateSchedule() {
 		<div id="listClasses" onchange="">
 		</div>
 		<span>Of these considered classes, how many would you like to take?
-			<select name="numTaking" onchange="" size="1">
-				<option value="0">1</option>
-				<option value="1">2</option>
-				<option value="2">3</option>
-				<option value="3">4</option>
-				<option value="4">5</option>
-				<option value="5">6</option>
+			<select id="numTaking" name="numTaking" onchange="" size="1">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
 			</select>
 		</span>
 		<br>

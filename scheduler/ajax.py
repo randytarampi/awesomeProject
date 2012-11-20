@@ -21,12 +21,12 @@ def generateSchedule(request, form):
 
 	# Get the data
 	selectedCourses = Course.objects.none()
-	numClasses =  int(form['numClasses'])
+	numClasses =  int(form['numTaking'])
 	for i in range(numClasses):
 		selectedCourses = selectedCourses | Course.objects.filter(subject=form['courseSubject%i' % (i+1)], number=form['courseNumber%i' % (i+1)])
 
 	# Process the data
-	optimalCourses = functionForRandy(numClasses, selectedCourses)
+	optimalCourses = functionForRandy(numClasses, selectedCourses)[0]
 	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)
 	optimalMeetingTimes = MeetingTime.objects.filter(course__in = optimalCourses)
 	optimalData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes}
