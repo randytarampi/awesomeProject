@@ -1,4 +1,4 @@
-from schedulingalg import *
+from algorithm import *
 
 
 def simpleTest():
