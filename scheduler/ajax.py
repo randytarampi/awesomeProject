@@ -6,6 +6,41 @@ from dajax.core import Dajax
 from scheduler.models import *
 from scheduler.schedulingalg import *
 
+def listOfDays():
+	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+	outString = []
+	for i in range(0, len(listOfDays)):
+		outString.append("<option value='%s'>%s</option>" % (str(i), listOfDays[i]))
+	return ''.join(outString)
+
+def listOfStarts():
+	listOfStarts = []
+	outString = []
+	for i in range(8, 22):
+		i = i % 12
+		if i == 0:
+			i = 12
+		j = str(i)
+		j+=':30'
+		listOfStarts.append(j)
+	for i in range(0, len(listOfStarts)):
+		outString.append("<option value='%s'>%s</option>" % (str(i), listOfStarts[i]))
+	return ''.join(outString)
+
+def listOfEnds():
+	listOfEnds = []
+	outString = []
+	for i in range(9, 23):
+		i = i % 12
+		if i == 0:
+			i = 12
+		j = str(i)
+		j+=':20'
+		listOfEnds.append(j)
+	for i in range(0, len(listOfEnds)):
+		outString.append("<option value='%s'>%s</option>" % (str(i), listOfEnds[i]))
+	return ''.join(outString)
+
 def listOfSubjects():
 	allSubjects = Course.objects.values_list('subject', flat=True).distinct()
 	datList = []
@@ -13,6 +48,16 @@ def listOfSubjects():
 	for i in allSubjects:
 		datList.append("<option value='%s'>%s</option>" % (i, i))
 	return ''.join(datList)
+
+@dajaxice_register
+def getUnavailability(request):
+	dajax = Dajax()
+
+	out = []
+	i = 1
+	out.append('<div>Period of Unavailability %s: <select id="unavailableDay%s" name="unavailableDay%s">%s</select> at <select id="unavailableStart%s" name="unavailableStart%s">%s</select> to <select id="unavailableEnd%s" name="unavailableEnd%s">%s</select></div>' % (str(i), str(i), str(i), listOfDays(), str(i), str(i),listOfStarts(), str(i), str(i), listOfEnds()))
+	dajax.assign('#unavailable', 'innerHTML', ''.join(out))
+	return dajax.json()
 
 @dajaxice_register
 def generateSchedule(request, form):
@@ -27,11 +72,12 @@ def generateSchedule(request, form):
 
 	# Process the data
 	optimalCourses = functionForRandy(numClasses, selectedCourses)[0]
-	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)
-	optimalLectureTimes = MeetingTime.objects.filter(course__in = optimalCourses, type="LEC")
-	optimalLabTimes = MeetingTime.objects.filter(course__in = optimalCourses, type="LAB")
-	optimalTestTimes = MeetingTime.objects.filter(course__in = optimalCourses, type="EXAM") | MeetingTime.objects.filter(course__in = optimalCourses, type="MIDT")
-	optimalData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalLectureTimes': optimalLectureTimes, 'optimalLabTimes': optimalLabTimes, 'optimalTestTimes': optimalTestTimes}
+	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)	
+	optimalMeetingTimes = MeetingTime.objects.filter(course__in = optimalCourses)
+	optimalLectureTimes = optimalMeetingTimes.filter(type="LEC")
+	optimalLabTimes = optimalMeetingTimes.filter(type="LAB")
+	optimalTestTimes = optimalMeetingTimes.filter(type="EXAM") | optimalMeetingTimes.filter(type="MIDT")
+	optimalData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'optimalLectureTimes': optimalLectureTimes, 'optimalLabTimes': optimalLabTimes, 'optimalTestTimes': optimalTestTimes}
 	
 	# Serve the data
 	scheduleInfo = render_to_response('schedulerSchedule.html', optimalData).content
@@ -61,7 +107,7 @@ def updatingCourseForm(request, option):
 
 	moreOut = []
 	#more stuff to render to the template. This renders the select tag before options are added to it.
-	moreOut.append("Of these considered classes, how many would you like to take?<select id=\"numTaking\" name=\"numTaking\" onchange=\"\" size=\"1\"></select>")
+	moreOut.append('Of these considered classes, how many would you like to take?<select id="numTaking" name="numTaking" onchange="Dajaxice.scheduler.getUnavailability(Dajax.process)" size="1"></select>')
 	dajax.assign('#numTakingSpan', 'innerHTML', ''.join(moreOut))
 
 	theList = []
