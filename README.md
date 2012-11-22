@@ -7,6 +7,8 @@ By: [Randy Tarampi](https://github.com/randytarampi), [Steven Evans](https://git
 
 We're making some sort of class schedule optimizer - it uses Django and will be located at http://cmpt470.csil.sfu.ca:9017
 
+Interested in what we had at our checkpoint evaluation? Check out the [checkpoint](https://github.com/randytarampi/awesomeProject/tree/checkpoint) tag.
+
 To Do:
 ------
 
