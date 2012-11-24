@@ -24,7 +24,7 @@
 {% block body %}
 
 <header>
-	{% block header %}<a href="http://www.sfu.ca"><img src="{{STATIC_PREFIX}}logo_main.gif"/></a>{% endblock %}
+	{% block header %}<a href="http://www.sfu.ca"><img src="{{STATIC_PREFIX}}logo_main.gif" alt="Simon Fraser University"/></a>{% endblock %}
 </header>
 
 <div id="disclaimer">
@@ -68,6 +68,8 @@
 			<li>Loaded at: {% now "g:i a" %}</li>
 			{% block extraside %}{% endblock %}
 			<li>{% now "F jS, Y" %}</li>
+			<li class="break"></li>
+			<li>Data for: Spring 2013</li>
 			<li class="break"></li>
 			<li><a href="https://go.sfu.ca/" target="_blank">Student Information System</a></li>
 		</ul>

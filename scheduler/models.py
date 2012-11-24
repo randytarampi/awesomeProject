@@ -42,7 +42,7 @@ TYPE_CHOICES = (
 
 SEMESTER_CHOICES = (
 	('1127', 'Fall 2012'),
-	('1131', 'Winter 2013'),
+	('1131', 'Spring 2013'),
 	('1134', 'Summer 2013'),
 	('1137', 'Fall 2013'),
 )
