@@ -82,6 +82,8 @@ def generateSchedule(request, form):
 	# Serve the data
 	scheduleInfo = render_to_response('schedulerSchedule.html', optimalData).content
 	dajax.assign('#scheduleViewDiv', 'innerHTML', scheduleInfo)
+	dajax.assign('#scheduleViewWeek', 'innerHTML', "You'll see a weekly calendar here")
+	dajax.assign('#scheduleViewExams', 'innerHTML', "You'll see at least one monthly calendar here")
 	return dajax.json()
 
 @dajaxice_register
