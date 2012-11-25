@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 
-{% load webdesign %}
-
 {% block content %}
-<h1>NOT A REAL SFU WEBSITE!!!</h1>
-{% lorem 6 p %}
+<h1>You're Looking for a Course Scheduler?</h1>
+<p>So, we don't have much here. What you probably want to see is <a href="{% url scheduler_index %}">here</a>. It sorta works, but it's pretty buggy - we're still testing things out with our optimization algorithm. Worried about the UI? Don't be - we're worried about it too. It'll probably change two or three times in the next week as we experiment with a few different ways of getting input and providing output, so yeah - we're just as worried as you probably are.</p>
+<p>We're actually pretty worried about the scope of the app. "Ambitious" and "original" were what we heard on our <a href="{{STATIC_PREFIX}}projectProposal.pdf">proposal</a>, but as far as the use of traditional web technologies (like HTML, CSS, JS, etc.) goes, we're worried about how much we should add to our app without falling into the trap of feature creep or otherwise losing cohesion by just layering on flashy trinkets. I guess we'll see what happens in two weeks.</p>
 {% endblock %}

@@ -1,13 +1,7 @@
 {% extends "schedulerBase.html" %}
 
 {% block extrajs %}
-<script type="text/javascript">
-function generateSchedule() {
-	data = $('#scheduleForm').serializeObject();
-	Dajaxice.scheduler.generateSchedule(Dajax.process, {'form': data});
-	return false;
-}
-</script>
+<script src="{{STATIC_PREFIX}}schedulerIndex.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
 
 {% block content %}

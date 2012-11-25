@@ -63,9 +63,17 @@ p {
 	margin: 8px;
 }
 
+ul.rejectedCourse {
+	display: none
+}
+
 ul.side {
 	padding: 4px 8px 4px 8px;
 	list-style-type: none;
+}
+
+ul.time {
+	display: none
 }
 
 li.break {

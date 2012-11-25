@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
 from scheduler.models import *
+from scheduler.views import *
 from scheduler.schedulingalg import *
 
 def listOfDays():
@@ -71,17 +72,23 @@ def generateSchedule(request, form):
 		selectedCourses = selectedCourses | Course.objects.filter(subject=form['courseSubject%i' % (i+1)], number=form['courseNumber%i' % (i+1)])
 
 	# Process the data
-	optimalCourses = functionForRandy(numClasses, selectedCourses)[0]
+	processedCourses = functionForRandy(numClasses, selectedCourses)
+	
+	optimalCourses = processedCourses[0]
 	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)	
-	optimalMeetingTimes = MeetingTime.objects.filter(course__in = optimalCourses)
-	optimalLectureTimes = optimalMeetingTimes.filter(type="LEC")
-	optimalLabTimes = optimalMeetingTimes.filter(type="LAB")
-	optimalTestTimes = optimalMeetingTimes.filter(type="EXAM") | optimalMeetingTimes.filter(type="MIDT")
-	optimalData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'optimalLectureTimes': optimalLectureTimes, 'optimalLabTimes': optimalLabTimes, 'optimalTestTimes': optimalTestTimes}
+	optimalMeetingTimes = MeetingTime.objects.filter(course__in = optimalCourses).order_by('type')
+	
+	rejectedCourses = processedCourses[1]
+	rejectedInstructors = Instructor.objects.filter(course__in = rejectedCourses)	
+	rejectedMeetingTimes = MeetingTime.objects.filter(course__in = rejectedCourses).order_by('type')
+	
+	processedData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'rejectedCourses': rejectedCourses, 'rejectedInstructors': rejectedInstructors, 'rejectedMeetingTimes': rejectedMeetingTimes}
 	
 	# Serve the data
-	scheduleInfo = render_to_response('schedulerSchedule.html', optimalData).content
+	scheduleInfo = render_to_response('schedulerSchedule.html', processedData).content
 	dajax.assign('#scheduleViewDiv', 'innerHTML', scheduleInfo)
+	dajax.assign('#scheduleViewWeek', 'innerHTML', "You'll see a weekly calendar here")
+	dajax.assign('#scheduleViewExams', 'innerHTML', "You'll see at least one monthly calendar here")
 	return dajax.json()
 
 @dajaxice_register

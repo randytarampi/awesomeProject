@@ -1,59 +1,69 @@
+{% load static %}{% get_static_prefix as STATIC_PREFIX %}
+<script src="{{STATIC_PREFIX}}schedulerSchedule.js" type="text/javascript" charset="utf-8"></script>
 <h1>View Your Schedule</h1>
 <div id="scheduleViewList">
-{% if optimalCourses %}
+	<ul>
+	{% for course in rejectedCourses %}
+		<li><a class="rejectedCourse" href=#>{{ course }} - {{ course.section }}</a> was Rejected</li>
+		<ul class="rejectedCourse course">
+		{% for instructor in rejectedInstructors %}
+			{% if instructor.course == course %}
+				<li>Instructor: {{ instructor }}</li>
+			{% endif %}
+		{% endfor %}
+			<li>Campus: {{ course.campusChoice }}</li>
+			<li><a class="rejectedTime" href="#">Meeting Times:</a></li>
+				<ul class="rejectedTime time">
+				{% for meetingTime in rejectedMeetingTimes %}
+					{% if meetingTime.course == course %}
+						{% if meetingTime.type == "LEC" or meetingTime.type == "LAB" %}
+							<li>{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} in {{ meetingTime.room }}</li>
+						{% else %}
+							<li class="exam">{{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
+						{% endif %}
+					{% endif %}
+				{% empty %}
+					<li>No meetings scheduled.</li>
+				{% endfor %}
+				</ul>
+		</ul>
+	{% endfor %}
+	</ul>
 	<ol>
 	{% for course in optimalCourses %}
-		<li>{{ course }}</li>
-		<ul>
+		<li><a class="optimalCourse" href="#">{{ course }} - {{ course.section }}</a></li>
+		<ul class="optimalCourse course">
 		{% for instructor in optimalInstructors %}
 			{% if instructor.course == course %}
 				<li>Instructor: {{ instructor }}</li>
 			{% endif %}
 		{% endfor %}
 			<li>Campus: {{ course.campusChoice }}</li>
-			<li>Section : {{ course.section }}</li>
-			{% if optimalLectureTimes %}
-				<li>Lecture Times:</li>
-				<ul>
-					{% for meetingTime in optimalLectureTimes %}
-						{% if meetingTime.room and meetingTime.course == course and meetingTime.type == "LEC" %}
-							<li>{{ meetingTime.room }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
-						{% endif %}
-					{% endfor %}
-				</ul>
-			{% endif %}
-			{% if optimalLabTimes %}
-				<li>Lab Times:</li>
-				<ul>
-					{% for meetingTime in optimalLabTimes %}
-						{% if meetingTime.course == course and meetingTime.type == "LAB" %}
-							<li>{{ meetingTime.room }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
-						{% endif %}
-					{% endfor %}
-				</ul>
-			{% endif %}
-			{% if optimalTestTimes %}
-				<li>Exam Times:</li>
-				<ul>
-					{% for meetingTime in optimalTestTimes %}
-						{% if meetingTime.course == course %}
+			<li><a class="optimalTime" href="#">Meeting Times:</a></li>
+				<ul class="optimalTime time">
+				{% for meetingTime in optimalMeetingTimes %}
+					{% if meetingTime.course == course %}
+						{% if meetingTime.type == "LEC" or meetingTime.type == "LAB" %}
+							<li>{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} in {{ meetingTime.room }}</li>
+						{% else %}
 							<li>{{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
 						{% endif %}
-					{% endfor %}
+					{% endif %}
+				{% empty %}
+					<li>No meetings scheduled.</li>
+				{% endfor %}
 				</ul>
-			{% endif %}
 		</ul>
+	{% empty %}
+		<span class="error">Please specify a set of classes.</span>
 	{% endfor %}
 	</ol>
-{% else %}
-	<span class="error">Please specify a set of classes.</span>
-{% endif %}
 </div>
-<div id="scheduleViewWeek">
 <h2>Your Typical Week</h2>
+<div id="scheduleViewWeek">
 {% block scheduleWeek %}{% endblock %}
 </div>
-<div id="scheduleViewExams">
 <h2>Your Exam Schedule</h2>
+<div id="scheduleViewExams">
 {% block scheduleExams %}{% endblock %}
 </div>
