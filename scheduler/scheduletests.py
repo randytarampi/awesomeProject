@@ -4,16 +4,16 @@ def simpleTest():
 	testinput = []
     	c = Course.objects.get(id = 1L)
     	testinput.append(c)
-    	return functionForRandy(1, testinput)
-    	#output = functionForRandy(1, testinput)
+    	return createOptimalSchedule(1, testinput)
+    	#output = createOptimalSchedule(1, testinput)
 
 def largeTest():
 	#Course.objects.filter(subject = "cmpt")
 
-    	#return createSchedule(5, Course.objects.all())
-	return createSchedule(5, Course.objects.all(), True)
-	#return createSchedule(5, Course.objects.filter(subject = "cmpt"), True)
-	#return createSchedule(4, Course.objects.filter(subject = "bisc"))
+    	#return createOptimalSchedule(5, Course.objects.all())
+	return createOptimalSchedule(5, Course.objects.all(), True)
+	#return createOptimalSchedule(5, Course.objects.filter(subject = "cmpt"), True)
+	#return createOptimalSchedule(4, Course.objects.filter(subject = "bisc"))
 def conradTest():
     	testCourseList = []
     	testCourse1 = Course.objects.get(id = 1L)
@@ -21,8 +21,8 @@ def conradTest():
     	testCourse2 = Course.objects.get(id = 4L)
     	testCourseList.append(testCourse2)
     	#print testCourseList
-    	#print createSchedule(2, testCourseList)
-    	return createSchedule(2, testCourseList, True)
+    	#print createOptimalSchedule(2, testCourseList)
+    	return createOptimalSchedule(2, testCourseList, True)
 
 #output = conradTest()
 #simpleTest()
@@ -66,8 +66,8 @@ s = Schedule()
 #c = Course.objects.get(id = 1L)
 #testinput = []
 #testinput.append(c)
-#functionForRandy(1, testinput)
-#output = functionForRandy(1, testinput)
+#createOptimalSchedule(1, testinput)
+#output = createOptimalSchedule(1, testinput)
 
 #dead code
 
