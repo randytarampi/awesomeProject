@@ -1,5 +1,4 @@
-from algorithm import *
-
+from scheduler.algorithm import *
 
 def simpleTest():
 	testinput = []

@@ -1,11 +1,8 @@
-import json
-from itertools import chain
-from django.shortcuts import get_object_or_404, render_to_response
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
 from scheduler.models import *
 from scheduler.views import *
-from scheduler.schedulingalg import *
+from scheduler.algorithm import *
 
 def listOfDays():
 	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']

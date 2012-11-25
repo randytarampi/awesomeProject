@@ -1,13 +1,11 @@
 #import schedule
-from datetime import datetime
-from schedule import *
-from course import *
-from choicestats import *
-from models import *
-from datetimeconverter import *
 import shlex
-
-
+from datetime import datetime
+from scheduler.schedule import *
+from scheduler.course import *
+from scheduler.choicestats import *
+from scheduler.models import *
+from scheduler.datetimeconverter import *
 
 # Main function
 #takes number of courses that the student wants,
