@@ -12,8 +12,8 @@ from scheduler.datetimeconverter import *
 # and a list of coursese the student is interested in and outputs a list of courses 
 #that will be in an optimal schedule
 #def functionForRandy(numberOfCourses, listofCourses):
-def functionForRandy(numberOfCourses, listofCourses, filterDistanceCourses):
-    schedules = Schedule()
+def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses):
+    schedule = Schedule()
     poolOfLockedCourses = []
     newListOfCourses = []
     poolOfCutCourses = []
@@ -83,8 +83,11 @@ def convertCourseModelToCourseObject(inputCourse, filterDistanceCourses):
     #print "aftermath ListoFmeetingtimes = " +  str(len(courseMeetingTimes))
     if (filterDistanceCourses == False) or len(courseMeetingTimes) != 0:
     	outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseExam, courseCampusNumber)
+	return outputCourse
+    else:
+	return False
     #print "aftermath len course's meetingTimes = " +  str(len(outputCourse.meetingTimes)) 
-    return outputCourse
+    
 
 def convertCampusModelToInt(campus):
     if campus == "BRNBY":

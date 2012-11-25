@@ -71,7 +71,7 @@ def generateSchedule(request, form):
 
 	# Process the data
 	#warning this will now filter out distance ed coures
-	processedCourses = functionForRandy(numClasses, selectedCourses, True)
+	processedCourses = createOptimalSchedule(numClasses, selectedCourses, True)
 	
 	optimalCourses = processedCourses[0]
 	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)	
