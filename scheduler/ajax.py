@@ -1,11 +1,10 @@
-import json
-from itertools import chain
-from django.shortcuts import get_object_or_404, render_to_response
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
 from scheduler.models import *
 from scheduler.views import *
-from scheduler.schedulingalg import *
+from scheduler.algorithm import *
+
+
 
 def listOfDays():
 	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
@@ -72,7 +71,8 @@ def generateSchedule(request, form):
 		selectedCourses = selectedCourses | Course.objects.filter(subject=form['courseSubject%i' % (i+1)], number=form['courseNumber%i' % (i+1)])
 
 	# Process the data
-	processedCourses = functionForRandy(numClasses, selectedCourses)
+	#warning this will now filter out distance ed coures
+	processedCourses = functionForRandy(numClasses, selectedCourses, True)
 	
 	optimalCourses = processedCourses[0]
 	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)	
