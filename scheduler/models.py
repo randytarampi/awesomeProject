@@ -47,7 +47,6 @@ SEMESTER_CHOICES = (
 	('1137', 'Fall 2013'),
 )
 
-# Create your models here.
 class Course (models.Model):
 	title = models.CharField(max_length=200)
 	section = models.CharField(max_length=50)

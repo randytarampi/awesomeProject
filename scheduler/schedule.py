@@ -1,7 +1,5 @@
 #Schedule.py
 
-
-
 class Schedule:
     #def __init__(self):  
    	mondayTimeSlotAvailability = [0] * 144

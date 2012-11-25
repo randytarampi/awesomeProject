@@ -6,7 +6,10 @@ Replace this with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-
+from scheduler.models import *
+from scheduler.urls import *
+from scheduler.views import *
+from scheduler.algorithm import *
 
 class SimpleTest(TestCase):
     def test_basic_addition(self):

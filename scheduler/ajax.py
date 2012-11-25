@@ -5,7 +5,6 @@ from scheduler.views import *
 from scheduler.algorithm import *
 
 
-
 def listOfDays():
 	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 	outString = []
