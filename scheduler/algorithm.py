@@ -13,13 +13,14 @@ import shlex
 #takes number of courses that the student wants,
 # and a list of coursese the student is interested in and outputs a list of courses 
 #that will be in an optimal schedule
-def functionForRandy(numberOfCourses, listofCourses):
-    schedule = Schedule()
+#def functionForRandy(numberOfCourses, listofCourses):
+def functionForRandy(numberOfCourses, listofCourses, filterDistanceCourses):
+    schedules = Schedule()
     poolOfLockedCourses = []
     newListOfCourses = []
     poolOfCutCourses = []
     for i in range (0, len(listofCourses)):
-        newCourse = convertCourseModelToCourseObject(listofCourses[i])
+	newCourse = convertCourseModelToCourseObject(listofCourses[i], filterDistanceCourses)
 	if (newCourse != False):
 	    #print "Course is acceptable"
 	    newListOfCourses.append(newCourse)
@@ -59,7 +60,8 @@ def functionForRandy(numberOfCourses, listofCourses):
 
 #Turns a course model object into a course object that we can use in the scheduler
 #Converts : course from database --> course usable by scheduler
-def convertCourseModelToCourseObject(inputCourse):
+#def convertCourseModelToCourseObject(inputCourse):
+def convertCourseModelToCourseObject(inputCourse, filterDistanceCourses):
     id = inputCourse.id		
     listofmeetingTimes = MeetingTime.objects.filter(course = id)
     if (len (listofmeetingTimes) == 0):
@@ -81,7 +83,8 @@ def convertCourseModelToCourseObject(inputCourse):
 	else:
 	    courseMeetingTimes.append(meetingTime)
     #print "aftermath ListoFmeetingtimes = " +  str(len(courseMeetingTimes))
-    outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseExam, courseCampusNumber)
+    if (filterDistanceCourses == False) or len(courseMeetingTimes) != 0:
+    	outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseExam, courseCampusNumber)
     #print "aftermath len course's meetingTimes = " +  str(len(outputCourse.meetingTimes)) 
     return outputCourse
 
@@ -133,8 +136,9 @@ def convertTimeToTimeSlot(intputTime):
 def checkCourseConflict(course, schedule, listOfLockedCourses):
     if courseExamConflict(course, listOfLockedCourses) == True:
 	return True
-    if checkCourseTimeConflict(course, schedule) == True:
-	return True
+    else:
+    	if checkCourseTimeConflict(course, schedule) == True:
+	    return True
     return False
 
 #check to see if the coures conflicts with the schedule
