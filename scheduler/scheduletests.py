@@ -9,7 +9,11 @@ def simpleTest():
     	#output = functionForRandy(1, testinput)
 
 def largeTest():
+	#Course.objects.filter(subject = "cmpt")
+
     	return functionForRandy(5, Course.objects.all())
+	#return functionForRandy(5, Course.objects.filter(subject = "cmpt"))
+	#return functionForRandy(4, Course.objects.filter(subject = "bisc"))
 def conradTest():
     	testCourseList = []
     	testCourse1 = Course.objects.get(id = 1L)

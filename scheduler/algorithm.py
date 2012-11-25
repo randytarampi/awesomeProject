@@ -4,6 +4,7 @@ from schedule import *
 from course import *
 from choicestats import *
 from models import *
+from datetimeconverter import *
 import shlex
 
 
@@ -70,13 +71,17 @@ def convertCourseModelToCourseObject(inputCourse):
     courseMeetingTimes = []
     courseCampus = inputCourse.campus
     courseCampusNumber = convertCampusModelToInt(courseCampus)
+    courseExam = []
     #print "len newListoFmeetingtimes = " +  str(len(listofmeetingTimes))
     for i in range (0, len(listofmeetingTimes)):
 	meetingTime = convertModelMeetingTimeToScheduleMeetingTime(listofmeetingTimes[i])
+	if (meetingTime.meetingType == "EXAM"):
+	    courseExam.append(meetingTime)
 	#meetingTime = convertStringToMeetingTime(listofmeetingTimes[i])
-	courseMeetingTimes.append(meetingTime)
+	else:
+	    courseMeetingTimes.append(meetingTime)
     #print "aftermath ListoFmeetingtimes = " +  str(len(courseMeetingTimes))
-    outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseCampusNumber)
+    outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseExam, courseCampusNumber)
     #print "aftermath len course's meetingTimes = " +  str(len(outputCourse.meetingTimes)) 
     return outputCourse
 
@@ -100,8 +105,13 @@ def convertModelMeetingTimeToScheduleMeetingTime(inputMeetingTime):
     #endTime = str(inputMeetingTime.end_time)
     endTime = inputMeetingTime.end_time
     endSlot = convertTimeToTimeSlot(endTime)
-    outputMeetingTime = SchedulingMeetingTime(startSlot, endSlot, dayInteger)
+    startDate = inputMeetingTime.start_day
+    endDate = inputMeetingTime.end_day
+    meetingType = inputMeetingTime.type
+    outputMeetingTime = SchedulingMeetingTime(startSlot, endSlot, dayInteger, startDate, endDate, meetingType)
     return outputMeetingTime
+
+
 
 
 #Converts an input string into a date
@@ -120,9 +130,17 @@ def convertTimeToTimeSlot(intputTime):
     timeslot += intputTime.minute /10
     return timeslot
 
+def checkCourseConflict(course, schedule, listOfLockedCourses):
+    if courseExamConflict(course, listOfLockedCourses) == True:
+	return True
+    if checkCourseTimeConflict(course, schedule) == True:
+	return True
+    return False
+
 #check to see if the coures conflicts with the schedule
-def checkCourseConflict(course, schedule):
+def checkCourseTimeConflict(course, schedule):
     campus = course.campus
+
     for i in range (0, len(course.meetingTimes)):
         meetingTime = course.meetingTimes[i]
 	#print "checkcourseconflict course title = " + str(course.title)
@@ -135,11 +153,38 @@ def checkCourseConflict(course, schedule):
             return True
     return False
 
+def courseExamConflict(course, listOfLockedCourses):
+	for i in range (0, len(listOfLockedCourses)):
+	    lockedCourse = listOfLockedCourses[i]
+	    for j in range (0, len(course.exams)):
+	    	courseExam = course.exams[0]
+		for k in range (0, len(lockedCourse.exams)):
+		    lockedCourseExam = course.exams[0]
+		    if examConflict(courseExam, lockedCourseExam) == True:
+			return True
+	return False
+
+#check if two courses have the same name
+def examConflict(examOne, examTwo):
+    if datetimeconflict(examOne.startDate, examOne.endDate, examTwo.startDate, examTwo.endDate) == True:
+	if timeConflict(examOne.startTime, examOne.endTime, examTwo.startTime, examTwo.endTime) == True:
+	    return True
+	else:
+	    return False
+    else:
+	return False   
+
+
+
+
+
+
+
 #locks a course into the schedule
 #(time is locked and the course is added to locked courses)
 def lockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
     #print "Locking Course"
-    if (checkCourseConflict(course, schedule) == False):
+    if (checkCourseConflict(course, schedule, poolOfLockedCourses) == False):
         #print "There is no course Conflict for lock"
         # lock the course
 	campus = course.campus
@@ -157,7 +202,7 @@ def lockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
 #unlocks the coures from the schedule (time is freed and the course is removed from locked courses)
 def unlockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
     #print "unlockingCourse"
-    if (checkCourseConflict(course, schedule) == True):
+    if (checkCourseConflict(course, schedule, poolOfLockedCourses) == True):
         #print "There is a conflict for unlock"
         # unlock/free the course
 	campus = course.campus
@@ -169,9 +214,9 @@ def unlockCourse(course, schedule, poolOfLockedCourses, poolOfPotentialCourses):
         poolOfLockedCourses.remove(course)
 
 #sets the course without any additional overhead
-def setCourse(course, schedule):
+def setCourse(course, schedule, poolOfLockedCourses):
     #print "Setting Course"
-    if (checkCourseConflict(course, schedule) == False):
+    if (checkCourseConflict(course, schedule, poolOfLockedCourses) == False):
         #print "There is no conflict for set"
         # Set the course
 	campus = course.campus
@@ -193,18 +238,42 @@ def freeCourse(course, schedule):
             schedule.unlockMeetingTimeCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus)
 
 #find all courses that currently conflict with our schedule and remove them from the list of potential courses
-def updateCleanPotentialCourses(poolOfPotentialCourses, poolOfCutCourses, schedule):
+def updateCleanPotentialCourses(poolOfPotentialCourses, poolOfCutCourses, poolOfLockedCourses, schedule):
     listOfCoursesToDelete = []
     #build a list of courses for us to remove
     for i in range (0, len(poolOfPotentialCourses)):
         courseWeCheckOut = poolOfPotentialCourses[i]
-        if checkCourseConflict(courseWeCheckOut, schedule) == True:
+        if checkCourseConflict(courseWeCheckOut, schedule, poolOfLockedCourses) == True:
             listOfCoursesToDelete.append(courseWeCheckOut)
     #and remove them
     for i in range (0, len(listOfCoursesToDelete)):
         courseToDelete = listOfCoursesToDelete[i]
         poolOfPotentialCourses.remove(courseToDelete)
 	poolOfCutCourses.append(courseToDelete)
+
+#check if two courses have the same name
+def courseNameConflict(courseOne, courseTwo):
+	if courseOne.title == courseTwo.title:
+		return True
+	else:
+		return False
+    
+#Eliminates all duplicate courses 
+def eliminateDuplicateCourses(poolOfPotentialCourses, poolOfLockedCourses, poolOfCutCourses, schedule):
+    listOfCoursesToDelete = []
+    #build a list of courses for us to remove
+    for i in range (0, len(poolOfPotentialCourses)):	
+	for j in range (0, len(poolOfLockedCourses)):
+	    if courseNameConflict(poolOfPotentialCourses[i], poolOfLockedCourses[j]):
+		listOfCoursesToDelete.append(poolOfPotentialCourses[i])
+	
+    #and remove them
+    for i in range (0, len(listOfCoursesToDelete)):
+        courseToDelete = listOfCoursesToDelete[i]
+        poolOfPotentialCourses.remove(courseToDelete)
+	poolOfCutCourses.append(courseToDelete)
+
+
 
 #This is the central algorithm
 # it requires:
@@ -217,8 +286,8 @@ def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, poolO
 	#print "interBehe We have the right size" 
         orignialTimeGap = schedule.getTotalTimeGap()
         originalNumberDays =  schedule.getTotalDays()
-        updateCleanPotentialCourses(poolOfPotentialCourses, poolOfCutCourses, schedule);
-        
+        updateCleanPotentialCourses(poolOfPotentialCourses, poolOfCutCourses, poolOfLockedCourses, schedule)
+        eliminateDuplicateCourses(poolOfPotentialCourses, poolOfLockedCourses, poolOfCutCourses, schedule)
         choiceStatsList = []
 	
         if len(poolOfPotentialCourses) >= 2:
@@ -227,7 +296,7 @@ def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, poolO
             for i in range (0, len(poolOfPotentialCourses)):
                 #schedule.clearSchedule()
                 courseWeTryToAdd = poolOfPotentialCourses[i]
-                setCourse(courseWeTryToAdd, schedule)
+                setCourse(courseWeTryToAdd, schedule, poolOfLockedCourses)
             
                 newTotalDays = schedule.getTotalDays()
                 newTotalTimeGap = schedule.getTotalTimeGap()

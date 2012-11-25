@@ -3,13 +3,8 @@
 
 from datetime import datetime
 
-b = "2012-10-12"
+#b = "2012-10-12"
 
-#function1()
-if 1 > 2:
-        print 'True'
-if 1 < 2:
-        print 'True'
 
 #later dates are greater than earlier dates
 # more recent dates > older dates
@@ -41,17 +36,20 @@ def datetimeconflict(startdate1, enddate1, startdate2, enddate2):
     if startdate1 <= enddate1 and startdate2 <= enddate2:
         if startdate1 < startdate2:
             if enddate1 < startdate2:
-                print 'No Conflict first dates happen before second dates'
+		#print 'No Conflict first dates happen before second dates'
+		return False
             else :
-                print 'There is a conflict'
+		#print 'There is a conflict'
+		return True
         else:
             if enddate2 < startdate1:
-                print 'No Conflict dates 2 happen first'
+                #print 'No Conflict dates 2 happen first'
+		return False
             else:
-                print 'There is a conflict'
+                #print 'There is a conflict'
+		return True
     else:
          print 'Improper inputs'
-
 
 
 #This checks for conflicts in the schedule in terms of dates
@@ -87,6 +85,29 @@ def DifferentCampusTravelConflict(time1, time2):
 
 #
 def timeConflict(starttime1, endtime1, starttime2, endtime2):
+    if starttime1 <= endtime1 and starttime2 <= endtime2:
+        if starttime1 < starttime2:
+            if endtime1 < starttime2:
+                #print 'No Conflict first time happens before second dates'
+                #if (starttime2-endtime1).seconds < 3600:
+                #    print 'We can not travel between campuses'
+		return False
+            else :
+                #print 'There is a conflict'
+		return True
+        else:
+            if endtime2 < starttime1:
+                #print 'No Conflict time 2 happens before time 1'
+		return False
+                #if (endtime2-starttime1).seconds < 3600:
+                #    print 'We can not travel between campuses'
+            else:
+                #print 'There is a conflict'
+		return False
+    else:
+         print 'Improper inputs'
+
+def timeConflictExpansive(starttime1, endtime1, starttime2, endtime2):
     if starttime1 <= endtime1 and starttime2 <= endtime2:
         if starttime1 < starttime2:
             if endtime1 < starttime2:
