@@ -4,7 +4,7 @@
 <div id="scheduleViewList">
 	<ul>
 	{% for course in rejectedCourses %}
-		<li><a class="rejectedCourse" href=#>{{ course }} - {{ course.section }}</a> was Rejected</li>
+		<li><a class="rejectedCourse">{{ course }} - {{ course.section }}</a> was Rejected</li>
 		<ul class="rejectedCourse course">
 		{% for instructor in rejectedInstructors %}
 			{% if instructor.course == course %}
@@ -12,7 +12,7 @@
 			{% endif %}
 		{% endfor %}
 			<li>Campus: {{ course.campusChoice }}</li>
-			<li><a class="rejectedTime" href="#">Meeting Times:</a></li>
+			<li><a class="rejectedTime">Meeting Times</a>:</li>
 				<ul class="rejectedTime time">
 				{% for meetingTime in rejectedMeetingTimes %}
 					{% if meetingTime.course == course %}
@@ -31,7 +31,7 @@
 	</ul>
 	<ol>
 	{% for course in optimalCourses %}
-		<li><a class="optimalCourse" href="#">{{ course }} - {{ course.section }}</a></li>
+		<li><a class="optimalCourse">{{ course }} - {{ course.section }}</a></li>
 		<ul class="optimalCourse course">
 		{% for instructor in optimalInstructors %}
 			{% if instructor.course == course %}
@@ -39,14 +39,14 @@
 			{% endif %}
 		{% endfor %}
 			<li>Campus: {{ course.campusChoice }}</li>
-			<li><a class="optimalTime" href="#">Meeting Times:</a></li>
+			<li><a class="optimalTime">Meeting Times</a>:</li>
 				<ul class="optimalTime time">
 				{% for meetingTime in optimalMeetingTimes %}
 					{% if meetingTime.course == course %}
 						{% if meetingTime.type == "LEC" or meetingTime.type == "LAB" %}
-							<li>{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} in {{ meetingTime.room }}</li>
+							<li class="classOrLab">{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} in {{ meetingTime.room }}</li>
 						{% else %}
-							<li>{{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
+							<li class="exam">{{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
 						{% endif %}
 					{% endif %}
 				{% empty %}
@@ -61,9 +61,14 @@
 </div>
 <h2>Your Typical Week</h2>
 <div id="scheduleViewWeek">
-{% block scheduleWeek %}{% endblock %}
 </div>
 <h2>Your Exam Schedule</h2>
 <div id="scheduleViewExams">
-{% block scheduleExams %}{% endblock %}
+    <ol>
+        {% for meetingTime in optimalExamTimes %}
+	    <li class="exam">{{ meetingTime.course.subject}} {{ meetingTime.course.number}} {{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
+	{% empty %}
+	    <span class="noexam">No Exams Scheduled!</span>
+	{% endfor %}
+    </ol>
 </div>

@@ -1,3 +1,4 @@
+from django.db.models import Q
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
 from scheduler.models import *
@@ -75,19 +76,19 @@ def generateSchedule(request, form):
 	
 	optimalCourses = processedCourses[0]
 	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)	
-	optimalMeetingTimes = MeetingTime.objects.filter(course__in = optimalCourses).order_by('type')
+	optimalMeetingTimes = MeetingTime.objects.filter(course__in = optimalCourses).order_by('type', 'start_day', 'start_time')
+	optimalExamTimes = optimalMeetingTimes.filter(Q(type="EXAM") | Q(type="MIDT"))
 	
 	rejectedCourses = processedCourses[1]
 	rejectedInstructors = Instructor.objects.filter(course__in = rejectedCourses)	
-	rejectedMeetingTimes = MeetingTime.objects.filter(course__in = rejectedCourses).order_by('type')
+	rejectedMeetingTimes = MeetingTime.objects.filter(course__in = rejectedCourses).order_by('type', 'start_day', 'start_time')
 	
-	processedData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'rejectedCourses': rejectedCourses, 'rejectedInstructors': rejectedInstructors, 'rejectedMeetingTimes': rejectedMeetingTimes}
+	processedData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'optimalExamTimes': optimalExamTimes, 'rejectedCourses': rejectedCourses, 'rejectedInstructors': rejectedInstructors, 'rejectedMeetingTimes': rejectedMeetingTimes}
 	
 	# Serve the data
 	scheduleInfo = render_to_response('schedulerSchedule.html', processedData).content
 	dajax.assign('#scheduleViewDiv', 'innerHTML', scheduleInfo)
 	dajax.assign('#scheduleViewWeek', 'innerHTML', "You'll see a weekly calendar here")
-	dajax.assign('#scheduleViewExams', 'innerHTML', "You'll see at least one monthly calendar here")
 	return dajax.json()
 
 @dajaxice_register
