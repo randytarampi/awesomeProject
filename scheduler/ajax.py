@@ -1,4 +1,4 @@
-import datetime
+from datetime import time
 from django.db.models import Q
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
@@ -7,21 +7,21 @@ from scheduler.views import *
 from scheduler.algorithm import *
 
 SCHEDULE_TIMES = (
-	"8:00AM",
-	"9:00AM",
-	"10:00AM",
-	"11:00AM",
-	"12:00AM",
-	"1:00PM",
-	"2:00PM",
-	"3:00PM",
-	"4:00PM",
-	"5:00PM",
-	"6:00PM",
-	"7:00PM",
-	"8:00PM",
-	"9:00PM",
-	"10:00PM",
+	(time(8, 0), "8:00AM"),
+	(time(9, 0), "9:00AM"),
+	(time(10, 0), "10:00AM"),
+	(time(11, 0), "11:00AM"),
+	(time(12, 0), "12:00AM"),
+	(time(13, 0), "1:00PM"),
+	(time(14, 0), "2:00PM"),
+	(time(15, 0), "3:00PM"),
+	(time(16, 0), "4:00PM"),
+	(time(17, 0), "5:00PM"),
+	(time(18, 0), "6:00PM"),
+	(time(19, 0), "7:00PM"),
+	(time(20, 0), "8:00PM"),
+	(time(21, 0), "9:00PM"),
+	(time(22, 0), "10:00PM"),
 )
 
 def listOfDays():
@@ -70,28 +70,72 @@ def listOfSubjects():
 def weeklySchedule(meetingTimes):
 	out = []
 	
+	meetingTimes = MeetingTime.objects.filter(course__in = Course.objects.filter(subject="POL", number=358).order_by('start_time') | Course.objects.filter(subject="POL", number="457W")).order_by('start_time')
+	
 	for time in SCHEDULE_TIMES:
+		timeObj = time[0]
+		timeStr = time[1]
+	
 		# First Row (Hour)
-		out.append("<tr><th rowspan='2'>%s</th>" % time)
+		out.append("<tr><th rowspan='2'>%s</th>" % timeStr)
 		
 		for day in range(6):
-			if day == 4 and time == "2:00PM":
-				out.append("<td rowspan='2'>FUCK</td>")
-			else: 
+			for meeting in meetingTimes:
+				rowCount = 0
+				meetingCount = 0
+				if meeting.weekday == day:
+					if meeting.start_time == timeObj:
+						# Accomodate the meeting time by incrementing the rowCount and testTime while testTime <= meeting.end_time
+						testTime = timeObj
+						while meeting.end_time > testTime:
+							try: 
+								testTime = testTime.replace(minute=testTime.minute+30)
+							except ValueError: 
+								testTime = testTime.replace(hour=testTime.hour+1, minute=0)
+							rowCount += 1
+						out.append("<td rowspan='%i'>%s - %s to %s</td>" % (rowCount, meeting.course, meeting.start_time, meeting.end_time))
+						rowCount = 0
+						break
+					elif meeting.start_time < timeObj and timeObj <= meeting.end_time:
+						break
+			
+			else:
+				# Blank space
 				out.append("<td>FUCK</td>")
 
 		out.append("</tr>")
 		
 		# Second Row
+		timeObj = timeObj.replace(minute=timeObj.minute+30)
 		out.append("<tr>")
 		
 		for day in range(6):
-			if not (day == 4 and time == "2:00PM"):
-				out.append("<td>YOU</td>")
+			for meeting in meetingTimes:
+				rowCount = 0
+				meetingCount = 0
+				if meeting.weekday == day:
+					if meeting.start_time == timeObj:
+						# Accomodate the meeting time by incrementing the rowCount and testTime while testTime <= meeting.end_time
+						testTime = timeObj
+						while meeting.end_time > testTime:
+							try: 
+								testTime = testTime.replace(minute=testTime.minute+30)
+							except ValueError: 
+								testTime = testTime.replace(hour=testTime.hour+1, minute=0)
+							rowCount += 1
+						out.append("<td rowspan='%i'>%s - %s to %s</td>" % (rowCount, meeting.course, meeting.start_time, meeting.end_time))
+						rowCount = 0
+						break
+					elif meeting.start_time < timeObj and timeObj <= meeting.end_time:
+						break
+			
+			else:
+				# Blank space
+				out.append("<td>FUCK</td>")
 		
 		out.append("</tr>")
 	
-	return "".join(out)#"<tr><td>TEST</td></tr>"
+	return "".join(out)
 
 @dajaxice_register
 def getUnavailability(request):
