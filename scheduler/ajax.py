@@ -7,25 +7,25 @@ from scheduler.views import *
 from scheduler.algorithm import *
 
 SCHEDULE_TIMES = (
-	(time(8, 0), "8:00AM"),
-	(time(9, 0), "9:00AM"),
-	(time(10, 0), "10:00AM"),
-	(time(11, 0), "11:00AM"),
-	(time(12, 0), "12:00AM"),
-	(time(13, 0), "1:00PM"),
-	(time(14, 0), "2:00PM"),
-	(time(15, 0), "3:00PM"),
-	(time(16, 0), "4:00PM"),
-	(time(17, 0), "5:00PM"),
-	(time(18, 0), "6:00PM"),
-	(time(19, 0), "7:00PM"),
-	(time(20, 0), "8:00PM"),
-	(time(21, 0), "9:00PM"),
-	(time(22, 0), "10:00PM"),
+	(time(8, 0), '8:00AM'),
+	(time(9, 0), '9:00AM'),
+	(time(10, 0), '10:00AM'),
+	(time(11, 0), '11:00AM'),
+	(time(12, 0), '12:00PM'),
+	(time(13, 0), '1:00PM'),
+	(time(14, 0), '2:00PM'),
+	(time(15, 0), '3:00PM'),
+	(time(16, 0), '4:00PM'),
+	(time(17, 0), '5:00PM'),
+	(time(18, 0), '6:00PM'),
+	(time(19, 0), '7:00PM'),
+	(time(20, 0), '8:00PM'),
+	(time(21, 0), '9:00PM'),
+	(time(22, 0), '10:00PM'),
 )
 
 def listOfDays():
-	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 	outString = []
 	for i in range(0, len(listOfDays)):
 		outString.append("<option value='%s'>%s</option>" % (str(i), listOfDays[i]))
@@ -84,7 +84,7 @@ def weeklyScheduleRows(meetingTimes, timeObj, timeStr):
 						except ValueError: 
 							testTime = testTime.replace(hour=testTime.hour+1, minute=0)
 						rowCount += 1
-					out.append("<td rowspan='%i'>%s - %s to %s</td>" % (rowCount, meeting.course, meeting.start_time, meeting.end_time))
+					out.append('<td rowspan="%i" class="class">%s - %s to %s</td>' % (rowCount, meeting.course, meeting.start_time, meeting.end_time))
 					rowCount = 0
 					break
 				elif meeting.start_time < timeObj and timeObj <= meeting.end_time:
@@ -92,31 +92,31 @@ def weeklyScheduleRows(meetingTimes, timeObj, timeStr):
 		
 		else:
 			# Blank space
-			out.append("<td id=%s>FUCK</td>" % (timeStr+str(day)))
+			out.append('<td class="noClass" id=%s>&nbsp;</td>' % (timeStr+str(day)))
 	
-	return "".join(out)
+	return ''.join(out)
 
 def weeklySchedule(meetingTimes):
 	out = []
 	
-	meetingTimes = MeetingTime.objects.filter(course__in = Course.objects.filter(subject="POL", number=358) | Course.objects.filter(subject="POL", number="457W") | Course.objects.filter(subject="POL", number=359) | Course.objects.filter(subject="POL", number=446), type="LEC").order_by('start_time')
+	meetingTimes = MeetingTime.objects.filter(course__in = Course.objects.filter(subject='POL', number=358) | Course.objects.filter(subject='POL', number='457W') | Course.objects.filter(subject='POL', number=359) | Course.objects.filter(subject='POL', number=446), type='LEC').order_by('start_time')
 	
 	for time in SCHEDULE_TIMES:
 		timeObj = time[0]
 		timeStr = time[1]
 	
 		# First Row (Top of the Hour)
-		out.append("<tr id=%s><th rowspan='2'>%s</th>" % (timeStr, timeStr))
+		out.append('<tr class="topHour" id=%s><th rowspan="2">%s</th>' % (timeStr, timeStr))
 		out.append(weeklyScheduleRows(meetingTimes, timeObj, timeStr))
-		out.append("</tr>")
+		out.append('</tr>')
 		
-		# Second Row (Bottom of the Hour
+		# Second Row (Bottom of the Hour)
 		timeObj = timeObj.replace(minute=timeObj.minute+30)
-		out.append("<tr>")
+		out.append('<tr class="bottomHour">')
 		out.append(weeklyScheduleRows(meetingTimes, timeObj, timeStr))
-		out.append("</tr>")
+		out.append('</tr>')
 	
-	return "".join(out)
+	return ''.join(out)
 
 @dajaxice_register
 def getUnavailability(request):
