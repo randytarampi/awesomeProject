@@ -1,3 +1,4 @@
+import datetime
 from django.db.models import Q
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
@@ -5,6 +6,23 @@ from scheduler.models import *
 from scheduler.views import *
 from scheduler.algorithm import *
 
+SCHEDULE_TIMES = (
+	"8:00AM",
+	"9:00AM",
+	"10:00AM",
+	"11:00AM",
+	"12:00AM",
+	"1:00PM",
+	"2:00PM",
+	"3:00PM",
+	"4:00PM",
+	"5:00PM",
+	"6:00PM",
+	"7:00PM",
+	"8:00PM",
+	"9:00PM",
+	"10:00PM",
+)
 
 def listOfDays():
 	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
@@ -49,6 +67,32 @@ def listOfSubjects():
 		datList.append("<option value='%s'>%s</option>" % (i, i))
 	return ''.join(datList)
 
+def weeklySchedule(meetingTimes):
+	out = []
+	
+	for time in SCHEDULE_TIMES:
+		# First Row (Hour)
+		out.append("<tr><th rowspan='2'>%s</th>" % time)
+		
+		for day in range(6):
+			if day == 4 and time == "2:00PM":
+				out.append("<td rowspan='2'>FUCK</td>")
+			else: 
+				out.append("<td>FUCK</td>")
+
+		out.append("</tr>")
+		
+		# Second Row
+		out.append("<tr>")
+		
+		for day in range(6):
+			if not (day == 4 and time == "2:00PM"):
+				out.append("<td>YOU</td>")
+		
+		out.append("</tr>")
+	
+	return "".join(out)#"<tr><td>TEST</td></tr>"
+
 @dajaxice_register
 def getUnavailability(request):
 	dajax = Dajax()
@@ -86,9 +130,8 @@ def generateSchedule(request, form):
 	processedData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'optimalExamTimes': optimalExamTimes, 'rejectedCourses': rejectedCourses, 'rejectedInstructors': rejectedInstructors, 'rejectedMeetingTimes': rejectedMeetingTimes}
 	
 	# Serve the data
-	scheduleInfo = render_to_response('schedulerSchedule.html', processedData).content
-	dajax.assign('#scheduleViewDiv', 'innerHTML', scheduleInfo)
-	dajax.assign('#scheduleViewWeek', 'innerHTML', "You'll see a weekly calendar here")
+	dajax.assign('#scheduleViewDiv', 'innerHTML', render_to_response('schedulerSchedule.html', processedData).content)
+	dajax.assign('#scheduleTableBody', 'innerHTML', weeklySchedule(optimalMeetingTimes))
 	return dajax.json()
 
 @dajaxice_register
