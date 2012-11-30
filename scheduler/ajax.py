@@ -1,4 +1,5 @@
 from datetime import time
+from django.template import Context, Template
 from django.db.models import Q
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
@@ -7,21 +8,21 @@ from scheduler.views import *
 from scheduler.algorithm import *
 
 SCHEDULE_TIMES = (
-	(time(8, 0), '8:00AM'),
-	(time(9, 0), '9:00AM'),
-	(time(10, 0), '10:00AM'),
-	(time(11, 0), '11:00AM'),
-	(time(12, 0), '12:00PM'),
-	(time(13, 0), '1:00PM'),
-	(time(14, 0), '2:00PM'),
-	(time(15, 0), '3:00PM'),
-	(time(16, 0), '4:00PM'),
-	(time(17, 0), '5:00PM'),
-	(time(18, 0), '6:00PM'),
-	(time(19, 0), '7:00PM'),
-	(time(20, 0), '8:00PM'),
-	(time(21, 0), '9:00PM'),
-	(time(22, 0), '10:00PM'),
+	time(8, 0),
+	time(9, 0),
+	time(10, 0),
+	time(11, 0),
+	time(12, 0),
+	time(13, 0),
+	time(14, 0),
+	time(15, 0),
+	time(16, 0),
+	time(17, 0),
+	time(18, 0),
+	time(19, 0),
+	time(20, 0),
+	time(21, 0),
+	time(22, 0),
 )
 
 def listOfDays():
@@ -67,56 +68,62 @@ def listOfSubjects():
 		datList.append("<option value='%s'>%s</option>" % (i, i))
 	return ''.join(datList)
 	
-def weeklyScheduleRows(meetingTimes, timeObj, timeStr):
-	out = []
+def weeklyScheduleRows(meetingTimes, time):
+	tableRow = []
 
 	for day in range(6):
 		for meeting in meetingTimes:
 			rowCount = 0
-			meetingCount = 0
 			if meeting.weekday == day:
-				if meeting.start_time == timeObj:
-					# Accomodate the meeting time by incrementing the rowCount and testTime while testTime <= meeting.end_time
-					testTime = timeObj
+				if meeting.start_time == time:
+					testTime = time
 					while meeting.end_time > testTime:
 						try: 
 							testTime = testTime.replace(minute=testTime.minute+30)
 						except ValueError: 
 							testTime = testTime.replace(hour=testTime.hour+1, minute=0)
 						rowCount += 1
-					out.append('<td rowspan="%i" class="class">%s - %s to %s</td>' % (rowCount, meeting.course, meeting.start_time, meeting.end_time))
-					rowCount = 0
+					tableRow.append('<td rowspan="%i" class="class">{{ meeting%s.course }} - {{ meeting%s.start_time }} to {{ meeting%s.end_time }}</td>' % (rowCount, meeting.id, meeting.id, meeting.id))
 					break
-				elif meeting.start_time < timeObj and timeObj <= meeting.end_time:
+				elif meeting.start_time < time and time <= meeting.end_time:
 					break
 		
 		else:
-			# Blank space
-			out.append('<td class="noClass" id=%s>&nbsp;</td>' % (timeStr+str(day)))
+			tableRow.append('<td class="noClass" id={{ time%s }}%s>&nbsp;</td>' % (time.hour, ("|"+str(day))))
 	
-	return ''.join(out)
+	return ''.join(tableRow)
 
 def weeklySchedule(meetingTimes):
-	out = []
-	
 	meetingTimes = MeetingTime.objects.filter(course__in = Course.objects.filter(subject='POL', number=358) | Course.objects.filter(subject='POL', number='457W') | Course.objects.filter(subject='POL', number=359) | Course.objects.filter(subject='POL', number=446), type='LEC').order_by('start_time')
+	meetingTable = []
+	meetingContext = {}
+	earlyBound = meetingTimes[0].start_time
+	lateBound = meetingTimes[len(meetingTimes)-1].end_time
+	tableBounds = []
 	
-	for time in SCHEDULE_TIMES:
-		timeObj = time[0]
-		timeStr = time[1]
+	for meeting in meetingTimes:
+		meetingContext[('meeting%s' % meeting.id)] = meeting
+		earlyBound = meeting.start_time if (meeting.start_time < earlyBound) else earlyBound
+		lateBound = meeting.end_time if (meeting.end_time > lateBound) else lateBound
+	
+	for hour in range(earlyBound.hour, lateBound.hour+1):
+		tableBounds.append(time(hour))
+	
+	for slot in tableBounds:
+		meetingContext[('time%s' % slot.hour)] = slot
 	
 		# First Row (Top of the Hour)
-		out.append('<tr class="topHour" id=%s><th rowspan="2">%s</th>' % (timeStr, timeStr))
-		out.append(weeklyScheduleRows(meetingTimes, timeObj, timeStr))
-		out.append('</tr>')
+		meetingTable.append('<tr class="topHour" id={{ time%s }}><th rowspan="2">{{ time%s }}</th>' % (slot.hour, slot.hour))
+		meetingTable.append(weeklyScheduleRows(meetingTimes, slot))
+		meetingTable.append('</tr>')
 		
 		# Second Row (Bottom of the Hour)
-		timeObj = timeObj.replace(minute=timeObj.minute+30)
-		out.append('<tr class="bottomHour">')
-		out.append(weeklyScheduleRows(meetingTimes, timeObj, timeStr))
-		out.append('</tr>')
+		slot = slot.replace(minute=slot.minute+30)
+		meetingTable.append('<tr class="bottomHour">')
+		meetingTable.append(weeklyScheduleRows(meetingTimes, slot))
+		meetingTable.append('</tr>')
 	
-	return ''.join(out)
+	return Template(''.join(meetingTable)).render(Context(meetingContext))
 
 @dajaxice_register
 def getUnavailability(request):
