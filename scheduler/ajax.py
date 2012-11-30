@@ -66,73 +66,54 @@ def listOfSubjects():
 	for i in allSubjects:
 		datList.append("<option value='%s'>%s</option>" % (i, i))
 	return ''.join(datList)
+	
+def weeklyScheduleRows(meetingTimes, timeObj, timeStr):
+	out = []
+
+	for day in range(6):
+		for meeting in meetingTimes:
+			rowCount = 0
+			meetingCount = 0
+			if meeting.weekday == day:
+				if meeting.start_time == timeObj:
+					# Accomodate the meeting time by incrementing the rowCount and testTime while testTime <= meeting.end_time
+					testTime = timeObj
+					while meeting.end_time > testTime:
+						try: 
+							testTime = testTime.replace(minute=testTime.minute+30)
+						except ValueError: 
+							testTime = testTime.replace(hour=testTime.hour+1, minute=0)
+						rowCount += 1
+					out.append("<td rowspan='%i'>%s - %s to %s</td>" % (rowCount, meeting.course, meeting.start_time, meeting.end_time))
+					rowCount = 0
+					break
+				elif meeting.start_time < timeObj and timeObj <= meeting.end_time:
+					break
+		
+		else:
+			# Blank space
+			out.append("<td id=%s>FUCK</td>" % (timeStr+str(day)))
+	
+	return "".join(out)
 
 def weeklySchedule(meetingTimes):
 	out = []
 	
-	meetingTimes = MeetingTime.objects.filter(course__in = Course.objects.filter(subject="POL", number=358).order_by('start_time') | Course.objects.filter(subject="POL", number="457W")).order_by('start_time')
+	meetingTimes = MeetingTime.objects.filter(course__in = Course.objects.filter(subject="POL", number=358) | Course.objects.filter(subject="POL", number="457W") | Course.objects.filter(subject="POL", number=359) | Course.objects.filter(subject="POL", number=446), type="LEC").order_by('start_time')
 	
 	for time in SCHEDULE_TIMES:
 		timeObj = time[0]
 		timeStr = time[1]
 	
-		# First Row (Hour)
-		out.append("<tr><th rowspan='2'>%s</th>" % timeStr)
-		
-		for day in range(6):
-			for meeting in meetingTimes:
-				rowCount = 0
-				meetingCount = 0
-				if meeting.weekday == day:
-					if meeting.start_time == timeObj:
-						# Accomodate the meeting time by incrementing the rowCount and testTime while testTime <= meeting.end_time
-						testTime = timeObj
-						while meeting.end_time > testTime:
-							try: 
-								testTime = testTime.replace(minute=testTime.minute+30)
-							except ValueError: 
-								testTime = testTime.replace(hour=testTime.hour+1, minute=0)
-							rowCount += 1
-						out.append("<td rowspan='%i'>%s - %s to %s</td>" % (rowCount, meeting.course, meeting.start_time, meeting.end_time))
-						rowCount = 0
-						break
-					elif meeting.start_time < timeObj and timeObj <= meeting.end_time:
-						break
-			
-			else:
-				# Blank space
-				out.append("<td>FUCK</td>")
-
+		# First Row (Top of the Hour)
+		out.append("<tr id=%s><th rowspan='2'>%s</th>" % (timeStr, timeStr))
+		out.append(weeklyScheduleRows(meetingTimes, timeObj, timeStr))
 		out.append("</tr>")
 		
-		# Second Row
+		# Second Row (Bottom of the Hour
 		timeObj = timeObj.replace(minute=timeObj.minute+30)
 		out.append("<tr>")
-		
-		for day in range(6):
-			for meeting in meetingTimes:
-				rowCount = 0
-				meetingCount = 0
-				if meeting.weekday == day:
-					if meeting.start_time == timeObj:
-						# Accomodate the meeting time by incrementing the rowCount and testTime while testTime <= meeting.end_time
-						testTime = timeObj
-						while meeting.end_time > testTime:
-							try: 
-								testTime = testTime.replace(minute=testTime.minute+30)
-							except ValueError: 
-								testTime = testTime.replace(hour=testTime.hour+1, minute=0)
-							rowCount += 1
-						out.append("<td rowspan='%i'>%s - %s to %s</td>" % (rowCount, meeting.course, meeting.start_time, meeting.end_time))
-						rowCount = 0
-						break
-					elif meeting.start_time < timeObj and timeObj <= meeting.end_time:
-						break
-			
-			else:
-				# Blank space
-				out.append("<td>FUCK</td>")
-		
+		out.append(weeklyScheduleRows(meetingTimes, timeObj, timeStr))
 		out.append("</tr>")
 	
 	return "".join(out)
