@@ -30,7 +30,10 @@
 				{% endfor %}
 			</select>
 			&nbsp;
-			<select id="subjectProfs" name="subjectProfs">
+			<select id="subjectProfs" name="subjectProfs" onchange="Dajaxice.scheduler.listOfNumbersByProf(Dajax.process, {'option':this.value})">
+			</select>
+			&nbsp;
+			<select id="courseNumberByProf" name="courseNumberByProf">
 			</select>
 		</div>
 
