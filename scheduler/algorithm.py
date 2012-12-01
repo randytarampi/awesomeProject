@@ -48,7 +48,22 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses)
     	#print "new newlistcourse = " + str(newListOfCourses[0])
     	#print "size of poolcut =" + str(len(poolOfCutCourses))
     	#return outPutListOfCourses
-    	largerOutputArray = []
+    	listMeetingTimes = []
+	for i in range (0, len(poolOfLockedCourses)):
+		meetingTimes = poolOfLockedCourses[i].meetingTimes
+		for j in range (0, len(meetingTimes)):
+			meetingTime = meetingTimes[j]
+			listMeetingTimes.append(meetingTime)
+	listActualMeetingTimes = []
+	#wooo dev speed > efficiency!	
+	for i in range (0, len(listMeetingTimes)):
+		currentScheduleMeetingTime = listMeetingTimes[i]
+		actualMeetingTime = MeetingTime.objects.get(id = currentScheduleMeetingTime.meetingTimeID)		
+		listActualMeetingTimes.append(currentScheduleMeetingTime)
+	
+
+	largerOutputArray = []
+	largerOutputArray.append(listActualMeetingTimes)
     	largerOutputArray.append(outPutListOfLockedCourses)
     	largerOutputArray.append(outPutListOfCutCourses)
     	#Schedule Stats
@@ -59,13 +74,8 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses)
     	largerOutputArray.append(currentChoiceStats)
     	largerOutputArray.append(schedule)
 	#list of meeting times
-	listMeetingTimes = []
-	for i in range (0, len(poolOfLockedCourses)):
-		meetingTimes = poolOfLockedCourses[i].meetingTimes
-		for j in range (0, len(meetingTimes))
-			meetingTime = meetingTimes[i]
-			listMeetingTimes.append(meetingTime)
-	largerOutputArray.append(meetingTime)
+	
+	#largerOutputArray.append(meetingTime)
     	return largerOutputArray
 # need a function that handles the case when the scheduler can't handle a certain course
 
@@ -154,7 +164,8 @@ def convertModelMeetingTimeToScheduleMeetingTime(inputMeetingTime):
   	startDate = inputMeetingTime.start_day
   	endDate = inputMeetingTime.end_day
   	meetingType = inputMeetingTime.type
-  	outputMeetingTime = SchedulingMeetingTime(startSlot, endSlot, dayInteger, startDate, endDate, meetingType)
+	meetingID = inputMeetingTime.id
+  	outputMeetingTime = SchedulingMeetingTime(startSlot, endSlot, dayInteger, startDate, endDate, meetingType, meetingID)
   	return outputMeetingTime
 
 

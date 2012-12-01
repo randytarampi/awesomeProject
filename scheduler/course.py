@@ -18,11 +18,12 @@ class SchedulingCourse:
 
 class SchedulingMeetingTime:
     #def __init__(self, startTime, endTime, weekday, startDate, endDate):
-	def __init__(self, startTime, endTime, weekday, startDate, endDate, meetingType):
+	def __init__(self, startTime, endTime, weekday, startDate, endDate, meetingType, meetingTimeID):
 		self.startTime = startTime
 		self.endTime = endTime
 		self.weekday = weekday
 		self.meetingType = meetingType
 		self.startDate = startDate
 		self.endDate = endDate
+		self.meetingTimeID = meetingTimeID
 
