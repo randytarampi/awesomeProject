@@ -1,5 +1,6 @@
 #import schedule
 import shlex
+import copy
 from datetime import datetime
 from scheduler.schedule import *
 from scheduler.course import *
@@ -59,7 +60,7 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses)
 	for i in range (0, len(listMeetingTimes)):
 		currentScheduleMeetingTime = listMeetingTimes[i]
 		actualMeetingTime = MeetingTime.objects.get(id = currentScheduleMeetingTime.meetingTimeID)		
-		listActualMeetingTimes.append(currentScheduleMeetingTime)
+		listActualMeetingTimes.append(actualMeetingTime)
 	
 
 	largerOutputArray = []
@@ -84,15 +85,8 @@ def handleLabsForCourse(inputCourse, listofCourses):
 	if len(inputCourse.labs) != 0:
 		#create a clone course for each lab
 		for i in range (0, len(inputCourse.labs)):
-			#print "I created a lab clone"
-			#testcourse = inputCourse
-			testcourse = SchedulingCourse(inputCourse.title, inputCourse.courseID, inputCourse.meetingTimes, inputCourse.exams, inputCourse.labs, inputCourse.campus)
+			testcourse = copy.deepcopy(inputCourse)
 			print str(len(inputCourse.labs)) + "listsOfCoursesLabs len"
-			#print str(len(testcourse.meetingTimes)) + "len(testcourse.meetingTimes)"
-			#print len(listofCourses) + "listOfCoursesLabs"
-			
-#SchedulingCourse:
-#	def __init__(self, title, courseID, meetingTimes, exams, labs, campus):
 			testcourse.addMeetingTime(inputCourse.labs[i])
 			print str(len(testcourse.meetingTimes)) + "tescourse meetingtimes len"
 			listofCourses.append(testcourse)
