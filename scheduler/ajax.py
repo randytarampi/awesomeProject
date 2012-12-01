@@ -1,3 +1,5 @@
+from datetime import time
+from django.template import Context, Template
 from django.db.models import Q
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
@@ -5,9 +7,8 @@ from scheduler.models import *
 from scheduler.views import *
 from scheduler.algorithm import *
 
-
 def listOfDays():
-	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 	outString = []
 	for i in range(0, len(listOfDays)):
 		outString.append("<option value='%s'>%s</option>" % (str(i), listOfDays[i]))
@@ -48,6 +49,63 @@ def listOfSubjects():
 	for i in allSubjects:
 		datList.append("<option value='%s'>%s</option>" % (i, i))
 	return ''.join(datList)
+	
+def weeklyScheduleRows(meetingTimes, time):
+	tableRow = []
+
+	for day in range(6):
+		for meeting in meetingTimes:
+			rowCount = 0
+			if meeting.weekday == day:
+				if meeting.start_time == time:
+					testTime = time
+					while meeting.end_time > testTime:
+						try: 
+							testTime = testTime.replace(minute=testTime.minute+30)
+						except ValueError: 
+							testTime = testTime.replace(hour=testTime.hour+1, minute=0)
+						rowCount += 1
+					tableRow.append('\n\t<td rowspan="%i" class="class">\n\t\t<span id={{ meeting%s.id }}>{{ meeting%s.course }} - {{ meeting%s.start_time }} to {{ meeting%s.end_time }} in {{ meeting%s.room }}</span></td>' % (rowCount, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id))
+					break
+				elif meeting.start_time < time and time <= meeting.end_time:
+					break
+		
+		else:
+			tableRow.append('\n\t<td class="noClass">&nbsp;</td>')
+	
+	return ''.join(tableRow)
+
+def weeklySchedule(meetingTimes):
+	meetingTimes = MeetingTime.objects.filter(course__in = Course.objects.filter(subject='POL', number=358) | Course.objects.filter(subject='POL', number='457W') | Course.objects.filter(subject='POL', number=359) | Course.objects.filter(subject='POL', number=446), type='LEC').order_by('start_time')
+	meetingTable = []
+	meetingContext = {}
+	earlyBound = meetingTimes[0].start_time
+	lateBound = meetingTimes[len(meetingTimes)-1].end_time
+	tableBounds = []
+	
+	for meeting in meetingTimes:
+		meetingContext[('meeting%s' % meeting.id)] = meeting
+		earlyBound = meeting.start_time if (meeting.start_time < earlyBound) else earlyBound
+		lateBound = meeting.end_time if (meeting.end_time > lateBound) else lateBound
+	
+	for hour in range(earlyBound.hour, lateBound.hour+1):
+		tableBounds.append(time(hour))
+	
+	for slot in tableBounds:
+		meetingContext[('time%s' % slot.hour)] = slot
+	
+		# First Row (Top of the Hour)
+		meetingTable.append('\n<tr class="topHour" id=%s><th rowspan="2">{{ time%s }}</th>' % (str(slot.hour), slot.hour))
+		meetingTable.append(weeklyScheduleRows(meetingTimes, slot))
+		meetingTable.append('\n</tr>')
+		
+		# Second Row (Bottom of the Hour)
+		slot = slot.replace(minute=slot.minute+30)
+		meetingTable.append('\n<tr class="bottomHour">')
+		meetingTable.append(weeklyScheduleRows(meetingTimes, slot))
+		meetingTable.append('\n</tr>')
+	
+	return Template(''.join(meetingTable)).render(Context(meetingContext))
 
 @dajaxice_register
 def getUnavailability(request):
@@ -86,9 +144,8 @@ def generateSchedule(request, form):
 	processedData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'optimalExamTimes': optimalExamTimes, 'rejectedCourses': rejectedCourses, 'rejectedInstructors': rejectedInstructors, 'rejectedMeetingTimes': rejectedMeetingTimes}
 	
 	# Serve the data
-	scheduleInfo = render_to_response('schedulerSchedule.html', processedData).content
-	dajax.assign('#scheduleViewDiv', 'innerHTML', scheduleInfo)
-	dajax.assign('#scheduleViewWeek', 'innerHTML', "You'll see a weekly calendar here")
+	dajax.assign('#scheduleViewDiv', 'innerHTML', render_to_response('schedulerSchedule.html', processedData).content)
+	dajax.assign('#scheduleTableBody', 'innerHTML', weeklySchedule(optimalMeetingTimes))
 	return dajax.json()
 
 @dajaxice_register

@@ -14,6 +14,9 @@ def largeTest():
 	return createOptimalSchedule(5, Course.objects.all(), True)
 	#return createOptimalSchedule(5, Course.objects.filter(subject = "cmpt"), True)
 	#return createOptimalSchedule(4, Course.objects.filter(subject = "bisc"))
+	#selectedCourses = Course.objects.filter(section__startswith="C")
+	return createOptimalSchedule(5, selectedCourses, True)
+	 
 def conradTest():
     	testCourseList = []
     	testCourse1 = Course.objects.get(id = 1L)
