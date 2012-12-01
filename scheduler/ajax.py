@@ -65,18 +65,18 @@ def weeklyScheduleRows(meetingTimes, time):
 						except ValueError: 
 							testTime = testTime.replace(hour=testTime.hour+1, minute=0)
 						rowCount += 1
-					tableRow.append('\n\t<td rowspan="%i" class="class">\n\t\t<span id={{ meeting%s.id }}>{{ meeting%s.course }} - {{ meeting%s.start_time }} to {{ meeting%s.end_time }} in {{ meeting%s.room }}</span></td>' % (rowCount, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id))
+					tableRow.append('\n\t<td rowspan="%i" class="scheduleTableCell scheduleTableclass">\n\t\t<span id={{ meeting%s.id }}>{{ meeting%s.course }} - {{ meeting%s.start_time }} to {{ meeting%s.end_time }} in {{ meeting%s.room }}</span></td>' % (rowCount, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id))
 					break
 				elif meeting.start_time < time and time <= meeting.end_time:
 					break
 		
 		else:
-			tableRow.append('\n\t<td class="noClass">&nbsp;</td>')
+			tableRow.append('\n\t<td class="scheduleTableCell">&nbsp;</td>')
 	
 	return ''.join(tableRow)
 
 def weeklySchedule(meetingTimes):
-	meetingTimes = MeetingTime.objects.filter(course__in = Course.objects.filter(subject='POL', number=358) | Course.objects.filter(subject='POL', number='457W') | Course.objects.filter(subject='POL', number=359) | Course.objects.filter(subject='POL', number=446), type='LEC').order_by('start_time')
+	meetingTimes = MeetingTime.objects.filter(course__in = Course.objects.filter(subject='POL', number=358) | Course.objects.filter(subject='POL', number='457W') | Course.objects.filter(subject='POL', number=359), type='LEC').order_by('start_time')
 	meetingTable = []
 	meetingContext = {}
 	earlyBound = meetingTimes[0].start_time
@@ -95,7 +95,7 @@ def weeklySchedule(meetingTimes):
 		meetingContext[('time%s' % slot.hour)] = slot
 	
 		# First Row (Top of the Hour)
-		meetingTable.append('\n<tr class="topHour" id=%s><th rowspan="2">{{ time%s }}</th>' % (str(slot.hour), slot.hour))
+		meetingTable.append('\n<tr class="scheduleTableRow topHour"><th rowspan="2">{{ time%s }}</th>' % slot.hour)
 		meetingTable.append(weeklyScheduleRows(meetingTimes, slot))
 		meetingTable.append('\n</tr>')
 		
@@ -149,7 +149,19 @@ def generateSchedule(request, form):
 	return dajax.json()
 
 @dajaxice_register
-def listOfNumbers(request, option, idNum):
+def listOfNumbers(request, option):
+	dajax = Dajax()
+	out = []
+
+	daList = Course.objects.filter(subject=option).values_list('number', flat=True).distinct()
+	for i in daList:
+		out.append("<option value='%s'>%s</option>" % (i, i))
+
+	dajax.assign('#courseNumber', 'innerHTML', ''.join(out))	
+	return dajax.json()
+
+@dajaxice_register
+def listOfNumbers2(request, option, idNum):
 	dajax = Dajax()
 	out = []
 
@@ -167,7 +179,7 @@ def updatingCourseForm(request, option):
 	out = []
 	# several select tags are made, each with a complete list of subjects with value = 1 through aClass
 	for aClass in range(1, int(option)+1):
-		out.append('<div>Course %s: <select id="courseSubject%s" name="courseSubject%s" onchange="Dajaxice.scheduler.listOfNumbers(Dajax.process, {\'option\':this.value, \'idNum\':\'#courseNumber%s\'})">%s</select> &nbsp<select id="courseNumber%s" name="courseNumber%s"></select></div>' % (str(aClass), str(aClass), str(aClass), str(aClass), listOfSubjects(), str(aClass), str(aClass)))
+		out.append('<div>Course %s: <select id="courseSubject%s" name="courseSubject%s" onchange="Dajaxice.scheduler.listOfNumbers2(Dajax.process, {\'option\':this.value, \'idNum\':\'#courseNumber%s\'})">%s</select> &nbsp<select id="courseNumber%s" name="courseNumber%s"></select></div>' % (str(aClass), str(aClass), str(aClass), str(aClass), listOfSubjects(), str(aClass), str(aClass)))
 
 	moreOut = []
 	#more stuff to render to the template. This renders the select tag before options are added to it.

@@ -1,0 +1,18 @@
+{% extends "schedulerBase.html" %}
+
+{% block content %}
+<div id="schedulerClasses">
+	{% regroup courses by subject as subjectList %}
+	<ul> 
+	{% for subject in subjectList %}
+	  <li>{{ subject.grouper }}
+		<ul>
+		    {% for class in subject.list %}
+		    <li>{{ class }}</li>
+		    {% endfor %}
+		</ul>
+	  </li>
+	{% endfor %}
+	</ul>
+</div>
+{% endblock %}
