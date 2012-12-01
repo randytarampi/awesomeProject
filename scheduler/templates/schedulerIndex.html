@@ -10,13 +10,21 @@
 	<form id="scheduleForm" method="POST">
 	{% csrf_token %}
 		<div id="addCourse">
-			Add a course:
-			<!--<select id="courseSubject" name="courseSubject" onchange="Dajaxice.scheduler.listOfNumbers(Dajax.process, {\'option\':this.value, \'idNum\':\'courseNumber\'})">{{ subjects }}</select>-->
-			<select>
+			Add a course: 
+			<select id="courseSubject" name="courseSubject" onchange="Dajaxice.scheduler.listOfNumbers(Dajax.process, {'option':this.value})">
 				{% for op in subjects %}
 				<option value="{{ op }}">{{ op }}</option>
 				{% endfor %}
 			</select>
+			&nbsp;
+			<select id="courseNumber" name="courseNumber">
+			</select>
+			&nbsp;
+			<input id="courseSubmit" type="submit" value="Submit!"/>
+		</div>
+		<div id="addByProf">
+			Add a course by prof:
+			<select id="courseSubjectByProf" name="courseSubjectByProf" onchange="Dajaxice.scheduler.listOfProfs(Dajax.process, {'option':this.value})">
 		</div>
 
 		<span>How many classes are you considering?
