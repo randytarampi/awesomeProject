@@ -25,6 +25,12 @@
 		<div id="addByProf">
 			Add a course by prof:
 			<select id="courseSubjectByProf" name="courseSubjectByProf" onchange="Dajaxice.scheduler.listOfProfs(Dajax.process, {'option':this.value})">
+				{% for op in subjects %}
+				<option value="{{ op }}">{{ op }}</option>
+				{% endfor %}
+			</select>
+			&nbsp;
+			<select id="subjectProfs" name="subjectProfs">
 			</select>
 		</div>
 

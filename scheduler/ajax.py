@@ -149,6 +149,19 @@ def generateSchedule(request, form):
 	return dajax.json()
 
 @dajaxice_register
+def listOfProfs(request, option):
+	dajax = Dajax()
+	out = []
+
+	c = Course.objects.filter(subject="CMPT")
+	d = Instructor.objects.filter(course__in=c).values_list('name', flat=True).distinct()
+	for i in d:
+		out.append("<option value='%s'>%s</option>" % (i, i))
+
+	dajax.assign('#subjectProfs', 'innerHTML', ''.join(out))
+	return dajax.json()
+
+@dajaxice_register
 def listOfNumbers(request, option):
 	dajax = Dajax()
 	out = []
