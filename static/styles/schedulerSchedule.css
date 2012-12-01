@@ -1,4 +1,4 @@
-table { 
+#scheduleTable { 
 	border-spacing: 0;
 	border-collapse: collapse;
 	border-width: 1px;
@@ -6,22 +6,22 @@ table {
 	border-style: solid;
 }
 
-tr {
+#scheduleTableBody tr {
 	border-width: 1px;
 	border-color: #A6192E;
 }
 
-tr.topHour {
+#scheduleTableBody tr.topHour {
 	border-top-style: solid;
 	border-bottom-style: dotted;
 }
 
-tr.bottomHour {
+#scheduleTableBody tr.bottomHour {
 	border-top-style: dotted;
 	border-bottom-style: solid;
 }
 
-td, th {
+.scheduleTableCell {
 	padding: 2px;
 	border-width: 1px;
 	border-color: #A6192E;
@@ -29,26 +29,24 @@ td, th {
 	border-left-style: solid;
 }
 
-td.class {
+.scheduleTableclass {
 	color: #FFF;
 	background-color: #A6192E;
 	text-align: center;
-	border-color: #A07400;
-	border-style: solid;
 }
 
-tfoot {
+#scheduleTableFoot {
 	font-weight: bold;
 }
 
 li.toggleCollapse {
-	list-style-image: url('collapse.gif');
-}
-
-li.toggleExpand {
 	list-style-image: url('expand.gif');
 }
 
-#scheduleWeekAndExams {
-	padding-left: 20px;
+li.toggleExpand {
+	list-style-image: url('collapse.gif');
+}
+
+ul.rejected {
+	display: none
 }

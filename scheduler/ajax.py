@@ -65,18 +65,18 @@ def weeklyScheduleRows(meetingTimes, time):
 						except ValueError: 
 							testTime = testTime.replace(hour=testTime.hour+1, minute=0)
 						rowCount += 1
-					tableRow.append('\n\t<td rowspan="%i" class="class">\n\t\t<span id={{ meeting%s.id }}>{{ meeting%s.course }} - {{ meeting%s.start_time }} to {{ meeting%s.end_time }} in {{ meeting%s.room }}</span></td>' % (rowCount, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id))
+					tableRow.append('\n\t<td rowspan="%i" class="scheduleTableCell scheduleTableclass">\n\t\t<span id={{ meeting%s.id }}>{{ meeting%s.course }} - {{ meeting%s.start_time }} to {{ meeting%s.end_time }} in {{ meeting%s.room }}</span></td>' % (rowCount, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id))
 					break
 				elif meeting.start_time < time and time <= meeting.end_time:
 					break
 		
 		else:
-			tableRow.append('\n\t<td class="noClass">&nbsp;</td>')
+			tableRow.append('\n\t<td class="scheduleTableCell">&nbsp;</td>')
 	
 	return ''.join(tableRow)
 
 def weeklySchedule(meetingTimes):
-	meetingTimes = MeetingTime.objects.filter(course__in = Course.objects.filter(subject='POL', number=358) | Course.objects.filter(subject='POL', number='457W') | Course.objects.filter(subject='POL', number=359) | Course.objects.filter(subject='POL', number=446), type='LEC').order_by('start_time')
+	meetingTimes = MeetingTime.objects.filter(course__in = Course.objects.filter(subject='POL', number=358) | Course.objects.filter(subject='POL', number='457W') | Course.objects.filter(subject='POL', number=359), type='LEC').order_by('start_time')
 	meetingTable = []
 	meetingContext = {}
 	earlyBound = meetingTimes[0].start_time
@@ -95,7 +95,7 @@ def weeklySchedule(meetingTimes):
 		meetingContext[('time%s' % slot.hour)] = slot
 	
 		# First Row (Top of the Hour)
-		meetingTable.append('\n<tr class="topHour" id=%s><th rowspan="2">{{ time%s }}</th>' % (str(slot.hour), slot.hour))
+		meetingTable.append('\n<tr class="scheduleTableRow topHour"><th rowspan="2">{{ time%s }}</th>' % slot.hour)
 		meetingTable.append(weeklyScheduleRows(meetingTimes, slot))
 		meetingTable.append('\n</tr>')
 		
