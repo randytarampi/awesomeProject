@@ -48,7 +48,22 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses)
     	#print "new newlistcourse = " + str(newListOfCourses[0])
     	#print "size of poolcut =" + str(len(poolOfCutCourses))
     	#return outPutListOfCourses
-    	largerOutputArray = []
+    	listMeetingTimes = []
+	for i in range (0, len(poolOfLockedCourses)):
+		meetingTimes = poolOfLockedCourses[i].meetingTimes
+		for j in range (0, len(meetingTimes)):
+			meetingTime = meetingTimes[j]
+			listMeetingTimes.append(meetingTime)
+	listActualMeetingTimes = []
+	#wooo dev speed > efficiency!	
+	for i in range (0, len(listMeetingTimes)):
+		currentScheduleMeetingTime = listMeetingTimes[i]
+		actualMeetingTime = MeetingTime.objects.get(id = currentScheduleMeetingTime.meetingTimeID)		
+		listActualMeetingTimes.append(currentScheduleMeetingTime)
+	
+
+	largerOutputArray = []
+	largerOutputArray.append(listActualMeetingTimes)
     	largerOutputArray.append(outPutListOfLockedCourses)
     	largerOutputArray.append(outPutListOfCutCourses)
     	#Schedule Stats
@@ -58,6 +73,9 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses)
     	currentChoiceStats = ChoiceStats(TotalDays, TotalTimeGap, crossCampusTravels)
     	largerOutputArray.append(currentChoiceStats)
     	largerOutputArray.append(schedule)
+	#list of meeting times
+	
+	#largerOutputArray.append(meetingTime)
     	return largerOutputArray
 # need a function that handles the case when the scheduler can't handle a certain course
 
@@ -66,8 +84,17 @@ def handleLabsForCourse(inputCourse, listofCourses):
 	if len(inputCourse.labs) != 0:
 		#create a clone course for each lab
 		for i in range (0, len(inputCourse.labs)):
-			testcourse = inputCourse
+			#print "I created a lab clone"
+			#testcourse = inputCourse
+			testcourse = SchedulingCourse(inputCourse.title, inputCourse.courseID, inputCourse.meetingTimes, inputCourse.exams, inputCourse.labs, inputCourse.campus)
+			print str(len(inputCourse.labs)) + "listsOfCoursesLabs len"
+			#print str(len(testcourse.meetingTimes)) + "len(testcourse.meetingTimes)"
+			#print len(listofCourses) + "listOfCoursesLabs"
+			
+#SchedulingCourse:
+#	def __init__(self, title, courseID, meetingTimes, exams, labs, campus):
 			testcourse.addMeetingTime(inputCourse.labs[i])
+			print str(len(testcourse.meetingTimes)) + "tescourse meetingtimes len"
 			listofCourses.append(testcourse)
 	else:
 		listofCourses.append(inputCourse)
@@ -100,6 +127,7 @@ def convertCourseModelToCourseObject(inputCourse, filterDistanceCourses):
 		if (meetingTime.meetingType == "EXAM"):
 	    		courseExam.append(meetingTime)
 		elif (meetingTime.meetingType == "LAB"):
+			#print "AddingLab"
 	    		courseLabs.append(meetingTime)
 	#meetingTime = convertStringToMeetingTime(listofmeetingTimes[i])
 		else:
@@ -136,7 +164,8 @@ def convertModelMeetingTimeToScheduleMeetingTime(inputMeetingTime):
   	startDate = inputMeetingTime.start_day
   	endDate = inputMeetingTime.end_day
   	meetingType = inputMeetingTime.type
-  	outputMeetingTime = SchedulingMeetingTime(startSlot, endSlot, dayInteger, startDate, endDate, meetingType)
+	meetingID = inputMeetingTime.id
+  	outputMeetingTime = SchedulingMeetingTime(startSlot, endSlot, dayInteger, startDate, endDate, meetingType, meetingID)
   	return outputMeetingTime
 
 

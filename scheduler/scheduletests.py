@@ -11,9 +11,9 @@ def largeTest():
 	#Course.objects.filter(subject = "cmpt")
 
     	#return createOptimalSchedule(5, Course.objects.all())
-	return createOptimalSchedule(5, Course.objects.all(), True)
+	#return createOptimalSchedule(5, Course.objects.all(), True)
 	#return createOptimalSchedule(5, Course.objects.filter(subject = "cmpt"), True)
-	#return createOptimalSchedule(4, Course.objects.filter(subject = "bisc"))
+	return createOptimalSchedule(5, Course.objects.filter(subject = "bisc"), True)
 	#selectedCourses = Course.objects.filter(section__startswith="C")
 	return createOptimalSchedule(5, selectedCourses, True)
 	 
@@ -31,23 +31,25 @@ def conradTest():
 #simpleTest()
 output = largeTest()
 
-c1 = output[0][0]
-c2 = output[0][1]
-c3 = output[0][2]
-c4 = output[0][3]
-c5 = output[0][4]
+c1 = output[1][0]
+c2 = output[1][1]
+c3 = output[1][2]
+c4 = output[1][3]
+c5 = output[1][4]
 mt1 = MeetingTime.objects.filter(course = c1.id)
 mt2 = MeetingTime.objects.filter(course = c2.id)
 mt3 = MeetingTime.objects.filter(course = c3.id)
 mt4 = MeetingTime.objects.filter(course = c4.id)
 mt5 = MeetingTime.objects.filter(course = c5.id)
 
-stats = output[2]
+cutcourses = output[2]
+
+stats = output[3]
 days = stats.numberOfDays
 gap = stats.totalGap
 travels = stats.crossCampusTravels
 
-schedule = output[3]
+schedule = output[4]
 
 monday = schedule.mondayTimeSlotAvailability
 tuesday = schedule.tuesdayTimeSlotAvailability
