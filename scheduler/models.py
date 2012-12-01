@@ -90,6 +90,9 @@ class Instructor (models.Model):
         Return the instructor's name.
 		"""
 		return self.name
+	
+	def first_letter(self):
+		return self.name and self.name.upper()[0] or ''
 
 class MeetingTime (models.Model):
 	start_day = models.DateField('Start Date')

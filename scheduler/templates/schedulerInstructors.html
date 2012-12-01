@@ -1,0 +1,18 @@
+{% extends "schedulerBase.html" %}
+
+{% block content %}
+<div id="schedulerInstructors">
+	{% regroup instructors by first_letter as letter_list %}
+	<ul> 
+	{% for letter in letter_list %}
+	  <li>{{ letter.grouper }}
+		<ul>
+		    {% for instructor in letter.list %}
+		    <li>{{ instructor.name }}</li>
+		    {% endfor %}
+		</ul>
+	  </li>
+	{% endfor %}
+	</ul>
+</div>
+{% endblock %}
