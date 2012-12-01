@@ -1,23 +1,83 @@
 $(document).ready(
 	function() {
 		// Rejected Courses
-		$("a.rejectedCourse").toggle(
-			function() {$(this).parents("li").next().show('fast');},
-			function() {$(this).parents("li").next().hide('slow');}
+		$("li.rejectedCourse").toggle(
+			function() {
+				$(this).next().show('fast');
+				$(this).addClass('toggleExpand');
+				$(this).removeClass('toggleCollapse');
+			},
+			function() {
+				$(this).next().hide('slow');
+				$(this).addClass('toggleCollapse');
+				$(this).removeClass('toggleExpand');
+			}
 	 	);
-		$("a.rejectedTime").toggle(
-			function() {$(this).parents("li").next().hide('slow');},
-			function() {$(this).parents("li").next().show('fast');}
+		$("li.rejectedTime").toggle(
+			function() {
+				$(this).next().hide('slow');
+				$(this).addClass('toggleExpand');
+				$(this).removeClass('toggleCollapse');
+			},
+			function() {
+				$(this).next().show('fast');
+				$(this).addClass('toggleCollapse');
+				$(this).removeClass('toggleExpand');
+			}
 	 	);
 	 	
 	 	// Optimal Courses
-		$("a.optimalCourse").toggle(
-			function() {$(this).parents("li").next().hide('slow');},
-			function() {$(this).parents("li").next().show('fast');}
+		$("li.optimalCourse").toggle(
+			function() {
+				$(this).next().hide('slow');
+				$(this).addClass('toggleExpand');
+				$(this).removeClass('toggleCollapse');
+			},
+			function() {
+				$(this).next().show('fast');
+				$(this).addClass('toggleCollapse');
+				$(this).removeClass('toggleExpand');
+			}
 	 	);
-		$("a.optimalTime").toggle(
-			function() {$(this).parents("li").next().hide('slow');},
-			function() {$(this).parents("li").next().show('fast');}
+		$("li.optimalTime").toggle(
+			function() {
+				$(this).next().hide('slow');
+				$(this).addClass('toggleExpand');
+				$(this).removeClass('toggleCollapse');
+			},
+			function() {
+				$(this).next().show('fast');
+				$(this).addClass('toggleExpand');
+				$(this).removeClass('toggleCollapse');
+			}
+	 	);	 	
+	 	
+	 	// Weekly Schedule
+		$("li.scheduleViewWeek").toggle(
+			function() {
+				$(this).next().hide('slow');
+				$(this).addClass('toggleExpand');
+				$(this).removeClass('toggleCollapse');
+			},
+			function() {
+				$(this).next().show('fast');
+				$(this).addClass('toggleCollapse');
+				$(this).removeClass('toggleExpand');
+			}
+	 	);
+	 	
+	 	// Exam Schedule
+		$("li.scheduleViewExams").toggle(
+			function() {
+				$(this).next().hide('slow');
+				$(this).addClass('toggleExpand');
+				$(this).removeClass('toggleCollapse');
+			},
+			function() {
+				$(this).next().show('fast');
+				$(this).addClass('toggleExpand');
+				$(this).removeClass('toggleCollapse');
+			}
 	 	);
 	}
 );

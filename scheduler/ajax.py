@@ -7,24 +7,6 @@ from scheduler.models import *
 from scheduler.views import *
 from scheduler.algorithm import *
 
-SCHEDULE_TIMES = (
-	time(8, 0),
-	time(9, 0),
-	time(10, 0),
-	time(11, 0),
-	time(12, 0),
-	time(13, 0),
-	time(14, 0),
-	time(15, 0),
-	time(16, 0),
-	time(17, 0),
-	time(18, 0),
-	time(19, 0),
-	time(20, 0),
-	time(21, 0),
-	time(22, 0),
-)
-
 def listOfDays():
 	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 	outString = []
@@ -83,13 +65,13 @@ def weeklyScheduleRows(meetingTimes, time):
 						except ValueError: 
 							testTime = testTime.replace(hour=testTime.hour+1, minute=0)
 						rowCount += 1
-					tableRow.append('<td rowspan="%i" class="class">{{ meeting%s.course }} - {{ meeting%s.start_time }} to {{ meeting%s.end_time }}</td>' % (rowCount, meeting.id, meeting.id, meeting.id))
+					tableRow.append('\n\t<td rowspan="%i" class="class">\n\t\t<span id={{ meeting%s.id }}>{{ meeting%s.course }} - {{ meeting%s.start_time }} to {{ meeting%s.end_time }} in {{ meeting%s.room }}</span></td>' % (rowCount, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id))
 					break
 				elif meeting.start_time < time and time <= meeting.end_time:
 					break
 		
 		else:
-			tableRow.append('<td class="noClass" id={{ time%s }}%s>&nbsp;</td>' % (time.hour, ("|"+str(day))))
+			tableRow.append('\n\t<td class="noClass">&nbsp;</td>')
 	
 	return ''.join(tableRow)
 
@@ -113,15 +95,15 @@ def weeklySchedule(meetingTimes):
 		meetingContext[('time%s' % slot.hour)] = slot
 	
 		# First Row (Top of the Hour)
-		meetingTable.append('<tr class="topHour" id={{ time%s }}><th rowspan="2">{{ time%s }}</th>' % (slot.hour, slot.hour))
+		meetingTable.append('\n<tr class="topHour" id=%s><th rowspan="2">{{ time%s }}</th>' % (str(slot.hour), slot.hour))
 		meetingTable.append(weeklyScheduleRows(meetingTimes, slot))
-		meetingTable.append('</tr>')
+		meetingTable.append('\n</tr>')
 		
 		# Second Row (Bottom of the Hour)
 		slot = slot.replace(minute=slot.minute+30)
-		meetingTable.append('<tr class="bottomHour">')
+		meetingTable.append('\n<tr class="bottomHour">')
 		meetingTable.append(weeklyScheduleRows(meetingTimes, slot))
-		meetingTable.append('</tr>')
+		meetingTable.append('\n</tr>')
 	
 	return Template(''.join(meetingTable)).render(Context(meetingContext))
 
