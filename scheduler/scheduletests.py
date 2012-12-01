@@ -11,9 +11,9 @@ def largeTest():
 	#Course.objects.filter(subject = "cmpt")
 
     	#return createOptimalSchedule(5, Course.objects.all())
-	return createOptimalSchedule(5, Course.objects.all(), True)
+	#return createOptimalSchedule(5, Course.objects.all(), True)
 	#return createOptimalSchedule(5, Course.objects.filter(subject = "cmpt"), True)
-	#return createOptimalSchedule(4, Course.objects.filter(subject = "bisc"))
+	return createOptimalSchedule(5, Course.objects.filter(subject = "bisc"), True)
 	#selectedCourses = Course.objects.filter(section__startswith="C")
 	return createOptimalSchedule(5, selectedCourses, True)
 	 
