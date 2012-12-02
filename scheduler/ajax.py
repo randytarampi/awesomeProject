@@ -130,14 +130,14 @@ def generateSchedule(request, form):
 
 	# Process the data
 	#warning this will now filter out distance ed coures
-	processedCourses = createOptimalSchedule(numClasses, selectedCourses, True)
+	processedCourses = createOptimalSchedule(numClasses, selectedCourses, False)
 	
-	optimalCourses = processedCourses[0]
+	optimalCourses = processedCourses[1]
 	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)	
-	optimalMeetingTimes = MeetingTime.objects.filter(course__in = optimalCourses).order_by('type', 'start_day', 'start_time')
-	optimalExamTimes = optimalMeetingTimes.filter(Q(type="EXAM") | Q(type="MIDT"))
+	optimalMeetingTimes = processedCourses[0].order_by('type', 'start_day', 'start_time')
+	optimalExamTimes = MeetingTime.objects.filter(course__in = optimalCourses).filter(Q(type="EXAM") | Q(type="MIDT"))
 	
-	rejectedCourses = processedCourses[1]
+	rejectedCourses = processedCourses[2]
 	rejectedInstructors = Instructor.objects.filter(course__in = rejectedCourses)	
 	rejectedMeetingTimes = MeetingTime.objects.filter(course__in = rejectedCourses).order_by('type', 'start_day', 'start_time')
 	
