@@ -37,7 +37,7 @@ TYPE_CHOICES = (
 	('MIDT', 'Midterm'),
 	('LEC', 'Lecture'),
 	('EXAM', 'Final'),
-	('LAB', 'Lab'),
+	('LAB', 'Lab/Tutorial'),
 )
 
 SEMESTER_CHOICES = (

@@ -11,12 +11,12 @@
 	border-color: #A6192E;
 }
 
-#scheduleTableBody tr.topHour {
+.topHour {
 	border-top-style: solid;
 	border-bottom-style: dotted;
 }
 
-#scheduleTableBody tr.bottomHour {
+.bottomHour {
 	border-top-style: dotted;
 	border-bottom-style: solid;
 }
@@ -33,6 +33,7 @@
 	color: #FFF;
 	background-color: #A6192E;
 	text-align: center;
+	border-width: 1px;
 	border-color: #A07400;
 	border-top-style: solid;
 	border-bottom-style: solid;
