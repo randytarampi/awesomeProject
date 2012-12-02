@@ -33,6 +33,9 @@
 	color: #FFF;
 	background-color: #A6192E;
 	text-align: center;
+	border-color: #A07400;
+	border-top-style: solid;
+	border-bottom-style: solid;
 }
 
 #scheduleTableFoot {
