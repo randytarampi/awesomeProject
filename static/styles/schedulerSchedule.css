@@ -1,4 +1,5 @@
 #scheduleTable { 
+	max-width: 591px;
 	border-spacing: 0;
 	border-collapse: collapse;
 	border-width: 1px;
@@ -22,6 +23,7 @@
 }
 
 .scheduleTableCell {
+	max-width: 100px;
 	padding: 2px;
 	border-width: 1px;
 	border-color: #A6192E;
@@ -37,6 +39,10 @@
 	border-color: #A07400;
 	border-top-style: solid;
 	border-bottom-style: solid;
+}
+
+.classDescription {
+	word-wrap: break-word;
 }
 
 #scheduleTableFoot {
