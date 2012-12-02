@@ -17,7 +17,15 @@ def examples(request):
 def instructors(request):
 	allInstructors = Instructor.objects.order_by('name')
 	return render_to_response('schedulerInstructors.html', { 'instructors': allInstructors })
+
+def instructor(request, instructorId):
+	instructor = get_object_or_404(Instructor, pk=instructorId)
+	return render_to_response('schedulerInstructor.html', { 'instructor': instructor })
     
-def classes(request):
+def courses(request):
 	allCourses = Course.objects.order_by('subject')
-	return render_to_response('schedulerClasses.html', { 'courses': allCourses })
+	return render_to_response('schedulerCourses.html', { 'courses': allCourses })
+
+def course(request, courseId):
+	course = get_object_or_404(Course, pk=courseId)
+	return render_to_response('schedulerCourse.html', { 'course': course })
