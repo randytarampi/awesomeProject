@@ -154,7 +154,7 @@ def listOfProfs(request, option):
 	out = []
 
 	c = Course.objects.filter(subject=option)
-	d = Instructor.objects.filter(course__in=c).values_list('name', flat=True).distinct()
+	d = Instructor.objects.filter(course__in=c).order_by('name').values_list('name', flat=True).distinct()
 	for i in d:
 		out.append("<option value='%s'>%s</option>" % (i, i))
 
