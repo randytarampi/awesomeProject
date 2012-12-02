@@ -338,6 +338,7 @@ def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, poolO
         	orignialTimeGap = schedule.getTotalTimeGap()
         	originalNumberDays =  schedule.getTotalDays()
         	updateCleanPotentialCourses(poolOfPotentialCourses, poolOfCutCourses, poolOfLockedCourses, schedule)
+		#i.e. if are taking cmpt 300 already... it will delete any other mentions of cmpt 300 from the potential list
         	eliminateDuplicateCourses(poolOfPotentialCourses, poolOfLockedCourses, poolOfCutCourses, schedule)
         	choiceStatsList = []
 	
@@ -352,7 +353,7 @@ def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, poolO
                 		newTotalDays = schedule.getTotalDays()
                 		newTotalTimeGap = schedule.getTotalTimeGap()
 				newCrossCampusTravels = schedule.getTotalCrossCampusTravels()
-                		currentChoiceStats = ChoiceStats(newTotalDays, newTotalDays, newCrossCampusTravels)
+                		currentChoiceStats = ChoiceStats(newTotalDays, newTotalTimeGap, newCrossCampusTravels)
                			choiceStatsList.append(currentChoiceStats)
                 		#free certain course
                 		freeCourse(courseWeTryToAdd, schedule)
