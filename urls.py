@@ -31,9 +31,8 @@ urlpatterns = patterns('',
     url(r'^favicon\.ico$', redirect_to, {'url': '/static/favicon.ico'}),
 
     # Project URLs
-    url(r'^$', direct_to_template, {'template': 'index.html'}, name="index"),
+    url(r'^', include('scheduler.urls')),
     url(r'^about/', include('about.urls')),
-    url(r'^scheduler/', include('scheduler.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()
