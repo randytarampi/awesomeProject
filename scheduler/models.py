@@ -83,6 +83,8 @@ class Course (models.Model):
 class Instructor (models.Model):
 	userid = models.CharField(max_length = 100, null=True)
 	name = models.CharField(max_length = 100)
+	first_name = models.CharField(max_length = 100)
+	last_name = models.CharField(max_length = 100)
 	course = models.ForeignKey(Course)
 
 	def __unicode__(self):
