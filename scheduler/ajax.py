@@ -7,6 +7,28 @@ from scheduler.models import *
 from scheduler.views import *
 from scheduler.algorithm import *
 
+@dajaxice_register
+def amORpmStart(request, option):
+	dajax = Dajax()
+
+	if int(option) > 12:
+		out = "pm"
+	else:
+		out = "am"
+	dajax.assign('#startT', 'innerHTML', out)
+	return dajax.json()
+
+@dajaxice_register
+def amORpmEnd(request, option):
+	dajax = Dajax()
+
+	if int(option) > 12:
+		out = "pm"
+	else:
+		out = "am"
+	dajax.assign('#endT', 'innerHTML', out)
+	return dajax.json()
+
 def listOfDays():
 	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 	outString = []
@@ -121,28 +143,28 @@ def getUnavailability(request):
 def generateSchedule(request, form):
 	dajax = Dajax()
 	dajax.clear('#scheduleViewDiv', 'innerHTML')
-
+	print "FUCK"
 	# Get the data
 	selectedCourses = Course.objects.none()
 	numClasses =  int(form['numTaking'])
 	for i in range(numClasses):
 		selectedCourses = selectedCourses | Course.objects.filter(subject=form['courseSubject%i' % (i+1)], number=form['courseNumber%i' % (i+1)])
-
+	print "YOU"
 	# Process the data
 	#warning this will now filter out distance ed coures
 	processedCourses = createOptimalSchedule(numClasses, selectedCourses, False)
-	
+	print "BITCHES"
 	optimalCourses = processedCourses[1]
 	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)	
 	optimalMeetingTimes = processedCourses[0].order_by('type', 'start_day', 'start_time')
 	optimalExamTimes = MeetingTime.objects.filter(course__in = optimalCourses).filter(Q(type="EXAM") | Q(type="MIDT"))
-	
+	print "BITCHES"
 	rejectedCourses = processedCourses[2]
 	rejectedInstructors = Instructor.objects.filter(course__in = rejectedCourses)	
 	rejectedMeetingTimes = MeetingTime.objects.filter(course__in = rejectedCourses).order_by('type', 'start_day', 'start_time')
-	
+	print "BITCHES"
 	processedData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'optimalExamTimes': optimalExamTimes, 'rejectedCourses': rejectedCourses, 'rejectedInstructors': rejectedInstructors, 'rejectedMeetingTimes': rejectedMeetingTimes}
-	
+	print "BITCHES"
 	# Serve the data
 	dajax.assign('#scheduleViewDiv', 'innerHTML', render_to_response('schedulerSchedule.html', processedData).content)
 	dajax.assign('#scheduleTableBody', 'innerHTML', weeklySchedule(optimalMeetingTimes))

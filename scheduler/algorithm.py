@@ -12,8 +12,9 @@ from scheduler.datetimeconverter import *
 #takes number of courses that the student wants,
 # and a list of coursese the student is interested in and outputs a list of courses 
 #that will be in an optimal schedule
-#def functionForRandy(numberOfCourses, listofCourses):
-def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses):
+#def createOptimalSchedule(numberOfCourses, listofCourses):
+	
+def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses = True):
 	schedule = Schedule()
 	poolOfLockedCourses = []
    	newListOfCourses = []
@@ -82,7 +83,30 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses)
 	
 	#largerOutputArray.append(meetingTime)
     	return largerOutputArray
-# need a function that handles the case when the scheduler can't handle a certain course
+
+
+#handles courses we need to take
+#Potential issue!
+#Say hte user wants to take cmpt 300, and we are passed all sections of cmpt 300
+#This means I should group up all the sections of cmpt 300 together into one list
+#NOT DONE
+def handleCoursesWeNeed(coursesWeNeedListOfLists, schedule, poolOfLockedCourses, poolOfCutCourses, numberOfCourses):
+	#go through the courses we need to take and attempt to add them one by one	
+	#poolOfLockedCourses = []
+	#for each course name (e.g. cmpt300
+	#note each course name has multiple sections
+	#for every course name
+	for i in range (0, len(coursesWeNeedListOfLists)):
+		listOfCopiesOfNeededCourse = []
+		courseListWithCertainName = coursesWeNeedListOfLists[i]
+		#for every entry with that course name (different sections)
+		#get the copies of the course
+		for j in range (0, len(courseListWithCertainName)):
+			currentCourseSection = courseListWithCertainName[j]
+			handleLabsForCourse(currentCourseWeNeed, listOfCopiesOfNeededCourse)
+		iterateBEHEMOTH(schedule, poolOfLockedCourses, listOfCopiesOfNeededCourse, poolOfCutCourses, numberOfCourses)
+
+	
 
 #Handles multiple labs for a course
 def handleLabsForCourse(inputCourse, listofCourses):
@@ -90,14 +114,11 @@ def handleLabsForCourse(inputCourse, listofCourses):
 		#create a clone course for each lab
 		for i in range (0, len(inputCourse.labs)):
 			testcourse = copy.deepcopy(inputCourse)
-			#print str(len(inputCourse.labs)) + "listsOfCoursesLabs len"
 			testcourse.addMeetingTime(inputCourse.labs[i])
-			#print str(len(testcourse.meetingTimes)) + "tescourse meetingtimes len"
 			listofCourses.append(testcourse)
 	else:
 		listofCourses.append(inputCourse)
 		
-
 
 #Turns a course model object into a course object that we can use in the scheduler
 #Converts : course from database --> course usable by scheduler
@@ -119,26 +140,19 @@ def convertCourseModelToCourseObject(inputCourse, filterDistanceCourses):
   	courseCampusNumber = convertCampusModelToInt(courseCampus)
   	courseExam = []
   	courseLabs = []
-    	#print "len newListoFmeetingtimes = " +  str(len(listofmeetingTimes))
   	for i in range (0, len(listofmeetingTimes)):
-		#meetingTime = convertModelMeetingTimeToScheduleMeetingTime(listofmeetingTimes[i])
 		meetingTime = listofmeetingTimes[i]
 		if (meetingTime.type == "EXAM"):
 	    		courseExam.append(meetingTime)
 		elif (meetingTime.type == "LAB"):
-			#print "AddingLab"
 	    		courseLabs.append(meetingTime)
-	#meetingTime = convertStringToMeetingTime(listofmeetingTimes[i])
 		else:
 	    		courseMeetingTimes.append(meetingTime)
-    #print "aftermath ListoFmeetingtimes = " +  str(len(courseMeetingTimes))
     	if (filterDistanceCourses == True) and len(courseMeetingTimes) == 0:
     		return False
     	else:
-		#outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseExam, courseLabs, courseCampusNumber)
 		outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseExam, courseLabs, courseCampusNumber, inputCourse)
 		return outputCourse
-    #print "aftermath len course's meetingTimes = " +  str(len(outputCourse.meetingTimes)) 
     
 
 def convertCampusModelToInt(campus):
@@ -155,10 +169,8 @@ def convertCampusModelToInt(campus):
 #Converts : meeting time from database --> meetingtime usable by scheduler
 def convertModelMeetingTimeToScheduleMeetingTime(inputMeetingTime):   
 	dayInteger = int(inputMeetingTime.weekday)
- 	#startTime = str(inputMeetingTime.start_time)
 	startTime = inputMeetingTime.start_time
 	startSlot = convertTimeToTimeSlot(startTime)
-  	#endTime = str(inputMeetingTime.end_time)
   	endTime = inputMeetingTime.end_time
   	endSlot = convertTimeToTimeSlot(endTime)
   	startDate = inputMeetingTime.start_day
