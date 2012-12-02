@@ -15,7 +15,7 @@ def examples(request):
 	return render_to_response('schedulerExamples.html')
 
 def instructors(request):
-	allInstructors = Instructor.objects.order_by('name')
+	allInstructors = Instructor.objects.order_by('last_name', 'first_name').exclude(first_name__startswith=".")
 	return render_to_response('schedulerInstructors.html', { 'instructors': allInstructors })
 
 def instructor(request, instructorId):

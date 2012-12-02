@@ -2,13 +2,14 @@
 
 {% block content %}
 <div id="schedulerClasses">
+	<h1>Classes By Subject</h1>
 	{% regroup courses by subject as subjectList %}
 	<ul> 
 	{% for subject in subjectList %}
 	  <li>{{ subject.grouper }}
 		<ul>	
-			{% for class in subject.list %}
-	    		<li>{{ class }}</li>
+			{% for course in subject.list %}
+	    		<li><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
 	    	{% endfor %}
 		</ul>
 	  </li>

@@ -2,13 +2,14 @@
 
 {% block content %}
 <div id="schedulerInstructors">
+	<h1>Instructors By Last Name</h1>
 	{% regroup instructors by first_letter as letter_list %}
 	<ul> 
 	{% for letter in letter_list %}
 	  <li>{{ letter.grouper }}
 		<ul>
 		    {% for instructor in letter.list %}
-		    <li>{{ instructor.name }}</li>
+		    <li><a href="{% url scheduler_instructor instructor.pk %}">{{ instructor.name }}</a></li>
 		    {% endfor %}
 		</ul>
 	  </li>

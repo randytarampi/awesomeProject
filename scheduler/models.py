@@ -64,37 +64,45 @@ class Course (models.Model):
 
 	def componentChoice(self):
 		"""
-        Return the component.
+		Return the component.
 		"""
 		return self.get_component_display()
 
 	def semesterChoice(self):
 		"""
-        Return the semester.
+		Return the semester.
 		"""
 		return self.get_semester_display()
 
 	def campusChoice(self):
 		"""
-        Return the campus.
+		Return the campus.
 		"""
 		return self.get_campus_display()
 
 class Instructor (models.Model):
-	userid = models.CharField(max_length = 100, null=True)
-	name = models.CharField(max_length = 100)
+	userid = models.CharField(max_length = 100, primary_key=True)
 	first_name = models.CharField(max_length = 100)
 	last_name = models.CharField(max_length = 100)
-	course = models.ForeignKey(Course)
+	course = models.ManyToManyField(Course)
 
 	def __unicode__(self):
 		"""
-        Return the instructor's name.
+		Return the instructor's name.
 		"""
-		return self.name
+		return self.userid
+	
+	def name(self):
+		"""
+		Return the instructor's full name.
+		"""
+		return self.first_name + " " + self.last_name
 	
 	def first_letter(self):
-		return self.name and self.name.upper()[0] or ''
+		"""
+		Return the first letter of the instructor's last name.
+		"""
+		return self.last_name and self.last_name.upper()[0] or ''
 
 class MeetingTime (models.Model):
 	start_day = models.DateField('Start Date')
@@ -108,18 +116,18 @@ class MeetingTime (models.Model):
 
 	def __unicode__(self):
 		"""
-        Return the meeting time.
+		Return the meeting time.
 		"""
-		return WEEKDAY_CHOICES[self.weekday][1] + " - " + str(self.start_time) + " to " + str(self.end_time)
+		return self.get_weekday_display() + " - " + str(self.start_time) + " to " + str(self.end_time)
 	
 	def dayChoice(self):
 		"""
-        Return the weekday.
+		Return the weekday.
 		"""
 		return self.get_weekday_display()
 
 	def typeChoice(self):
 		"""
-        Return the type.
+		Return the type.
 		"""
 		return self.get_type_display()

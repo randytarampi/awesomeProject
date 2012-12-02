@@ -15,8 +15,10 @@ inputJSON = json.load(open(sys.argv[1]))
 coursesSQL = "INSERT INTO `scheduler_course` (`title`, `section`, `component`, `number`, `semester`, `campus`, `subject`) "
 #INSERT INTO `scheduler_meetingtime` (`start_day`, `room`, `start_time`, `end_day`, `weekday`, `type`, `end_time`, `course_id`) VALUES ('2012-11-01', 'School', '10:30:00', '2012-11-30', 3, 'LEC', '13:30:00', 2)
 meetingtimeSQL = "INSERT INTO `scheduler_meetingtime` (`start_day`, `room`, `start_time`, `end_day`, `weekday`, `type`, `end_time`, `course_id`) "
-#INSERT INTO `scheduler_instructor` (`userid`, `name`, `first_name`, `last_name`, `course_id`) VALUES ('tstInstr', 'Test Instructor', 2)
-instructorSQL = "INSERT INTO `scheduler_instructor` (`userid`, `name`, `first_name`, `last_name`, `course_id`) "
+#INSERT INTO `scheduler_instructor` (`userid`, `first_name`, `last_name`) VALUES ('tstInstr', 'Test', 'Instructor')
+instructorSQL = "INSERT IGNORE INTO `scheduler_instructor` (`userid`, `first_name`, `last_name`) "
+#INSERT INTO `scheduler_instructor_course` (`instructor_id`, `course_id`) VALUES ('tstInstr', 2)
+instructorCourseSQL = "INSERT IGNORE INTO `scheduler_instructor_course` (`instructor_id`, `course_id`) "
 courseSQL = ""
 outputSQL = ""
 
@@ -31,19 +33,22 @@ for course in inputJSON['courses']:
 	courseSQL += "'" + course['campus'] + "', "
 	courseSQL += "'" + course['subject'] + "');\n"
 	
-	# Get the course_id for the last two queries
+	# Get the course_id as a reference for the following queries
 	courseSQL += "SET @course_id = LAST_INSERT_ID();\n"
 	
 	# Add the instructor(s)
 	for instructor in course['instructors']:
 		nameList = instructor['name'].split(' ', 1)
+		userid = instructor['userid'] if instructor['userid'] else instructor['name']
 		courseSQL += instructorSQL + "VALUES ("
-		courseSQL += "'" + instructor['userid'].replace("'", "''") + "', " if instructor['userid'] else "NULL, "
-		courseSQL += "'" + instructor['name'].replace("'", "''") + "', "
+		courseSQL += "'" + userid + "', "
 		courseSQL += "'" + nameList[0].replace("'", "''") + "', "
-		courseSQL += "'" + nameList[1].replace("'", "''") + "', "
-		courseSQL += "@course_id);\n"
-	
+		courseSQL += "'" + nameList[1].replace("'", "''") + "');\n"
+		
+		# Get the instructor_id as a reference for the next query
+		courseSQL += "SET @instructor_id = '%s';\n" % userid
+		courseSQL += instructorCourseSQL + "VALUES (@instructor_id, @course_id);\n"
+
 	# Add the meeting time(s)
 	for meetingtime in course['meetingtimes']:
 		courseSQL += meetingtimeSQL + "VALUES ("
