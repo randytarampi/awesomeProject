@@ -130,14 +130,14 @@ def generateSchedule(request, form):
 
 	# Process the data
 	#warning this will now filter out distance ed coures
-	processedCourses = createOptimalSchedule(numClasses, selectedCourses, True)
+	processedCourses = createOptimalSchedule(numClasses, selectedCourses, False)
 	
-	optimalCourses = processedCourses[0]
+	optimalCourses = processedCourses[1]
 	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)	
-	optimalMeetingTimes = MeetingTime.objects.filter(course__in = optimalCourses).order_by('type', 'start_day', 'start_time')
-	optimalExamTimes = optimalMeetingTimes.filter(Q(type="EXAM") | Q(type="MIDT"))
+	optimalMeetingTimes = processedCourses[0].order_by('type', 'start_day', 'start_time')
+	optimalExamTimes = MeetingTime.objects.filter(course__in = optimalCourses).filter(Q(type="EXAM") | Q(type="MIDT"))
 	
-	rejectedCourses = processedCourses[1]
+	rejectedCourses = processedCourses[2]
 	rejectedInstructors = Instructor.objects.filter(course__in = rejectedCourses)	
 	rejectedMeetingTimes = MeetingTime.objects.filter(course__in = rejectedCourses).order_by('type', 'start_day', 'start_time')
 	
@@ -146,6 +146,32 @@ def generateSchedule(request, form):
 	# Serve the data
 	dajax.assign('#scheduleViewDiv', 'innerHTML', render_to_response('schedulerSchedule.html', processedData).content)
 	dajax.assign('#scheduleTableBody', 'innerHTML', weeklySchedule(optimalMeetingTimes))
+	return dajax.json()
+
+@dajaxice_register
+def listOfProfs(request, option):
+	dajax = Dajax()
+	out = []
+
+	c = Course.objects.filter(subject=option)
+	d = Instructor.objects.filter(course__in=c).exclude(name__startswith=". ").order_by('name').values_list('name', flat=True).distinct()
+	for i in d:
+		out.append("<option value='%s'>%s</option>" % (i, i))
+
+	dajax.assign('#subjectProfs', 'innerHTML', ''.join(out))
+	return dajax.json()
+
+@dajaxice_register
+def listOfNumbersByProf(request, option):
+	dajax = Dajax()
+	out = []
+
+	c = Instructor.objects.filter(name=option)
+	for i in c:
+		j = i.course.number
+		out.append("<option value='%s'>%s</option>" % (str(j), str(j)))
+
+	dajax.assign('#courseNumberByProf', 'innerHTML', ''.join(out))
 	return dajax.json()
 
 @dajaxice_register

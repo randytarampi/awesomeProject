@@ -6,10 +6,10 @@
 	<ul> 
 	{% for subject in subjectList %}
 	  <li>{{ subject.grouper }}
-		<ul>
-		    {% for class in subject.list %}
-		    <li>{{ class }}</li>
-		    {% endfor %}
+		<ul>	
+			{% for class in subject.list %}
+	    		<li>{{ class }}</li>
+	    	{% endfor %}
 		</ul>
 	  </li>
 	{% endfor %}
