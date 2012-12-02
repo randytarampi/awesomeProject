@@ -23,6 +23,8 @@ Requires [Dajax & Dajaxice](http://www.dajaxproject.com/).
 Also requires [jQuery 1.7.2](http://code.jquery.com/jquery-1.7.2.js) and [jquery.ba-serializeobject](https://github.com/cowboy/jquery-misc/blob/master/jquery.ba-serializeobject.min.js).
 Makes use of the [django-debug-toolbar](https://github.com/django-debug-toolbar/django-debug-toolbar).
 
+The arrow icons come from the [Mini icons 2](http://www.iconfinder.com/search/?q=iconset%3Aminiicons2) icon set. The loading spinner is care of [NETEYE](http://neteye.github.com/activity-indicator.html).
+
 This project uses the HTML5 Boilerplate CSS reset, which can be found [here](https://github.com/h5bp/html5-boilerplate/blob/master/css/main.css).
 
 Acknowledgements:

@@ -78,6 +78,16 @@ li.break {
 	border-top: 1px dotted #777;
 }
 
+.fullSchedule {
+	height: 100%;
+	width: 100%;
+}
+
+.emptySchedule {
+	height: 300px;
+	width: 100%;
+}
+
 .exam {
     color: red;
     font-weight: bold;

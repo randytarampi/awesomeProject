@@ -123,7 +123,7 @@ def weeklySchedule(meetingTimes):
 		
 		# Second Row (Bottom of the Hour)
 		slot = slot.replace(minute=slot.minute+30)
-		meetingTable.append('\n<tr class="bottomHour">')
+		meetingTable.append('\n<tr class="scheduleTableRow bottomHour">')
 		meetingTable.append(weeklyScheduleRows(meetingTimes, slot))
 		meetingTable.append('\n</tr>')
 	
@@ -168,6 +168,9 @@ def generateSchedule(request, form):
 	# Serve the data
 	dajax.assign('#scheduleViewDiv', 'innerHTML', render_to_response('schedulerSchedule.html', processedData).content)
 	dajax.assign('#scheduleTableBody', 'innerHTML', weeklySchedule(optimalMeetingTimes))
+	dajax.script('$(\'#scheduleViewDiv\').activity(false);')
+	dajax.remove_css_class('#scheduleViewDiv', 'emptySchedule');
+	dajax.add_css_class('#scheduleViewDiv', 'fullSchedule');
 	return dajax.json()
 
 @dajaxice_register
