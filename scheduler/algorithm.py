@@ -37,13 +37,17 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses)
     	outPutListOfLockedCourses = []
     	#print "size of lockedCourses =" + str(len(poolOfLockedCourses))
     	for i in range (0, len(poolOfLockedCourses)):
-		temporaryID = poolOfLockedCourses[i].courseID
-       		outputCourse = Course.objects.get(id = temporaryID)
+		lockedCourse = poolOfLockedCourses[i]
+		outputCourse = lockedCourse.dataBaseCourse		
+		#temporaryID = poolOfLockedCourses[i].courseID
+       		#outputCourse = Course.objects.get(id = temporaryID)
        		outPutListOfLockedCourses.append(outputCourse)
     	outPutListOfCutCourses = []
 	for i in range (0, len(poolOfCutCourses)):
-		temporaryID = poolOfCutCourses[i].courseID
-		outputCourse = Course.objects.get(id = temporaryID)
+		cutCourse = poolOfCutCourses[i]
+		outputCourse = cutCourse.dataBaseCourse
+		#temporaryID = poolOfCutCourses[i].courseID
+		#outputCourse = Course.objects.get(id = temporaryID)
 		outPutListOfCutCourses.append(outputCourse)
     	#print "size of output =" + str(len(outPutListOfCourses))
     	#print "new newlistcourse = " + str(newListOfCourses[0])
@@ -131,7 +135,8 @@ def convertCourseModelToCourseObject(inputCourse, filterDistanceCourses):
     	if (filterDistanceCourses == True) and len(courseMeetingTimes) == 0:
     		return False
     	else:
-		outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseExam, courseLabs, courseCampusNumber)
+		#outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseExam, courseLabs, courseCampusNumber)
+		outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseExam, courseLabs, courseCampusNumber, inputCourse)
 		return outputCourse
     #print "aftermath len course's meetingTimes = " +  str(len(outputCourse.meetingTimes)) 
     
