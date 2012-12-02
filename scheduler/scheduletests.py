@@ -32,7 +32,8 @@ def conradTest():
 output = largeTest()
 
 meet = output[0]
-
+for i in range (0, len (meet)):
+	print meet[i].type
 c1 = output[1][0]
 c2 = output[1][1]
 c3 = output[1][2]

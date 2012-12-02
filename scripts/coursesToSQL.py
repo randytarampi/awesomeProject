@@ -5,6 +5,7 @@
 
 import sys
 import json
+import shlex
 
 assert len(sys.argv) == 3
 
@@ -12,10 +13,10 @@ assert len(sys.argv) == 3
 inputJSON = json.load(open(sys.argv[1]))
 #INSERT INTO `scheduler_course` (`title`, `section`, `component`, `number`, `semester`, `campus`, `subject`) VALUES ('TESTING 102', 'D100', 'LEC', '102', '1131', 'VANCR', 'TEST')
 coursesSQL = "INSERT INTO `scheduler_course` (`title`, `section`, `component`, `number`, `semester`, `campus`, `subject`) "
-#INSERT INTO `scheduler_instructor` (`userid`, `name`, `course_id`) VALUES ('tstInstr', 'Test Instructor', 2)
-meetingtimeSQL = "INSERT INTO `scheduler_meetingtime` (`start_day`, `room`, `start_time`, `end_day`, `weekday`, `type`, `end_time`, `course_id`) "
 #INSERT INTO `scheduler_meetingtime` (`start_day`, `room`, `start_time`, `end_day`, `weekday`, `type`, `end_time`, `course_id`) VALUES ('2012-11-01', 'School', '10:30:00', '2012-11-30', 3, 'LEC', '13:30:00', 2)
-instructorSQL = "INSERT INTO `scheduler_instructor` (`userid`, `name`, `course_id`) "
+meetingtimeSQL = "INSERT INTO `scheduler_meetingtime` (`start_day`, `room`, `start_time`, `end_day`, `weekday`, `type`, `end_time`, `course_id`) "
+#INSERT INTO `scheduler_instructor` (`userid`, `name`, `first_name`, `last_name`, `course_id`) VALUES ('tstInstr', 'Test Instructor', 2)
+instructorSQL = "INSERT INTO `scheduler_instructor` (`userid`, `name`, `first_name`, `last_name`, `course_id`) "
 courseSQL = ""
 outputSQL = ""
 
@@ -35,10 +36,13 @@ for course in inputJSON['courses']:
 	
 	# Add the instructor(s)
 	for instructor in course['instructors']:
+		nameList = instructor['name'].split(' ', 1)
 		courseSQL += instructorSQL + "VALUES ("
 		courseSQL += "'" + instructor['userid'].replace("'", "''") + "', " if instructor['userid'] else "NULL, "
 		courseSQL += "'" + instructor['name'].replace("'", "''") + "', "
-		courseSQL += " @course_id);\n"
+		courseSQL += "'" + nameList[0].replace("'", "''") + "', "
+		courseSQL += "'" + nameList[1].replace("'", "''") + "', "
+		courseSQL += "@course_id);\n"
 	
 	# Add the meeting time(s)
 	for meetingtime in course['meetingtimes']:
@@ -50,7 +54,7 @@ for course in inputJSON['courses']:
 		courseSQL += str(meetingtime['weekday']) + ", "
 		courseSQL += "'" + meetingtime['type'] + "', "
 		courseSQL += "'" + meetingtime['end_time'] + "', "
-		courseSQL += " @course_id);\n"
+		courseSQL += "@course_id);\n"
 	
 	# Concatenate to outputSQL
 	outputSQL += courseSQL
