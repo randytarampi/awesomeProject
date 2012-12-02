@@ -12,8 +12,9 @@ from scheduler.datetimeconverter import *
 #takes number of courses that the student wants,
 # and a list of coursese the student is interested in and outputs a list of courses 
 #that will be in an optimal schedule
-#def functionForRandy(numberOfCourses, listofCourses):
-def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses):
+#def createOptimalSchedule(numberOfCourses, listofCourses):
+	
+def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses = True):
 	schedule = Schedule()
 	poolOfLockedCourses = []
    	newListOfCourses = []
@@ -119,26 +120,20 @@ def convertCourseModelToCourseObject(inputCourse, filterDistanceCourses):
   	courseCampusNumber = convertCampusModelToInt(courseCampus)
   	courseExam = []
   	courseLabs = []
-    	#print "len newListoFmeetingtimes = " +  str(len(listofmeetingTimes))
   	for i in range (0, len(listofmeetingTimes)):
 		#meetingTime = convertModelMeetingTimeToScheduleMeetingTime(listofmeetingTimes[i])
 		meetingTime = listofmeetingTimes[i]
 		if (meetingTime.type == "EXAM"):
 	    		courseExam.append(meetingTime)
 		elif (meetingTime.type == "LAB"):
-			#print "AddingLab"
 	    		courseLabs.append(meetingTime)
-	#meetingTime = convertStringToMeetingTime(listofmeetingTimes[i])
 		else:
 	    		courseMeetingTimes.append(meetingTime)
-    #print "aftermath ListoFmeetingtimes = " +  str(len(courseMeetingTimes))
     	if (filterDistanceCourses == True) and len(courseMeetingTimes) == 0:
     		return False
     	else:
-		#outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseExam, courseLabs, courseCampusNumber)
 		outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseExam, courseLabs, courseCampusNumber, inputCourse)
 		return outputCourse
-    #print "aftermath len course's meetingTimes = " +  str(len(outputCourse.meetingTimes)) 
     
 
 def convertCampusModelToInt(campus):

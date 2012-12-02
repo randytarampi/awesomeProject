@@ -13,7 +13,8 @@ def largeTest():
     	#return createOptimalSchedule(5, Course.objects.all())
 	#return createOptimalSchedule(5, Course.objects.all(), True)
 	#return createOptimalSchedule(5, Course.objects.filter(subject = "cmpt"), True)
-	return createOptimalSchedule(3, Course.objects.filter(subject = "bisc"), True)
+	return createOptimalSchedule(5, Course.objects.filter(subject = "cmpt"))
+	#return createOptimalSchedule(5, Course.objects.filter(subject = "bisc"), True)
 	#selectedCourses = Course.objects.filter(section__startswith="C")
 	#return createOptimalSchedule(5, selectedCourses, True)
 	 
@@ -37,13 +38,13 @@ for i in range (0, len (meet)):
 c1 = output[1][0]
 c2 = output[1][1]
 c3 = output[1][2]
-#c4 = output[1][3]
-#c5 = output[1][4]
+c4 = output[1][3]
+c5 = output[1][4]
 mt1 = MeetingTime.objects.filter(course = c1.id)
 mt2 = MeetingTime.objects.filter(course = c2.id)
 mt3 = MeetingTime.objects.filter(course = c3.id)
-#mt4 = MeetingTime.objects.filter(course = c4.id)
-#mt5 = MeetingTime.objects.filter(course = c5.id)
+mt4 = MeetingTime.objects.filter(course = c4.id)
+mt5 = MeetingTime.objects.filter(course = c5.id)
 
 cutcourses = output[2]
 
