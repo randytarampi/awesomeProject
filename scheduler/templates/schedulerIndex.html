@@ -18,6 +18,9 @@
 			</select>
 			&nbsp;
 			<select id="courseNumber" name="courseNumber">
+				{% for op in initNums %}
+				<option value="{{ op }}">{{ op }}</option>
+				{% endfor %}
 			</select>
 			&nbsp;
 			<input id="courseSubmit" type="submit" value="Submit!"/>
@@ -31,9 +34,15 @@
 			</select>
 			&nbsp;
 			<select id="subjectProfs" name="subjectProfs" onchange="Dajaxice.scheduler.listOfNumbersByProf(Dajax.process, {'option':this.value})">
+				{% for i in initProfs %}
+				<option value="{{ i.userid }}">{{ i.first_name }} {{ i.last_name }}</option>
+				{% endfor %}
 			</select>
 			&nbsp;
 			<select id="courseNumberByProf" name="courseNumberByProf">
+				{% for i in initNumsByProf %}
+				<option value="{{ i.id }}">{{ i.number }}</option>
+				{% endfor %}
 			</select>
 			&nbsp;
 			<input id="courseSubmitByProf" type="submit" value="Submit!"/>
@@ -66,7 +75,7 @@
 				<option value="21">9</option>
 				<option value="22">10</option>
 			</select>
-			:
+			<span>:</span>
 			<select id="startMinute">
 				<option value="0">0</option>
 				<option value="10">10</option>
@@ -75,7 +84,7 @@
 				<option value="40">40</option>
 				<option value="50">50</option>
 			</select>
-			<span id="startT"></span>
+			<span id="startT">am</span>
 			to
 			<select id="endHour" onchange="Dajaxice.scheduler.amORpmEnd(Dajax.process, {'option':this.value})">
 				<option value="8">8</option>
@@ -94,7 +103,7 @@
 				<option value="21">9</option>
 				<option value="22">10</option>
 			</select>
-			:
+			<span>:</span>
 			<select id="endMinute">
 				<option value="0">0</option>
 				<option value="10">10</option>
@@ -103,7 +112,7 @@
 				<option value="40">40</option>
 				<option value="50">50</option>
 			</select>
-			<span id="endT"></span>
+			<span id="endT">am</span>
 			<input id="timeUnavailable" type="submit" value="Submit!"/>
 		</div>
 

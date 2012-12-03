@@ -179,7 +179,7 @@ def listOfProfs(request, option):
 	out = []
 
 	c = Course.objects.filter(subject=option)
-	d = Instructor.objects.filter(course__in=c).exclude(first_name__startswith=".").order_by('last_name').distinct()
+	d = Instructor.objects.filter(course__in=c).order_by('last_name').distinct()
 	for i in d:
 		out.append("<option value='%s'>%s</option>" % (i.userid, i.name()))
 
@@ -195,7 +195,7 @@ def listOfNumbersByProf(request, option):
 	for i in d:
 		for j in i.course.all():
 			courseNum = j.number
-			out.append("<option value='%s'>%s</option>" % (str(courseNum), str(courseNum)))
+			out.append("<option value='%s'>%s</option>" % (str(j.id), str(courseNum)))
 
 	dajax.assign('#courseNumberByProf', 'innerHTML', ''.join(out))
 	return dajax.json()
