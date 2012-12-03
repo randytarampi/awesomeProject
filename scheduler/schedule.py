@@ -9,6 +9,7 @@ class Schedule:
    	fridayTimeSlotAvailability = [0] * 144
    	saturdayTimeSlotAvailability = [0] * 144
    	sundayTimeSlotAvailability = [0] * 144
+	poolOfLockedCourses = []
 
    	def __init__(self):  
    		self.mondayTimeSlotAvailability = [0] * 144
@@ -18,6 +19,7 @@ class Schedule:
    		self.fridayTimeSlotAvailability = [0] * 144
    		self.saturdayTimeSlotAvailability = [0] * 144
    		self.sundayTimeSlotAvailability = [0] * 144
+		poolOfLockedCourses = []
     #def getTotalDays(self):
 
     #see if the timeslice conflicts with the current weekly schedule

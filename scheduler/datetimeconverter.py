@@ -103,7 +103,7 @@ def timeConflict(starttime1, endtime1, starttime2, endtime2):
                 #    print 'We can not travel between campuses'
             else:
                 #print 'There is a conflict'
-		return True
+		return False
     else:
          print 'Improper inputs'
 
