@@ -32,6 +32,8 @@ def conradTest():
 #simpleTest()
 output = largeTest()
 
+
+
 meet = output[0]
 for i in range (0, len (meet)):
 	print meet[i].type
@@ -45,6 +47,10 @@ mt2 = MeetingTime.objects.filter(course = c2.id)
 mt3 = MeetingTime.objects.filter(course = c3.id)
 mt4 = MeetingTime.objects.filter(course = c4.id)
 mt5 = MeetingTime.objects.filter(course = c5.id)
+
+
+mtList1 = [mt1] 
+mtList2 = [mt2]
 
 cutcourses = output[2]
 
@@ -67,6 +73,27 @@ sunday = schedule.sundayTimeSlotAvailability
 c = Course.objects.get(id = 2562)
 ac = convertCourseModelToCourseObject(c, False)
 s = Schedule()
+
+
+#if (meetingTimesConflict(mt1[0], mt1[0])
+#	print "Conflict Mt1,
+
+meetOne = []
+for i in range (0, len(mt1)):
+	meetOne.append(mt1[i])
+
+if meetingTimesNewTimesOldTimesFilter(meetOne, meetOne) == []:
+	print "Conflict Mt1, MT1"
+else:
+	print "No Conflict between mt1 and mt1"
+	print  meetingTimesNewTimesOldTimesFilter(meetOne, meetOne) 
+
+if meetingTimesNewTimesOldTimesFilter(mt1, mt2) == []:
+	print "Conflict Mt1, MT1"
+else:
+	print "No Conflict between mt1 and mt2"
+	print  meetingTimesNewTimesOldTimesFilter(meetOne, meetOne) 
+
 
 #1l, 4l, 5l, 78l, 147l
 
