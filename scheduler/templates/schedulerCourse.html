@@ -1,5 +1,32 @@
 {% extends "schedulerBase.html" %}
 
 {% block content %}
-<h1>{{ course }} - {{ course.section }}</h1>
+<h1>{{ course }}</h1>
+<h2>Course Information:</h2>
+<ul>
+	<li>Campus: {{ course.campusChoice }}</li>
+	<li>Section: {{ course.section }}</li>
+	<li>Mode: {{ course.componentChoice }}</li>
+</ul>
+<h2>Instructor{{ course.instructor_set.all|pluralize }}:</h3>
+<ul>
+	{% for instructor in course.instructor_set.all|dictsort:'last_name' %}
+		<li>{% if instructor.userid != '. Tbd' and instructor.userid != '. Sessional' and instructor.userid != '. Faculty' and " " not in instructor.userid %} <a href="{% url scheduler_instructor instructor.pk %}">{{ instructor.name }}</a> (<a href="mailto:{{ instructor.userid }}@sfu.ca">{{ instructor.userid }}@sfu.ca</a>) {% else %} {{ instructor.userid }} {% endif %}</li>
+	{% endfor %}
+</ul>
+<h2>Meeting Times:</h2>
+{% regroup course.meetingtime_set.all|dictsort:'type' by typeChoice as typeList %}
+<ul>
+	{% for type in typeList %}
+	<li>{{ type.grouper }}{{ type.list|pluralize }}
+		<ul class="times">	
+			{% for meetingTime in type.list %}
+	    		<li class="{% if meetingTime.type == 'EXAM' or meetingTime.type == 'MIDT' %}exam{% else %}classOrLab{% endif %} time">{{ meetingTime.dayChoice }}{% if meetingTime.type == "EXAM" or meetingTime.type == "MIDT" %}, {{ meetingTime.start_day }} {% endif %} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} {% if meetingTime.room %} in  {{ meetingTime.room }} {% else %} room TBA {% endif %}</li>
+			{% endfor %}
+		</ul>
+	</li>
+	{% empty %}
+		<li>No meetings scheduled</li>
+	{% endfor %}
+</ul>
 {% endblock %}

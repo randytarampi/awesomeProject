@@ -2,4 +2,24 @@
 
 {% block content %}
 <h1>{{ instructor.name }}</h1>
+{% if instructor.userid != '. Tbd' and instructor.userid != '. Sessional' and instructor.userid != '. Faculty' and " " not in instructor.userid %}<ul><li>Email: <a href="mailto:{{ instructor.userid }}@sfu.ca">{{ instructor.userid }}@sfu.ca</a></li></ul>{% endif %}
+<h2>Teaching in Spring 2013:</h2>
+<ul class="courses">
+	{% for course in instructor.course.all %}
+		<li class="course"><a href="{% url scheduler_course course.id %}">{{ course }}</a></li>
+		<ul>
+			<li>Campus: {{ course.campusChoice }}</li>
+			<li>Section: {{ course.section }}</li>
+			<li>Mode: {{ course.componentChoice }}</li>
+			<li>Meeting Times:</li>
+			<ul>
+				{% for meetingTime in course.meetingtime_set.all %}
+					<li>{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} {% if meetingTime.room %} in  {{ meetingTime.room }} {% else %} room TBA {% endif %}</li>
+				{% empty %}
+					<li>No meetings scheduled</li>
+				{% endfor %}
+			</ul>
+		</ul>
+	{% endfor %}
+</ul
 {% endblock %}

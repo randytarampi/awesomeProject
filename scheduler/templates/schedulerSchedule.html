@@ -21,9 +21,9 @@
 						{% for meetingTime in rejectedMeetingTimes %}
 							{% if meetingTime.course == course %}
 								{% if meetingTime.type == "LEC" or meetingTime.type == "LAB" %}
-									<li>{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} in {{ meetingTime.room }}</li>
+									<li class="classOrLab time">{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} in {{ meetingTime.room }}</li>
 								{% else %}
-									<li class="exam">{{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
+									<li class="exam time">{{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
 								{% endif %}
 							{% endif %}
 						{% empty %}
@@ -47,13 +47,13 @@
 				{% endfor %}
 					<li>Campus: {{ course.campusChoice }}</li>
 					<li>Meeting Times:</li>
-						<ul class="optimal time">
+						<ul class="optimal times">
 						{% for meetingTime in optimalMeetingTimes %}
 							{% if meetingTime.course == course %}
 								{% if meetingTime.type == "LEC" or meetingTime.type == "LAB" %}
-									<li class="classOrLab">{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} in {{ meetingTime.room }}</li>
+									<li class="classOrLab time">{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} in {{ meetingTime.room }}</li>
 								{% else %}
-									<li class="exam">{{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
+									<li class="exam time">{{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
 								{% endif %}
 							{% endif %}
 						{% empty %}

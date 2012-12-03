@@ -1,0 +1,12 @@
+{% extends "schedulerBase.html" %}
+
+{% block content %}
+<div id="schedulerClasses">
+	<h1>Classes By Subject - {{ subject }}</h1>
+	<ul class="courses">	
+		{% for course in courses %}
+    		<li class="course"><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
+		{% endfor %}
+	</ul>
+</div>
+{% endblock %}

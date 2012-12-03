@@ -1,7 +1,8 @@
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import *
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
+from django.views.generic import *
 from scheduler.models import *
 
 def index(request):
@@ -28,19 +29,28 @@ def instructions(request):
 
 def examples(request):
 	return render_to_response('schedulerExamples.html')
-
-def instructors(request):
-	allInstructors = Instructor.objects.order_by('last_name', 'first_name').exclude(first_name__startswith=".")
-	return render_to_response('schedulerInstructors.html', { 'instructors': allInstructors })
-
-def instructor(request, instructorId):
-	instructor = get_object_or_404(Instructor, pk=instructorId)
-	return render_to_response('schedulerInstructor.html', { 'instructor': instructor })
     
-def courses(request):
-	allCourses = Course.objects.order_by('subject')
-	return render_to_response('schedulerCourses.html', { 'courses': allCourses })
+class SubjectListView(ListView):
+	context_object_name = "courses"
+	template_name = "schedulerCoursesSubject.html"
 
-def course(request, courseId):
-	course = get_object_or_404(Course, pk=courseId)
-	return render_to_response('schedulerCourse.html', { 'course': course })
+	def get_queryset(self):
+		return get_list_or_404(Course, subject=self.kwargs['subject'])
+
+	def get_context_data(self, **kwargs):
+		context = super(SubjectListView, self).get_context_data(**kwargs)
+		context['subject'] = self.kwargs['subject']
+		return context
+
+class SubjectNumberListView(ListView):
+	context_object_name = "courses"
+	template_name = "schedulerCoursesSubjectNumber.html"
+
+	def get_queryset(self):
+		return get_list_or_404(Course, subject=self.kwargs['subject'], number=self.kwargs['number'])
+
+	def get_context_data(self, **kwargs):
+		context = super(SubjectNumberListView, self).get_context_data(**kwargs)
+		context['subject'] = self.kwargs['subject']
+		context['number'] = self.kwargs['number']
+		return context

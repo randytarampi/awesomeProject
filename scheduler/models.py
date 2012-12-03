@@ -8,7 +8,7 @@ COMPONENT_CHOICES = (
 	('LAB', 'Laboratory'),
 	('WKS', 'Workshop'),
 	('OLC', 'Online Conference'),
-	('SEC', 'Section'),
+	('SEC', 'Distance Education'),
 	('IND', 'Independent Study'),
 	('SEM', 'Seminar'),
 	('FLD', 'Field School'),
