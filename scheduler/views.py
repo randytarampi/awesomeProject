@@ -35,7 +35,10 @@ class SubjectListView(ListView):
 	template_name = "schedulerCoursesSubject.html"
 
 	def get_queryset(self):
-		return get_list_or_404(Course, subject=self.kwargs['subject'])
+		queryset = get_list_or_404(Course.objects.values('subject', 'number', 'title').distinct(), subject=self.kwargs['subject'])
+		for course in queryset:
+			course['level'] = course['number'][0]
+		return queryset
 
 	def get_context_data(self, **kwargs):
 		context = super(SubjectListView, self).get_context_data(**kwargs)
@@ -54,3 +57,8 @@ class SubjectNumberListView(ListView):
 		context['subject'] = self.kwargs['subject']
 		context['number'] = self.kwargs['number']
 		return context
+	
+	def render_to_response(self, context):
+		if len(self.object_list) == 1:
+			return redirect('scheduler_course', self.object_list[0].id)
+		return super(SubjectNumberListView, self).render_to_response(context)

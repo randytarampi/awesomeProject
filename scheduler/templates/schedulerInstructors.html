@@ -3,9 +3,9 @@
 {% block content %}
 <div id="schedulerInstructors">
 	<h1>Instructors By Last Name</h1>
-	{% regroup instructors by first_letter as letter_list %}
+	{% regroup instructors by firstLetter as letterList %}
 	<ul> 
-	{% for letter in letter_list %}
+	{% for letter in letterList %}
 	  <li id="{{ letter.grouper }}">{{ letter.grouper }}
 		<ul>
 		    {% for instructor in letter.list %}

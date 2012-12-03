@@ -79,6 +79,12 @@ class Course (models.Model):
 		Return the campus.
 		"""
 		return self.get_campus_display()
+	
+	def courseLevel(self):
+		"""
+		Return the level (x00 level) of the course
+		"""
+		return self.number and self.number[0] or '' +"00"
 
 class Instructor (models.Model):
 	userid = models.CharField(max_length = 100, primary_key=True)
@@ -98,7 +104,7 @@ class Instructor (models.Model):
 		"""
 		return self.first_name + " " + self.last_name
 	
-	def first_letter(self):
+	def firstLetter(self):
 		"""
 		Return the first letter of the instructor's last name.
 		"""

@@ -3,10 +3,17 @@
 {% block content %}
 <div id="schedulerClasses">
 	<h1>Classes By Subject - {{ subject }}</h1>
-	<ul class="courses">	
-		{% for course in courses %}
-    		<li class="course"><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
-		{% endfor %}
+	{% regroup courses by level as levelList %}
+	<ul class="courses">
+	{% for level in levelList %}
+		<li class="level" id="{{ level.grouper }}00">{{ level.grouper }}00 Level
+			<ul class="courses">
+			{% for course in courses %}
+					<li class="course"><a href="{% url scheduler_courses SubjectNumber course.subject course.number %}">{{ course.subject }} {{ course.number }} : {{ course.title }}</a></li>
+			{% endfor %}
+			</ul>
+		</li>
+	{% endfor %}
 	</ul>
 </div>
 {% endblock %}
