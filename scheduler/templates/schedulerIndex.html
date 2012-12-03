@@ -66,7 +66,7 @@
 				<option value="21">9</option>
 				<option value="22">10</option>
 			</select>
-			:
+			<span>:</span>
 			<select id="startMinute">
 				<option value="0">0</option>
 				<option value="10">10</option>
@@ -75,7 +75,7 @@
 				<option value="40">40</option>
 				<option value="50">50</option>
 			</select>
-			<span id="startT"></span>
+			<span id="startT">am</span>
 			to
 			<select id="endHour" onchange="Dajaxice.scheduler.amORpmEnd(Dajax.process, {'option':this.value})">
 				<option value="8">8</option>
@@ -94,7 +94,7 @@
 				<option value="21">9</option>
 				<option value="22">10</option>
 			</select>
-			:
+			<span>:</span>
 			<select id="endMinute">
 				<option value="0">0</option>
 				<option value="10">10</option>
@@ -103,7 +103,7 @@
 				<option value="40">40</option>
 				<option value="50">50</option>
 			</select>
-			<span id="endT"></span>
+			<span id="endT">am</span>
 			<input id="timeUnavailable" type="submit" value="Submit!"/>
 		</div>
 
