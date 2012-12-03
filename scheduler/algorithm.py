@@ -60,6 +60,14 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses 
 		for j in range (0, len(meetingTimes)):
 			meetingTime = meetingTimes[j]
 			listMeetingTimes.append(meetingTime)
+	listCutMeetingTimes = []
+	for i in range (0, len(poolOfCutCourses)):
+		meetingTimes = poolOfCutCourses[i].meetingTimes
+		for j in range (0, len(meetingTimes)):
+			meetingTime = meetingTimes[j]
+			listCutMeetingTimes.append(meetingTime)
+	#largerOutputArray.append(listCutMeetingTimes)
+	
 	#listActualMeetingTimes = []
 	#wooo dev speed > efficiency!	
 	#for i in range (0, len(listMeetingTimes)):
@@ -71,6 +79,7 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses 
 	largerOutputArray = []
 	largerOutputArray.append(listMeetingTimes)
     	largerOutputArray.append(outPutListOfLockedCourses)
+	largerOutputArray.append(listCutMeetingTimes)
     	largerOutputArray.append(outPutListOfCutCourses)
     	#Schedule Stats
    	TotalDays = schedule.getTotalDays()

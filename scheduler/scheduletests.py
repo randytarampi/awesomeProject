@@ -53,14 +53,15 @@ mt4 = MeetingTime.objects.filter(course = c4.id)
 mtList1 = [mt1] 
 mtList2 = [mt2]
 
-cutcourses = output[2]
+cuttimes = output[2]
+cutcourses = output[3]
 
-stats = output[3]
+stats = output[4]
 days = stats.numberOfDays
 gap = stats.totalGap
 travels = stats.crossCampusTravels
 
-schedule = output[4]
+schedule = output[5]
 
 monday = schedule.mondayTimeSlotAvailability
 tuesday = schedule.tuesdayTimeSlotAvailability
