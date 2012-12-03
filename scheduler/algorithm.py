@@ -234,7 +234,25 @@ def meetingTimesListConflict(firstListOfMeetingTimes, secondListOfMeetingTimes):
 				return True
 	return False
 
+#meeting Times conflict checker that also tells which meetingTimse conflict with which meeting Times
+def meetingTimesNewTimesOldTimesFilter(newTimesList, oldTimesList):
+	listOfNonConflictingNewTimes = []
+	#For each new time 
+	for i in range (0, len(newTimesList)):
+	    	newTime = newTimesList[i]
+		if meetingTimeConflictWithList(newTime, oldTimesList) == False:
+			listOfNonConflictingNewTimes.append(newTime)
+	return listOfNonConflictingNewTimes
 
+#Checks if a meeting time conflicts with a list of meeting time
+def meetingTimeConflictWithList(meetingTimeOne, meetingTimeList):
+	for i in range (0, len(meetingTimeList)):
+		meetingTimeTwo = meetingTimeList[i]
+		if meetingTimesConflict(meetingTimeOne, meetingTimeTwo) == True:
+			return True
+	return False
+
+#checks if two meeting times conflict
 def meetingTimesConflict(firstMeetingTime, secondMeetingTime):
 	if (firstMeetingTime.weekday == secondMeetingTime.weekday):
 		if examConflict(firstMeetingTime, secondMeetingTime) == True:
