@@ -180,9 +180,9 @@ def generateSchedule(request, form):
 	optimalMeetingTimes = processedCourses[0]
 	optimalExamTimes = MeetingTime.objects.filter(course__in = optimalCourses).filter(Q(type="EXAM") | Q(type="MIDT"))
 
-	rejectedCourses = processedCourses[2]
+	rejectedCourses = processedCourses[3]
 	rejectedInstructors = Instructor.objects.filter(course__in = rejectedCourses)	
-	rejectedMeetingTimes = MeetingTime.objects.filter(course__in = rejectedCourses).order_by('type', 'start_day', 'start_time')
+	rejectedMeetingTimes = processedCourses[2]
 
 	processedData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'optimalExamTimes': optimalExamTimes, 'rejectedCourses': rejectedCourses, 'rejectedInstructors': rejectedInstructors, 'rejectedMeetingTimes': rejectedMeetingTimes}
 
