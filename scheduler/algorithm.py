@@ -165,20 +165,7 @@ def convertCampusModelToInt(campus):
  	else :
 		return 0
 
-#converts a meeting time from the table into a meeting time object that we can use it in the scheduling algorithm
-#Converts : meeting time from database --> meetingtime usable by scheduler
-def convertModelMeetingTimeToScheduleMeetingTime(inputMeetingTime):   
-	dayInteger = int(inputMeetingTime.weekday)
-	startTime = inputMeetingTime.start_time
-	startSlot = convertTimeToTimeSlot(startTime)
-  	endTime = inputMeetingTime.end_time
-  	endSlot = convertTimeToTimeSlot(endTime)
-  	startDate = inputMeetingTime.start_day
-  	endDate = inputMeetingTime.end_day
-  	meetingType = inputMeetingTime.type
-	meetingID = inputMeetingTime.id
-  	outputMeetingTime = SchedulingMeetingTime(startSlot, endSlot, dayInteger, startDate, endDate, meetingType, meetingID)
-  	return outputMeetingTime
+
 
 
 
@@ -236,7 +223,30 @@ def courseExamConflict(course, listOfLockedCourses):
 					return True
 	return False
 
+#Checks if there is a conflict between two lists of meeting times
+def meetingTimesListConflict(firstListOfMeetingTimes, secondListOfMeetingTimes):
+	for i in range (0, len(firstListOfMeetingTimes)):
+	    	meetingTimeOne = firstListOfMeetingTimes[i]
+	    	for j in range (0, len(firstListOfMeetingTimes)):
+	    		meetingTimeTwo = secondListOfMeetingTimes[j]
+			#This function works for all courses
+	    		if meetingTimesConflict(meetingTimeOne, meetingTimeTwo) == True:
+				return True
+	return False
+
+
+def meetingTimesConflict(firstMeetingTime, secondMeetingTime):
+	if (firstMeetingTime.weekday == secondMeetingTime.weekday):
+		if examConflict(firstMeetingTime, secondMeetingTime) == True:
+			return True
+		else:
+			return False
+	return False
+		
+
+
 #check if two courses have the same name
+#also works for ... two lists of 
 def examConflict(examOne, examTwo):
     	if datetimeconflict(examOne.start_day, examOne.end_day, examTwo.start_day, examTwo.end_day) == True:
 		exam1StartTime = convertTimeToTimeSlot(examOne.start_time)
@@ -250,9 +260,6 @@ def examConflict(examOne, examTwo):
 	    		return False
     	else:
 		return False   
-
-
-
 
 
 
@@ -360,7 +367,7 @@ def eliminateDuplicateCourses(poolOfPotentialCourses, poolOfLockedCourses, poolO
     	for i in range (0, len(listOfCoursesToDelete)):
         	courseToDelete = listOfCoursesToDelete[i]
         	poolOfPotentialCourses.remove(courseToDelete)
-		poolOfCutCourses.append(courseToDelete)
+		#poolOfCutCourses.append(courseToDelete)
 
 
 
@@ -375,9 +382,10 @@ def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, poolO
 		#print "interBehe We have the right size" 
         	orignialTimeGap = schedule.getTotalTimeGap()
         	originalNumberDays =  schedule.getTotalDays()
+		eliminateDuplicateCourses(poolOfPotentialCourses, poolOfLockedCourses, poolOfCutCourses, schedule)
         	updateCleanPotentialCourses(poolOfPotentialCourses, poolOfCutCourses, poolOfLockedCourses, schedule)
 		#i.e. if are taking cmpt 300 already... it will delete any other mentions of cmpt 300 from the potential list
-        	eliminateDuplicateCourses(poolOfPotentialCourses, poolOfLockedCourses, poolOfCutCourses, schedule)
+        	
         	choiceStatsList = []
 	
         	if len(poolOfPotentialCourses) >= 2:
@@ -410,8 +418,6 @@ def iterateBEHEMOTH(schedule, poolOfLockedCourses, poolOfPotentialCourses, poolO
                         			currentBestChoiceStats = currentChoiceStats;
                         			currentPositionOfChoice = i;
                     			elif (currentChoiceStats.crossCampusTravels <= currentBestChoiceStats.crossCampusTravels):
-                        			#currentBestChoiceStats = currentChoiceStats
-                        			#currentPositionOfChoice = i
 						if (currentChoiceStats.crossCampusTravels < currentBestChoiceStats.crossCampusTravels):
                             				currentBestChoiceStats = currentChoiceStats
                             				currentPositionOfChoice = i
@@ -462,6 +468,20 @@ def convertDayStringToDayInt(inputString):
     elif inputString == "Sunday":
         return 6
 
+#converts a meeting time from the table into a meeting time object that we can use it in the scheduling algorithm
+#Converts : meeting time from database --> meetingtime usable by scheduler
+def convertModelMeetingTimeToScheduleMeetingTime(inputMeetingTime):   
+	dayInteger = int(inputMeetingTime.weekday)
+	startTime = inputMeetingTime.start_time
+	startSlot = convertTimeToTimeSlot(startTime)
+  	endTime = inputMeetingTime.end_time
+  	endSlot = convertTimeToTimeSlot(endTime)
+  	startDate = inputMeetingTime.start_day
+  	endDate = inputMeetingTime.end_day
+  	meetingType = inputMeetingTime.type
+	meetingID = inputMeetingTime.id
+  	outputMeetingTime = SchedulingMeetingTime(startSlot, endSlot, dayInteger, startDate, endDate, meetingType, meetingID)
+  	return outputMeetingTime
 
 
 
