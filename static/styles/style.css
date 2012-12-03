@@ -63,21 +63,6 @@ p {
 	margin: 8px;
 }
 
-ul.rejectedCourse {
-	display: none;
-}
-
-ul.side {
-	padding: 4px 8px 4px 8px;
-	list-style-type: none;
-}
-
-li.break {
-	display: block;
-	margin: 4px 12px;
-	border-top: 1px dotted #777;
-}
-
 .fullSchedule {
 	height: 100%;
 	width: 100%;
@@ -101,6 +86,66 @@ li.break {
 .side a:hover {
 	color: #B5111B;
 	text-decoration: none;	
+}
+
+.topHour {
+	border-top-style: solid;
+	border-bottom-style: dotted;
+}
+
+.bottomHour {
+	border-top-style: dotted;
+	border-bottom-style: solid;
+}
+
+.scheduleTableCell {
+	max-width: 100px;
+	padding: 2px;
+	border-width: 1px;
+	border-color: #A6192E;
+	border-right-style: solid;
+	border-left-style: solid;
+}
+
+.scheduleTableclass {
+	color: #FFF;
+	background-color: #A6192E;
+	text-align: center;
+	border-width: 1px;
+	border-color: #A07400;
+	border-top-style: solid;
+	border-bottom-style: solid;
+}
+
+.classDescription {
+	word-wrap: break-word;
+}
+
+li.toggleCollapse {
+	list-style-image: url('expand.gif');
+}
+
+li.toggleExpand {
+	list-style-image: url('collapse.gif');
+}
+
+ul.rejected.courses{
+    display: none
+}
+
+ul.rejectedCourse {
+	display: none;
+}
+
+ul.side {
+	padding: 4px 8px 4px 8px;
+	list-style-type: none;
+}
+
+li.break {
+	display: block;
+	margin: 4px 12px;
+	border-top: 1px dotted #777;
 }
 
 #container {
@@ -167,4 +212,22 @@ li.break {
 
 #footerCenter {
 	text-align: center;
+}
+
+#scheduleTable { 
+	max-width: 591px;
+	border-spacing: 0;
+	border-collapse: collapse;
+	border-width: 1px;
+	border-color: #A6192E;
+	border-style: solid;
+}
+
+#scheduleTableBody tr {
+	border-width: 1px;
+	border-color: #A6192E;
+}
+
+#scheduleTableFoot {
+	font-weight: bold;
 }

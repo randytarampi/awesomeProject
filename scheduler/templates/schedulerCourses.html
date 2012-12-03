@@ -6,10 +6,10 @@
 	{% regroup courses by subject as subjectList %}
 	<ul class="courses"> 
 	{% for subject in subjectList %}
-	  <li id="{{ subject.grouper }}"><a href="{% url scheduler_courses Subject subject.grouper %}">{{ subject.grouper }}</a>
+	  <li id="{{ subject.grouper }}"><a href="{% url scheduler_coursesSubject subject.grouper %}">{{ subject.grouper }}</a>
 		<ul class="courses">	
 			{% for course in subject.list %}
-	    		<li class="course"><a href="{% url scheduler_courses SubjectNumber course.subject course.number %}">{{ course.subject }} {{ course.number }} : {{ course.title }}</a></li>
+	    		<li class="course"><a href="{% url scheduler_coursesSubjectNumber course.subject course.number %}">{{ course.subject }} {{ course.number }} : {{ course.title }}</a></li>
 			{% endfor %}
 		</ul>
 	  </li>
