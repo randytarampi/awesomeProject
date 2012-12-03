@@ -6,7 +6,7 @@
 	{% regroup instructors by first_letter as letter_list %}
 	<ul> 
 	{% for letter in letter_list %}
-	  <li>{{ letter.grouper }}
+	  <li id="{{ letter.grouper }}">{{ letter.grouper }}
 		<ul>
 		    {% for instructor in letter.list %}
 		    <li><a href="{% url scheduler_instructor instructor.pk %}">{{ instructor.name }}</a></li>
