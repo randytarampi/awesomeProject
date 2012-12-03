@@ -209,6 +209,7 @@ def listOfNumbers(request, option):
 	for i in daList:
 		out.append("<option value='%s'>%s</option>" % (i, i))
 
+	dajax.clear('#courseNumber', 'innerHTML')
 	dajax.assign('#courseNumber', 'innerHTML', ''.join(out))	
 	return dajax.json()
 

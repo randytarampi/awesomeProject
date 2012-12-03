@@ -6,7 +6,9 @@ from scheduler.models import *
 
 def index(request):
 	allSubjects = Course.objects.values_list('subject', flat=True).distinct()
-	return render_to_response('schedulerIndex.html', { 'subjects': allSubjects }, context_instance=RequestContext(request))
+	firstSubject = allSubjects[0]
+	initialNumbers = Course.objects.filter(subject=firstSubject).values_list('number', flat=True).distinct()
+	return render_to_response('schedulerIndex.html', { 'subjects': allSubjects, 'initNums': initialNumbers }, context_instance=RequestContext(request))
 
 def instructions(request):
 	return render_to_response('schedulerInstructions.html')

@@ -18,6 +18,9 @@
 			</select>
 			&nbsp;
 			<select id="courseNumber" name="courseNumber">
+				{% for op in initNums %}
+				<option value="{{ op }}">{{ op }}</option>
+				{% endfor %}
 			</select>
 			&nbsp;
 			<input id="courseSubmit" type="submit" value="Submit!"/>
