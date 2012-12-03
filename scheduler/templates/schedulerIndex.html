@@ -7,9 +7,9 @@
 {% block content %}
 <div id="scheduleFormDiv">
 	<h1>Build a Schedule</h1>
-	<form id="scheduleForm" method="POST">
+
+	<form id="addCourseForm" method="POST">
 	{% csrf_token %}
-		<div id="addCourse">
 			Add a course: 
 			<select id="courseSubject" name="courseSubject" onchange="Dajaxice.scheduler.listOfNumbers(Dajax.process, {'option':this.value})">
 				{% for op in subjects %}
@@ -23,8 +23,11 @@
 				{% endfor %}
 			</select>
 			&nbsp;
-			<input id="courseSubmit" type="submit" value="Submit!"/>
-		</div>
+			<input id="courseSubmit" type="button" value="Submit!" onclick="addCourseToSession()"/>
+	</form>
+
+	<form id="addCourseByProfForm" method="POST">
+	{% csrf_token %}
 		<div id="addByProf">
 			Add a course by instructor:
 			<select id="courseSubjectByProf" name="courseSubjectByProf" onchange="Dajaxice.scheduler.listOfProfs(Dajax.process, {'option':this.value})">
@@ -45,11 +48,15 @@
 				{% endfor %}
 			</select>
 			&nbsp;
-			<input id="courseSubmitByProf" type="submit" value="Submit!"/>
+			<input id="courseSubmitByProf" type="button" value="Submit!"/>
 		</div>
+	</form>
+
+	<form id="addUnavailableForm" method="POST">
+	{% csrf_token %}
 		<div id="addUnavailableTime">
 			Add a time you are unavailable:
-			<select id="day">
+			<select id="day" name="day">
 				<option value="0">Monday</option>
 				<option value="1">Tuesday</option>
 				<option value="2">Thursday</option>
@@ -58,7 +65,7 @@
 				<option value="5">Sunday</option>
 			</select>
 			at
-			<select id="startHour" onchange="Dajaxice.scheduler.amORpmStart(Dajax.process, {'option':this.value})">
+			<select id="startHour" name="startHour" onchange="Dajaxice.scheduler.amORpmStart(Dajax.process, {'option':this.value})">
 				<option value="8">8</option>
 				<option value="9">9</option>
 				<option value="10">10</option>
@@ -76,7 +83,7 @@
 				<option value="22">10</option>
 			</select>
 			<span>:</span>
-			<select id="startMinute">
+			<select id="startMinute" name="startMinute">
 				<option value="0">0</option>
 				<option value="10">10</option>
 				<option value="20">20</option>
@@ -86,7 +93,7 @@
 			</select>
 			<span id="startT">am</span>
 			to
-			<select id="endHour" onchange="Dajaxice.scheduler.amORpmEnd(Dajax.process, {'option':this.value})">
+			<select id="endHour" name="endHour" onchange="Dajaxice.scheduler.amORpmEnd(Dajax.process, {'option':this.value})">
 				<option value="8">8</option>
 				<option value="9">9</option>
 				<option value="10">10</option>
@@ -104,7 +111,7 @@
 				<option value="22">10</option>
 			</select>
 			<span>:</span>
-			<select id="endMinute">
+			<select id="endMinute" name="endMinute">
 				<option value="0">0</option>
 				<option value="10">10</option>
 				<option value="20">20</option>
@@ -113,9 +120,12 @@
 				<option value="50">50</option>
 			</select>
 			<span id="endT">am</span>
-			<input id="timeUnavailable" type="submit" value="Submit!"/>
+			<input id="timeUnavailable" type="button" value="Submit!"/>
 		</div>
+	</form>
 
+	<form id="scheduleForm" method="POST">
+	{% csrf_token %}
 		<span>How many classes are you considering?
 			<select id="numClasses" name="numClasses" onchange="Dajaxice.scheduler.updatingCourseForm(Dajax.process, {'option':this.value})" size="1">
 				<option value="1">1</option>

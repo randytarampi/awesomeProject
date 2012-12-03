@@ -71,7 +71,28 @@ def listOfSubjects():
 	for i in allSubjects:
 		datList.append("<option value='%s'>%s</option>" % (i, i))
 	return ''.join(datList)
-	
+
+@dajaxice_register
+def addCourseToSession(request, form):
+	dajax = Dajax()
+
+	request.session['byCourse'] = form['courseSubject'] + " " + form['courseNumber']
+
+	dajax.alert(request.session['byCourse'])
+	return dajax.json()
+
+@dajaxice_register
+def addCourseByProfToSession(request, form):
+	dajax = Dajax()
+
+	return dajax.json()
+
+@dajaxice_register
+def addUnavailableToSession(request, form):
+	dajax = Dajax()
+
+	return dajax.json()
+
 def weeklyScheduleRows(meetingTimes, time):
 	tableRow = []
 
