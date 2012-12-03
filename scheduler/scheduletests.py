@@ -13,11 +13,12 @@ def largeTest():
     	#return createOptimalSchedule(5, Course.objects.all())
 	#return createOptimalSchedule(5, Course.objects.all(), True)
 	#return createOptimalSchedule(5, Course.objects.filter(subject = "cmpt"), True)
-	return createOptimalSchedule(5, Course.objects.filter(subject = "cmpt"))
+	#return createOptimalSchedule(5, Course.objects.filter(subject = "cmpt"))
 	#return createOptimalSchedule(5, Course.objects.filter(subject = "bisc"), True)
 	#selectedCourses = Course.objects.filter(section__startswith="C")
 	#return createOptimalSchedule(5, selectedCourses, True)
-	 
+	selectedCourses = Course.objects.filter(subject="CMPT", number=125) | Course.objects.filter(subject="CMPT", number=150) | Course.objects.filter(subject="CMPT", number=165) | Course.objects.filter(subject="MACM", number=201) | Course.objects.filter(subject="POL", number=100)
+	return createOptimalSchedule(5, selectedCourses)
 def conradTest():
     	testCourseList = []
     	testCourse1 = Course.objects.get(id = 1L)
@@ -41,12 +42,12 @@ c1 = output[1][0]
 c2 = output[1][1]
 c3 = output[1][2]
 c4 = output[1][3]
-c5 = output[1][4]
+#c5 = output[1][4]
 mt1 = MeetingTime.objects.filter(course = c1.id)
 mt2 = MeetingTime.objects.filter(course = c2.id)
 mt3 = MeetingTime.objects.filter(course = c3.id)
 mt4 = MeetingTime.objects.filter(course = c4.id)
-mt5 = MeetingTime.objects.filter(course = c5.id)
+#mt5 = MeetingTime.objects.filter(course = c5.id)
 
 
 mtList1 = [mt1] 
@@ -93,6 +94,19 @@ if meetingTimesNewTimesOldTimesFilter(mt1, mt2) == []:
 else:
 	print "No Conflict between mt1 and mt2"
 	print  meetingTimesNewTimesOldTimesFilter(meetOne, meetOne) 
+
+cmpt125exam = MeetingTime.objects.filter(course = 511)[1]
+macm201exam = MeetingTime.objects.filter(course = 1960)[1]
+#macm201List = Course.objects.filter(subject = "MACM", number = 201)
+#macm201List = Course.objects.filter(subject = "MACM", number = 1960)
+
+scheduleCourses = []
+for i in range (0, len(schedule.poolOfLockedCourses)):
+	testCourse = schedule.poolOfLockedCourses[i].dataBaseCourse
+	scheduleCourses.append(testCourse)
+	#poolOfLockedCourses
+lockC = schedule.poolOfLockedCourses
+#dataBaseCourse
 
 
 #1l, 4l, 5l, 78l, 147l

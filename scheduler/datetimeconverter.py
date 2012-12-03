@@ -102,8 +102,13 @@ def timeConflict(starttime1, endtime1, starttime2, endtime2):
                 #if (endtime2-starttime1).seconds < 3600:
                 #    print 'We can not travel between campuses'
             else:
-                #print 'There is a conflict'
-		return False
+                #print 'Timeconflict() conflict!'
+		#print "Start time1 = " + str(starttime1)
+		#print "Start time2 = " + str(starttime1)
+		#print "end time1 = " + str(endtime1)
+		#print "end time2 = " + str(endtime2)
+			
+		return True
     else:
          print 'Improper inputs'
 

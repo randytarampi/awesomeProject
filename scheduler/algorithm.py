@@ -213,13 +213,16 @@ def checkCourseTimeConflict(course, schedule):
     	return False
 
 def courseExamConflict(course, listOfLockedCourses):
+	#print "exam conflict for " + course.title
+	#print "len of list of locked courses" + str(len(listOfLockedCourses))	
 	for i in range (0, len(listOfLockedCourses)):
 	    	lockedCourse = listOfLockedCourses[i]
 	    	for j in range (0, len(course.exams)):
-	    		courseExam = course.exams[0]
+	    		courseExam = course.exams[j]
 			for k in range (0, len(lockedCourse.exams)):
-		    		lockedCourseExam = course.exams[0]
+		    		lockedCourseExam = lockedCourse.exams[k]
 		    		if examConflict(courseExam, lockedCourseExam) == True:
+					
 					return True
 	return False
 
@@ -273,6 +276,7 @@ def examConflict(examOne, examTwo):
 		exam2EndTime = convertTimeToTimeSlot(examTwo.end_time)
 		#if timeConflict(examOne.startTime, examOne.endTime, examTwo.startTime, examTwo.endTime) == True:
 		if timeConflict(exam1StartTime, exam1EndTime, exam2StartTime, exam2EndTime) == True:
+			#print "examConflict()..."
 	    		return True
 		else:
 	    		return False
