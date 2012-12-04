@@ -18,7 +18,14 @@ def largeTest():
 	#selectedCourses = Course.objects.filter(section__startswith="C")
 	#return createOptimalSchedule(5, selectedCourses, True)
 	selectedCourses = Course.objects.filter(subject="CMPT", number=125) | Course.objects.filter(subject="CMPT", number=150) | Course.objects.filter(subject="CMPT", number=165) | Course.objects.filter(subject="MACM", number=201) | Course.objects.filter(subject="POL", number=100)
-	return createOptimalSchedule(5, selectedCourses)
+	#createOptimalSchedule(5, selectedCourses)
+	#return createOptimalSchedule(3, selectedCourses)
+	return createOptimalSchedule(3, createOptimalSchedule(4, selectedCourses)[1])
+	#return createOptimalSchedule(5, selectedCourses)
+	
+	#createOptimalSchedule(3, selectedCourses)
+
+
 def conradTest():
     	testCourseList = []
     	testCourse1 = Course.objects.get(id = 1L)
@@ -41,12 +48,12 @@ for i in range (0, len (meet)):
 c1 = output[1][0]
 c2 = output[1][1]
 c3 = output[1][2]
-c4 = output[1][3]
+#c4 = output[1][3]
 #c5 = output[1][4]
 mt1 = MeetingTime.objects.filter(course = c1.id)
 mt2 = MeetingTime.objects.filter(course = c2.id)
 mt3 = MeetingTime.objects.filter(course = c3.id)
-mt4 = MeetingTime.objects.filter(course = c4.id)
+#mt4 = MeetingTime.objects.filter(course = c4.id)
 #mt5 = MeetingTime.objects.filter(course = c5.id)
 
 
@@ -98,6 +105,8 @@ else:
 
 cmpt125exam = MeetingTime.objects.filter(course = 511)[1]
 macm201exam = MeetingTime.objects.filter(course = 1960)[1]
+
+cmpt165List = Course.objects.filter(subject="CMPT", number=165)
 #macm201List = Course.objects.filter(subject = "MACM", number = 201)
 #macm201List = Course.objects.filter(subject = "MACM", number = 1960)
 

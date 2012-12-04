@@ -16,7 +16,7 @@ from scheduler.datetimeconverter import *
 	
 def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses = True):
 	schedule = Schedule()
-	#poolOfLockedCourses = []
+	#schedule.poolOfLockedCourses = []
    	newListOfCourses = []
     	poolOfCutCourses = []
     	for i in range (0, len(listofCourses)):
@@ -34,38 +34,40 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses 
 			#newCourse = newListOfCourses[0]
     			#newMeetingTimes = newCourse.meetingTimes
     	for i in range (0, numberOfCourses):
-        	iterateBEHEMOTH(schedule, newListOfCourses, poolOfCutCourses, numberOfCourses)
+        	iterateBEHEMOTH(schedule, newListOfCourses, numberOfCourses)
     	outPutListOfLockedCourses = []
-    	#print "size of lockedCourses =" + str(len(poolOfLockedCourses))
-    	for i in range (0, len(schedule.poolOfLockedCourses)):
-		lockedCourse = schedule.poolOfLockedCourses[i]
-		outputCourse = lockedCourse.dataBaseCourse		
-		#temporaryID = poolOfLockedCourses[i].courseID
-       		#outputCourse = Course.objects.get(id = temporaryID)
-       		outPutListOfLockedCourses.append(outputCourse)
-    	outPutListOfCutCourses = []
-	for i in range (0, len(poolOfCutCourses)):
-		cutCourse = poolOfCutCourses[i]
-		outputCourse = cutCourse.dataBaseCourse
-		#temporaryID = poolOfCutCourses[i].courseID
-		#outputCourse = Course.objects.get(id = temporaryID)
-		outPutListOfCutCourses.append(outputCourse)
-    	#print "size of output =" + str(len(outPutListOfCourses))
-    	#print "new newlistcourse = " + str(newListOfCourses[0])
-    	#print "size of poolcut =" + str(len(poolOfCutCourses))
-    	#return outPutListOfCourses
-    	listMeetingTimes = []
+    	
+	#Locked meeting times
+	listMeetingTimes = []
 	for i in range (0, len(schedule.poolOfLockedCourses)):
 		meetingTimes = schedule.poolOfLockedCourses[i].meetingTimes
 		for j in range (0, len(meetingTimes)):
 			meetingTime = meetingTimes[j]
 			listMeetingTimes.append(meetingTime)
+	#Locked Courses
+    	outPutListOfCutCourses = []
+	for i in range (0, len(schedule.poolOfCutCourses)):
+		cutCourse = schedule.poolOfCutCourses[i]
+		outputCourse = cutCourse.dataBaseCourse
+		outPutListOfCutCourses.append(outputCourse)
+	
+	#Cut MeetingTimes
 	listCutMeetingTimes = []
-	for i in range (0, len(poolOfCutCourses)):
-		meetingTimes = poolOfCutCourses[i].meetingTimes
+	for i in range (0, len(schedule.poolOfCutCourses)):
+		meetingTimes = schedule.poolOfCutCourses[i].meetingTimes
 		for j in range (0, len(meetingTimes)):
 			meetingTime = meetingTimes[j]
 			listCutMeetingTimes.append(meetingTime)
+
+	#Cut Courses
+    	for i in range (0, len(schedule.poolOfLockedCourses)):
+		lockedCourse = schedule.poolOfLockedCourses[i]
+		outputCourse = lockedCourse.dataBaseCourse		
+       		outPutListOfLockedCourses.append(outputCourse)
+	
+	
+	
+	
 	#largerOutputArray.append(listCutMeetingTimes)
 	
 	#listActualMeetingTimes = []
@@ -78,11 +80,11 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses 
 
 	largerOutputArray = []
 	largerOutputArray.append(listMeetingTimes)
-    	largerOutputArray.append(outPutListOfLockedCourses)
+	largerOutputArray.append(outPutListOfLockedCourses)
 	largerOutputArray.append(listCutMeetingTimes)
-    	largerOutputArray.append(outPutListOfCutCourses)
+	largerOutputArray.append(outPutListOfCutCourses)
     	#Schedule Stats
-   	TotalDays = schedule.getTotalDays()
+	TotalDays = schedule.getTotalDays()
     	TotalTimeGap = schedule.getTotalTimeGap()
     	crossCampusTravels = schedule.getTotalCrossCampusTravels()
     	currentChoiceStats = ChoiceStats(TotalDays, TotalTimeGap, crossCampusTravels)
@@ -99,7 +101,7 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses 
 #Say hte user wants to take cmpt 300, and we are passed all sections of cmpt 300
 #This means I should group up all the sections of cmpt 300 together into one list
 #NOT DONE
-def handleCoursesWeNeed(coursesWeNeedListOfLists, schedule, poolOfCutCourses, numberOfCourses):
+def handleCoursesWeNeed(coursesWeNeedListOfLists, schedule, numberOfCourses):
 	#go through the courses we need to take and attempt to add them one by one	
 	#poolOfLockedCourses = []
 	#for each course name (e.g. cmpt300
@@ -113,7 +115,7 @@ def handleCoursesWeNeed(coursesWeNeedListOfLists, schedule, poolOfCutCourses, nu
 		for j in range (0, len(courseListWithCertainName)):
 			currentCourseSection = courseListWithCertainName[j]
 			handleLabsForCourse(currentCourseWeNeed, listOfCopiesOfNeededCourse)
-		iterateBEHEMOTH(schedule, listOfCopiesOfNeededCourse, poolOfCutCourses, numberOfCourses)
+		iterateBEHEMOTH(schedule, listOfCopiesOfNeededCourse, schedule.poolOfCutCourses, numberOfCourses)
 
 	
 
@@ -196,10 +198,18 @@ def convertTimeToTimeSlot(intputTime):
    	return timeslot
 
 def checkCourseConflict(course, schedule):
+	#if (course.title =="Cmpt165 "):
+	#		print "exam conflict Cmpt 165"
 	if courseExamConflict(course, schedule.poolOfLockedCourses) == True:
+		#print "Course exam conflict" +	course.title
+		#if (course.title =="Cmpt165 "):
+		#	print "exam conflict Cmpt 165"
 		return True
 	else:
     		if checkCourseTimeConflict(course, schedule) == True:
+			#print "Course checkCourseTimeConflict conflict" +	course.title
+			#if (course.title =="Cmpt165"):
+			#	print "checkCourseTimeConflict conflict Cmpt 165"
 	    		return True
 	return False
 
@@ -231,7 +241,6 @@ def courseExamConflict(course, listOfLockedCourses):
 			for k in range (0, len(lockedCourse.exams)):
 		    		lockedCourseExam = lockedCourse.exams[k]
 		    		if examConflict(courseExam, lockedCourseExam) == True:
-					
 					return True
 	return False
 
@@ -303,7 +312,7 @@ def lockCourse(course, schedule, poolOfPotentialCourses):
         	#print "There is no course Conflict for lock"
         	# lock the course
 		campus = course.campus
-		print "lockCourse - course campus = " + str(campus)
+		#print "lockCourse - course campus = " + str(campus)
         	for i in range (0, len(course.meetingTimes)):
             		meetingTime = course.meetingTimes[i]
             		#print "Locking MeetingTime"
@@ -365,7 +374,7 @@ def freeCourse(course, schedule):
 
 
 #find all courses that currently conflict with our schedule and remove them from the list of potential courses
-def updateCleanPotentialCourses(poolOfPotentialCourses, poolOfCutCourses, schedule):
+def updateCleanPotentialCourses(poolOfPotentialCourses, schedule):
     	listOfCoursesToDelete = []
     #build a list of courses for us to remove
     	for i in range (0, len(poolOfPotentialCourses)):
@@ -376,22 +385,29 @@ def updateCleanPotentialCourses(poolOfPotentialCourses, poolOfCutCourses, schedu
     	for i in range (0, len(listOfCoursesToDelete)):
        		courseToDelete = listOfCoursesToDelete[i]
         	poolOfPotentialCourses.remove(courseToDelete)
-		poolOfCutCourses.append(courseToDelete)
+		schedule.poolOfCutCourses.append(courseToDelete)
+		#print "removing course from update"
+		#print "Coruse name == " + courseToDelete.title
+		#print "courseOne.title == " + courseOne.title
+		#print "courseTwo.title == " + courseTwo.title
 
 #check if two courses have the same name
 def courseNameConflict(courseOne, courseTwo):
 	if courseOne.title == courseTwo.title:
+		#print "course Name conflict"
+		#print "courseOne.title == " + courseOne.title
+		#print "courseTwo.title == " + courseTwo.title
 		return True
 	else:
 		return False
     
 #Eliminates all duplicate courses 
-def eliminateDuplicateCourses(poolOfPotentialCourses, poolOfCutCourses, schedule):
+def eliminateDuplicateCourses(poolOfPotentialCourses, schedule):
     	listOfCoursesToDelete = []
    	#build a list of courses for us to remove
     	for i in range (0, len(poolOfPotentialCourses)):	
 		for j in range (0, len(schedule.poolOfLockedCourses)):
-	    		if courseNameConflict(poolOfPotentialCourses[i], schedule.poolOfLockedCourses[j]):
+	    		if courseNameConflict(poolOfPotentialCourses[i], schedule.poolOfLockedCourses[j]) == True:
 				listOfCoursesToDelete.append(poolOfPotentialCourses[i])
 	
     	#and remove them
@@ -408,18 +424,23 @@ def eliminateDuplicateCourses(poolOfPotentialCourses, poolOfCutCourses, schedule
 	#pool of locked courses for a schedule
 	#a "schedule" object to handle the time grid
 	#the number of courses a student wants to take
-def iterateBEHEMOTH(schedule, poolOfPotentialCourses, poolOfCutCourses, maxSize):
-    	if len(schedule.poolOfLockedCourses) < maxSize:
-		#print "interBehe We have the right size" 
+def iterateBEHEMOTH(schedule, poolOfPotentialCourses, maxSize):
+	print "Iterate Behemoth"    	
+	if len(schedule.poolOfLockedCourses) < maxSize:
+		#print "interBehe We have the right size"
+		#print "len len(poolOfPotentialCourses) = " + str(len(poolOfPotentialCourses))
         	orignialTimeGap = schedule.getTotalTimeGap()
         	originalNumberDays =  schedule.getTotalDays()
-		eliminateDuplicateCourses(poolOfPotentialCourses, poolOfCutCourses, schedule)
-        	updateCleanPotentialCourses(poolOfPotentialCourses, poolOfCutCourses, schedule)
+		eliminateDuplicateCourses(poolOfPotentialCourses, schedule)
+		#print "Post eliminateDuplicateCourses len(poolOfPotentialCourses) = " + str(len(poolOfPotentialCourses))
+        	updateCleanPotentialCourses(poolOfPotentialCourses, schedule)
+		#print "Post updateCleanPotentialCourses len(poolOfPotentialCourses) = " + str(len(poolOfPotentialCourses))
 		#i.e. if are taking cmpt 300 already... it will delete any other mentions of cmpt 300 from the potential list
         	
         	choiceStatsList = []
-	
+		#print "new len(poolOfPotentialCourses) = " + str(len(poolOfPotentialCourses))
         	if len(poolOfPotentialCourses) >= 2:
+			#print "Behemoth PotentialCourses >=2"
             		#Gather information on all possible choices:
 	    		#First temporarily add the course to the schedule and gather stats about the new schedule
             		for i in range (0, len(poolOfPotentialCourses)):
@@ -458,14 +479,28 @@ def iterateBEHEMOTH(schedule, poolOfPotentialCourses, poolOfCutCourses, maxSize)
             		#get the Course that has risen above all others and solidify its position in the schedule
             		courseThatHasRisenAboveAllOthers = poolOfPotentialCourses[currentPositionOfChoice]
             		#also make sure to update here....
+			#print "Locking course from len(potcourse) >=2"
             		lockCourse(courseThatHasRisenAboveAllOthers, schedule, poolOfPotentialCourses)
 
         	elif len(poolOfPotentialCourses) == 1:
             		onlyCourseOption = poolOfPotentialCourses[0]
+			#print "Locking course from len(potcourse) ==1"
 	    		lockCourse(onlyCourseOption, schedule, poolOfPotentialCourses)
 
+	else:
+		print "Maxed out on behe interation numbers"
 
 
+#def handleUnavailableMeetingTimes(MeetingTimesListFromWebsite, schedule):
+		
+#	for i in range(0, len(MeetingTimes):
+#		meetingTimeFromWebSite = MeetingTimesListFromWebsite[i]
+		#day = convertTimeToTimeSlot(meetingTimeFromWebSite[0])
+		#day = convertTimeToTimeSlot(meetingTimeFromWebSite[0])
+		#def lockMeetingTime(self, startTime, endTime, weekday):
+		#schedule.lockMeetingTime(startTime, endTime, weekday
+	#convertTimeToTimeSlot
+	#convertDayStringToDayInt
 
 #Potentially obsolete code
 #<MeetingTime: Monday - 10:30:00 to 12:20:00>
