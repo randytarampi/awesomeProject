@@ -414,7 +414,7 @@ def eliminateDuplicateCourses(poolOfPotentialCourses, schedule):
     	for i in range (0, len(listOfCoursesToDelete)):
         	courseToDelete = listOfCoursesToDelete[i]
         	poolOfPotentialCourses.remove(courseToDelete)
-		#poolOfCutCourses.append(courseToDelete)
+		#schedule.poolOfCutCourses.append(courseToDelete)
 
 
 
