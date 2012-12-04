@@ -117,6 +117,16 @@ p {
 	border-bottom-style: solid;
 }
 
+.scheduleTableProposedClass {
+	color: #FFF;
+	background-color: #003087;
+	text-align: center;
+	border-width: 1px;
+	border-color: #A07400;
+	border-top-style: solid;
+	border-bottom-style: solid;
+}
+
 .classDescription {
 	word-wrap: break-word;
 }

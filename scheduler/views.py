@@ -69,13 +69,12 @@ class courseDetailView(DetailView):
 	template_name = "schedulerCourse.html"
 	
 	def get_context_data(self, **kwargs):
-		print kwargs['object'].id
 		context = super(courseDetailView, self).get_context_data(**kwargs)
 		if 'processedData' in self.request.session:
 			context['scheduledCourses'] = self.request.session['processedData']['optimalCourses']
 			context['scheduledInstructors'] = self.request.session['processedData']['optimalInstructors']
 			context['scheduledMeetingTimes'] = self.request.session['processedData']['optimalMeetingTimes']
 			context['scheduledExamTimes'] = self.request.session['processedData']['optimalExamTimes']
-			context['scheduledHTML'] = weeklySchedule(context['scheduledMeetingTimes'])
+			context['scheduledHTML'] = weeklySchedule(context['scheduledMeetingTimes'], kwargs['object'].meetingtime_set.exclude(type="EXAM").exclude(type="MIDT"))
 		return context
 

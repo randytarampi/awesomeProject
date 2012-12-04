@@ -47,7 +47,7 @@
 			<li>Campus: {{ course.campusChoice }}</li>
 			<li>Meeting Times:</li>
 				<ul class="scheduled times">
-				{% for meetingTime in optimalMeetingTimes %}
+				{% for meetingTime in scheduledMeetingTimes %}
 					{% if meetingTime.course == course %}
 						{% if meetingTime.type == "LEC" or meetingTime.type == "LAB" %}
 							<li class="classOrLab time">{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} in {{ meetingTime.room }}</li>
@@ -93,7 +93,13 @@
 		{{ scheduledHTML|safe }}
 	</tbody>
 	<tfoot id="scheduleTableFoot">
-		<tr><td colspan="7">NOTE: There are no classes scheduled on Sundays</td></tr>
+		<tr>
+			<td colspan="1">Legend:</td>
+			<td class="scheduleTableClass" colspan="1">&nbsp;</td>
+			<td colspan="2">Meetings in your schedule</td>
+			<td class="scheduleTableProposedClass" colspan="1">&nbsp;</td>
+			<td colspan="2">Meetings for this class</td>
+		</tr>
 	</tfoot>
 </table>
 </div>

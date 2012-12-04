@@ -1,5 +1,6 @@
 from datetime import time
-from django.template import Context, Template
+from django.shortcuts import *
+from django.template import Context, Template, RequestContext
 from django.db.models import Q
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
@@ -134,7 +135,7 @@ def addUnavailableToSession(request, form):
 
 	return dajax.json()
 
-def weeklyScheduleRows(meetingTimes, time):
+def weeklyScheduleRows(meetingTimes, time, proposedCourse=None):
 	tableRow = []
 
 	for day in range(6):
@@ -149,18 +150,22 @@ def weeklyScheduleRows(meetingTimes, time):
 						except ValueError: 
 							testTime = testTime.replace(hour=testTime.hour+1, minute=0)
 						rowCount += 1
-					tableRow.append('\n\t<td rowspan="%i" class="scheduleTableCell scheduleTableclass" id={{ meeting%s.id }}>\n\t\t<span class="classDescription" id={{ meeting%s.id }}>{{ meeting%s.course }}<br />{{ meeting%s.typeChoice }}<br />{{ meeting%s.start_time }} to {{ meeting%s.end_time }}<br />{{ meeting%s.room }}</span></td>' % (rowCount, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id))
+					scheduledOrProposed = "scheduleTableclass" if (meeting.course != proposedCourse) else "scheduleTableProposedClass"
+					tableRow.append('\n\t<td rowspan="%i" class="scheduleTableCell %s" id={{ meeting%s.id }}>\n\t\t<span class="classDescription" id={{ meeting%s.id }}>{{ meeting%s.course }}<br />{{ meeting%s.typeChoice }}<br />{{ meeting%s.start_time }} to {{ meeting%s.end_time }}<br />{{ meeting%s.room }}</span></td>' % (rowCount, scheduledOrProposed, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id))
 					break
 				elif meeting.start_time < time and time <= meeting.end_time:
 					break
-		
 		else:
 			tableRow.append('\n\t<td class="scheduleTableCell">&nbsp;</td>')
 	
 	return ''.join(tableRow)
 
-def weeklySchedule(meetingTimes):
-	meetingTimes = sorted(meetingTimes, key=lambda meetingTime: meetingTime.start_time)
+def weeklySchedule(scheduledTimes, proposedTimes=[]):
+	meetingTimes = scheduledTimes
+	for proposedTime in proposedTimes:
+		meetingTimes.append(proposedTime)
+	meetingTimes = sorted(meetingTimes, key=lambda meeting: meeting.start_time)
+	proposedCourse = proposedTimes[0].course if proposedTimes else None
 	meetingTable = []
 	meetingContext = {}
 	earlyBound = meetingTimes[0].start_time
@@ -180,13 +185,13 @@ def weeklySchedule(meetingTimes):
 	
 		# First Row (Top of the Hour)
 		meetingTable.append('\n<tr class="scheduleTableRow topHour"><th rowspan="2">{{ time%s }}</th>' % slot.hour)
-		meetingTable.append(weeklyScheduleRows(meetingTimes, slot))
+		meetingTable.append(weeklyScheduleRows(meetingTimes, slot, proposedCourse))
 		meetingTable.append('\n</tr>')
 		
 		# Second Row (Bottom of the Hour)
 		slot = slot.replace(minute=slot.minute+30)
 		meetingTable.append('\n<tr class="scheduleTableRow bottomHour">')
-		meetingTable.append(weeklyScheduleRows(meetingTimes, slot))
+		meetingTable.append(weeklyScheduleRows(meetingTimes, slot, proposedCourse))
 		meetingTable.append('\n</tr>')
 	
 	return Template(''.join(meetingTable)).render(Context(meetingContext))
@@ -233,14 +238,18 @@ def generateSchedule(request, form):
 
 	processedData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'optimalExamTimes': optimalExamTimes, 'rejectedCourses': rejectedCourses, 'rejectedInstructors': rejectedInstructors, 'rejectedMeetingTimes': rejectedMeetingTimes}
 	request.session['processedData'] = processedData
-
+	
 	# Serve the data
+	print "FUCK"
 	dajax.assign('#scheduleViewDiv', 'innerHTML', render_to_response('schedulerSchedule.html', processedData).content)
+	print "YOU"
 	dajax.assign('#scheduleTableBody', 'innerHTML', weeklySchedule(optimalMeetingTimes))
+	print "BITCHES"
 	dajax.script('$(\'#scheduleViewDiv\').activity(false);')
 	dajax.script('$(document).ready(jQueryEffects());')
 	dajax.remove_css_class('#scheduleViewDiv', 'emptySchedule');
 	dajax.add_css_class('#scheduleViewDiv', 'fullSchedule');
+	print ":)"
 	return dajax.json()
 
 @dajaxice_register
