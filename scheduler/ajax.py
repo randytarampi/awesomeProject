@@ -112,13 +112,18 @@ def addCourseByProfToSession(request, form):
 		sessionList.append(courseTuple)
 	request.session['byProf'] = sessionList
 
-	print request.session['byProf']
+	out = []
+	for i in request.session['byProf']:
+		out.append("<li>%s %s taught by: %s</li>" % (i[0], i[2], i[1]))
+
+	dajax.assign('#addCourseByProfList', 'innerHTML', ''.join(out))
 
 	return dajax.json()
 
 @dajaxice_register
 def addUnavailableToSession(request, form):
 	dajax = Dajax()
+	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 	sessionList = []
 	d = int(form['day'])
 	t1 = time(int(form['startHour']), int(form['startMinute']))
@@ -127,7 +132,7 @@ def addUnavailableToSession(request, form):
 	
 	if 'timesUnavailable' in request.session:
 		if timeTuple in request.session['timesUnavailable']:
-			dajax.alert('You have already marked %s from %s to %s as unavailable')
+			dajax.alert('You have already marked %s from %s:%s to %s:%s as unavailable' % (listOfDays[d], form['startHour'], form['startMinute'], form['endHour'], form['endMinute']))
 			return dajax.json()
 		sessionList = request.session['timesUnavailable']
 		sessionList.append(timeTuple)
@@ -135,7 +140,22 @@ def addUnavailableToSession(request, form):
 		sessionList.append(timeTuple)
 	request.session['timesUnavailable'] = sessionList
 
-	print request.session['timesUnavailable']
+	out = []
+
+	for i in request.session['timesUnavailable']:
+
+		if int(i[1].minute) < 10:
+			firstMinute = str(i[1].minute) + '0'
+		else:
+			firstMinute = str(i[1].minute)
+		if int(i[2].minute) < 10:
+			lastMinute = str(i[2].minute) + '0'
+		else:
+			lastMinute = str(i[2].minute)
+
+		out.append("<li>%s from %s:%s to %s:%s</li>" % (listOfDays[i[0]], i[1].hour, firstMinute, i[2].hour, lastMinute))
+
+	dajax.assign('#addTimeList', 'innerHTML', ''.join(out))
 
 	return dajax.json()
 
