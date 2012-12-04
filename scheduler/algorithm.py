@@ -14,7 +14,7 @@ from scheduler.datetimeconverter import *
 #that will be in an optimal schedule
 #def createOptimalSchedule(numberOfCourses, listofCourses):
 	
-def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses = True):
+def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses = False):
 	schedule = Schedule()
 	#schedule.poolOfLockedCourses = []
    	newListOfCourses = []
