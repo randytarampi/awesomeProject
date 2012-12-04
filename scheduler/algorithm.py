@@ -37,6 +37,16 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses 
         	iterateBEHEMOTH(schedule, newListOfCourses, numberOfCourses)
     	outPutListOfLockedCourses = []
     	
+
+
+	unUsedCourseList = []	
+	for i in range (0, len(newListOfCourses)):
+		unUsedCourseList.append(newListOfCourses[i])
+	for i in range (0, len(unUsedCourseList)):
+		unUsedCourse = unUsedCourseList[i]
+		schedule.poolOfCutCourses.append(unUsedCourse)
+		newListOfCourses.remove(unUsedCourse)
+
 	#Locked meeting times
 	listMeetingTimes = []
 	for i in range (0, len(schedule.poolOfLockedCourses)):
@@ -50,6 +60,11 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses 
 		cutCourse = schedule.poolOfCutCourses[i]
 		outputCourse = cutCourse.dataBaseCourse
 		outPutListOfCutCourses.append(outputCourse)
+	#Possible fix to insufficient number of cut classes
+	
+		
+		
+	
 	
 	#Cut MeetingTimes
 	listCutMeetingTimes = []
@@ -138,12 +153,12 @@ def convertCourseModelToCourseObject(inputCourse, filterDistanceCourses):
     	id = inputCourse.id		
     	listofmeetingTimes = MeetingTime.objects.filter(course = id)
 	#Filters out distance courses	
-	if "C" in inputCourse.section:
-		return False    	
-	if (len (listofmeetingTimes) == 0):
-		return False
-    	if inputCourse.component == "PRA":
-		return False
+	#if "C" in inputCourse.section:
+	#	return False    	
+	#if (len (listofmeetingTimes) == 0):
+	#	return False
+    	#if inputCourse.component == "PRA":
+	#	return False
     	courseInfo = inputCourse.subject
     	courseInfo += inputCourse.number
   	courseMeetingTimes = []
@@ -159,11 +174,11 @@ def convertCourseModelToCourseObject(inputCourse, filterDistanceCourses):
 	    		courseLabs.append(meetingTime)
 		else:
 	    		courseMeetingTimes.append(meetingTime)
-    	if (filterDistanceCourses == True) and len(courseMeetingTimes) == 0:
-    		return False
-    	else:
-		outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseExam, courseLabs, courseCampusNumber, inputCourse)
-		return outputCourse
+    	#if (filterDistanceCourses == True) and len(courseMeetingTimes) == 0:
+    	#	return False
+    	#else:
+	outputCourse = SchedulingCourse(courseInfo, id, courseMeetingTimes, courseExam, courseLabs, courseCampusNumber, inputCourse)
+	return outputCourse
     
 
 def convertCampusModelToInt(campus):
@@ -384,8 +399,8 @@ def updateCleanPotentialCourses(poolOfPotentialCourses, schedule):
     #and remove them
     	for i in range (0, len(listOfCoursesToDelete)):
        		courseToDelete = listOfCoursesToDelete[i]
-        	poolOfPotentialCourses.remove(courseToDelete)
 		schedule.poolOfCutCourses.append(courseToDelete)
+        	poolOfPotentialCourses.remove(courseToDelete)
 		#print "removing course from update"
 		#print "Coruse name == " + courseToDelete.title
 		#print "courseOne.title == " + courseOne.title
@@ -413,8 +428,9 @@ def eliminateDuplicateCourses(poolOfPotentialCourses, schedule):
     	#and remove them
     	for i in range (0, len(listOfCoursesToDelete)):
         	courseToDelete = listOfCoursesToDelete[i]
+		schedule.poolOfCutCourses.append(courseToDelete)
         	poolOfPotentialCourses.remove(courseToDelete)
-		#schedule.poolOfCutCourses.append(courseToDelete)
+		
 
 
 
