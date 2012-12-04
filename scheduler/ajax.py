@@ -76,9 +76,17 @@ def listOfSubjects():
 def addCourseToSession(request, form):
 	dajax = Dajax()
 
-	request.session['byCourse'] = form['courseSubject'] + " " + form['courseNumber']
+	sessionList = []
+	courseTuple = (form['courseSubject'], form['courseNumber'])
+	if 'byCourse' in request.session:
+		sessionList = request.session['byCourse']
+		sessionList.append(courseTuple)
+	else:
+		sessionList.append(courseTuple)
+	request.session['byCourse'] = sessionList
 
-	dajax.alert(request.session['byCourse'])
+	print request.session['byCourse']
+
 	return dajax.json()
 
 @dajaxice_register
