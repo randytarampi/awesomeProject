@@ -183,7 +183,7 @@ def weeklySchedule(scheduledTimes, proposedTimes=[]):
 		meetingContext[('time%s' % slot.hour)] = slot
 	
 		# First Row (Top of the Hour)
-		meetingTable.append('\n<tr class="scheduleTableRow topHour"><th rowspan="2">{{ time%s }}</th>' % slot.hour)
+		meetingTable.append('\n<tr class="scheduleTableRow topHour"><th class="scheduleTableTime" rowspan="2">{{ time%s }}</th>' % slot.hour)
 		meetingTable.append(weeklyScheduleRows(meetingTimes, slot, proposedCourse))
 		meetingTable.append('\n</tr>')
 		
