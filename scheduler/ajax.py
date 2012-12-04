@@ -4,7 +4,6 @@ from django.db.models import Q
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
 from scheduler.models import *
-from scheduler.views import *
 from scheduler.algorithm import *
 
 @dajaxice_register
@@ -75,10 +74,13 @@ def listOfSubjects():
 @dajaxice_register
 def addCourseToSession(request, form):
 	dajax = Dajax()
-
 	sessionList = []
 	courseTuple = (form['courseSubject'], form['courseNumber'])
+
 	if 'byCourse' in request.session:
+		if courseTuple in request.session['byCourse']:
+			dajax.alert('You have already selected %s %s!' % courseTuple)
+			return dajax.json()
 		sessionList = request.session['byCourse']
 		sessionList.append(courseTuple)
 	else:
@@ -92,10 +94,13 @@ def addCourseToSession(request, form):
 @dajaxice_register
 def addCourseByProfToSession(request, form):
 	dajax = Dajax()
-
 	sessionList = []
 	courseTuple = (form['courseSubjectByProf'], form['subjectProfs'], form['courseNumberByProf'])
+	
 	if 'byProf' in request.session:
+		if courseTuple in request.session['byProf']:
+			dajax.alert('You have already selected %s %s! with %s' % (courseTuple[0], courseTuple[2], courseTuple[1]))
+			return dajax.json()
 		sessionList = request.session['byProf']
 		sessionList.append(courseTuple)
 	else:
@@ -109,13 +114,16 @@ def addCourseByProfToSession(request, form):
 @dajaxice_register
 def addUnavailableToSession(request, form):
 	dajax = Dajax()
-
 	sessionList = []
 	d = int(form['day'])
 	t1 = time(int(form['startHour']), int(form['startMinute']))
 	t2 = time(int(form['endHour']), int(form['endMinute']))
 	timeTuple = (d, t1, t2)
+	
 	if 'timesUnavailable' in request.session:
+		if timeTuple in request.session['timesUnavailable']:
+			dajax.alert('You have already marked %s from %s to %s as unavailable')
+			return dajax.json()
 		sessionList = request.session['timesUnavailable']
 		sessionList.append(timeTuple)
 	else:
@@ -196,17 +204,23 @@ def getUnavailability(request):
 @dajaxice_register
 def generateSchedule(request, form):
 	dajax = Dajax()
-	dajax.clear('#scheduleViewDiv', 'innerHTML')
+	selectedCourses = Course.objects.none()
+	timesUnavailable = []
 
 	# Get the data
-	selectedCourses = Course.objects.none()
-	numClasses =  int(form['numTaking'])
-	for i in range(numClasses):
-		selectedCourses = selectedCourses | Course.objects.filter(subject=form['courseSubject%i' % (i+1)], number=form['courseNumber%i' % (i+1)])
+	numClasses = int(form['numClasses'])
+	if 'byCourse' in request.session:
+		for courseTuple in request.session['byCourse']:
+			selectedCourses = selectedCourses | Course.objects.filter(subject=courseTuple[0], number=courseTuple[1])
+	if 'byProf' in request.session:
+		for profTuple in request.session['byProf']:
+			selectedCourses = selectedCourses | Instructor.objects.get(userid=profTuple[1]).course.filter(subject=profTuple[0], number=profTuple[2])
+	if 'timesUnavailable' in request.session:
+		for time in request.session['timesUnavailable']:
+			timesUnavailable = timesUnavailable.append(time)
 
 	# Process the data
-	#warning this will now filter out distance ed coures
-	processedCourses = createOptimalSchedule(numClasses, selectedCourses, False)
+	processedCourses = createOptimalSchedule(numClasses, selectedCourses)
 
 	optimalCourses = processedCourses[1]
 	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)	
@@ -218,6 +232,7 @@ def generateSchedule(request, form):
 	rejectedMeetingTimes = processedCourses[2]
 
 	processedData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'optimalExamTimes': optimalExamTimes, 'rejectedCourses': rejectedCourses, 'rejectedInstructors': rejectedInstructors, 'rejectedMeetingTimes': rejectedMeetingTimes}
+	request.session['processedData'] = processedData
 
 	# Serve the data
 	dajax.assign('#scheduleViewDiv', 'innerHTML', render_to_response('schedulerSchedule.html', processedData).content)

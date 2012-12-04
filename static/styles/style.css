@@ -215,6 +215,7 @@ li.break {
 }
 
 #scheduleTable { 
+	width: 100%;
 	max-width: 591px;
 	border-spacing: 0;
 	border-collapse: collapse;

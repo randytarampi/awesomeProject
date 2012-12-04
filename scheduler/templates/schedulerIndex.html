@@ -127,7 +127,7 @@
 	<form id="scheduleForm" method="POST">
 	{% csrf_token %}
 		<span>How many classes are you considering?
-			<select id="numClasses" name="numClasses" onchange="Dajaxice.scheduler.updatingCourseForm(Dajax.process, {'option':this.value})" size="1">
+			<select id="numClasses" name="numClasses" size="1">
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
@@ -140,13 +140,6 @@
 				<option value="10">10</option>
 			</select>
 		</span>
-		<div id="listClasses" onchange="">
-		</div>
-		<span id="numTakingSpan">
-		</span>
-		<br>
-		<div id="unavailable">
-		</div>
 		<input id="scheduleSubmit" type="button" value="Generate Schedule" onclick="generateSchedule()"/>
 	</form>
 </div>

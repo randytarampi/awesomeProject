@@ -16,7 +16,7 @@
 					<li>Campus: {{ course.campusChoice }}</li>
 					<li>Meeting Times:</li>
 						<ul class="rejected times">
-						{% for meetingTime in rejectedMeetingTimes %}
+						{% for meetingTime in rejectedMeetingTimes|dictsort:'type' %}
 							{% if meetingTime.course == course %}
 								{% if meetingTime.type == "LEC" or meetingTime.type == "LAB" %}
 									<li class="classOrLab time">{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} in {{ meetingTime.room }}</li>
@@ -44,7 +44,7 @@
 					<li>Campus: {{ course.campusChoice }}</li>
 					<li>Meeting Times:</li>
 						<ul class="optimal times">
-						{% for meetingTime in optimalMeetingTimes %}
+						{% for meetingTime in optimalMeetingTimes|dictsort:'type' %}
 							{% if meetingTime.course == course %}
 								{% if meetingTime.type == "LEC" or meetingTime.type == "LAB" %}
 									<li class="classOrLab time">{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} in {{ meetingTime.room }}</li>
@@ -60,17 +60,17 @@
 			{% endfor %}
 			</ul>
 		{% else %}
-			<span class="error">Please specify a set of classes.</span>
+			{% if rejectedCourses %}<span class="error">All of the courses specified conflicted.</span>{% endif %}<span class="error">Please specify a set of classes.</span>
 		{% endif %}
 	</ul>
 </div>
 <h2>Your Exam Schedule</h2>
 <div id="scheduleViewExams">
-	<ol>
-	    {% for meetingTime in optimalExamTimes %}
+	<ol class="optimal exams">
+	{% for meetingTime in optimalExamTimes %}
 		<li class="exam">{{ meetingTime.course.subject}} {{ meetingTime.course.number}} {{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
 	{% empty %}
-		<span class="noexam">No Exams Scheduled!</span>
+		<p><span class="noexam">No Exams Scheduled!</span></p>
 	{% endfor %}
 	</ol>
 </div>

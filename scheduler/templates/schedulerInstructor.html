@@ -2,7 +2,11 @@
 
 {% block content %}
 <h1>{{ instructor.name }}</h1>
-{% if instructor.userid != '. Tbd' and instructor.userid != '. Sessional' and instructor.userid != '. Faculty' and " " not in instructor.userid %}<ul><li>Email: <a href="mailto:{{ instructor.userid }}@sfu.ca">{{ instructor.userid }}@sfu.ca</a></li></ul>{% endif %}
+{% if instructor.userid != '. Tbd' and instructor.userid != '. Sessional' and instructor.userid != '. Faculty' and " " not in instructor.userid %}<ul>
+	<li>Email: <a href="mailto:{{ instructor.userid }}@sfu.ca">{{ instructor.userid }}@sfu.ca</a></li>
+	<li>Webpage: <a href="http://www.sfu.ca/~{{ instructor.userid }}">sfu.ca/~{{ instructor.userid }}</a></li>
+</ul>
+{% endif %}
 <h2>Teaching in Spring 2013:</h2>
 <ul class="courses">
 	{% for course in instructor.course.all %}
