@@ -324,7 +324,7 @@ def courseFitsWithMeetingTimeList(dbCourse, meetingTimeList):
 	#Handle the lab times... at least One has to work	
 	labTimes = course.labs
 	if labTimes != []:
-		acceptableLabTimes = meetingTimesNewTimesOldTimesFilter(labTimes, meetingTimeList)
+		acceptableLabTimes = meetingTimesFilter(meetingTimeList, labTimes)
 		if len (acceptableLabTimes) != 0:
 			outPutAppropriateTimes.append(acceptableLabTimes[i])
 		else:
