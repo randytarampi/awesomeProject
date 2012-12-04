@@ -1,17 +1,17 @@
 from datetime import time
-from django.template import Context, Template
+from django.shortcuts import render_to_response
+from django.template import Context, Template, RequestContext
 from django.db.models import Q
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
 from scheduler.models import *
-from scheduler.views import *
 from scheduler.algorithm import *
 
 @dajaxice_register
 def amORpmStart(request, option):
 	dajax = Dajax()
 
-	if int(option) > 12:
+	if int(option) >= 12:
 		out = "pm"
 	else:
 		out = "am"
@@ -22,7 +22,7 @@ def amORpmStart(request, option):
 def amORpmEnd(request, option):
 	dajax = Dajax()
 
-	if int(option) > 12:
+	if int(option) >= 12:
 		out = "pm"
 	else:
 		out = "am"
@@ -75,33 +75,71 @@ def listOfSubjects():
 @dajaxice_register
 def addCourseToSession(request, form):
 	dajax = Dajax()
-
 	sessionList = []
 	courseTuple = (form['courseSubject'], form['courseNumber'])
+
 	if 'byCourse' in request.session:
+		if courseTuple in request.session['byCourse']:
+			dajax.alert('You have already selected %s %s!' % courseTuple)
+			return dajax.json()
 		sessionList = request.session['byCourse']
 		sessionList.append(courseTuple)
 	else:
 		sessionList.append(courseTuple)
 	request.session['byCourse'] = sessionList
 
-	print request.session['byCourse']
+	out = []
+	for i in request.session['byCourse']:
+		out.append("<li>%s %s</li>" % (i[0], i[1]))
+
+	dajax.assign('#addCourseList', 'innerHTML', ''.join(out))
 
 	return dajax.json()
 
 @dajaxice_register
 def addCourseByProfToSession(request, form):
 	dajax = Dajax()
+	sessionList = []
+	courseTuple = (form['courseSubjectByProf'], form['subjectProfs'], form['courseNumberByProf'])
+	
+	if 'byProf' in request.session:
+		if courseTuple in request.session['byProf']:
+			dajax.alert('You have already selected %s %s! with %s' % (courseTuple[0], courseTuple[2], courseTuple[1]))
+			return dajax.json()
+		sessionList = request.session['byProf']
+		sessionList.append(courseTuple)
+	else:
+		sessionList.append(courseTuple)
+	request.session['byProf'] = sessionList
+
+	print request.session['byProf']
 
 	return dajax.json()
 
 @dajaxice_register
 def addUnavailableToSession(request, form):
 	dajax = Dajax()
+	sessionList = []
+	d = int(form['day'])
+	t1 = time(int(form['startHour']), int(form['startMinute']))
+	t2 = time(int(form['endHour']), int(form['endMinute']))
+	timeTuple = (d, t1, t2)
+	
+	if 'timesUnavailable' in request.session:
+		if timeTuple in request.session['timesUnavailable']:
+			dajax.alert('You have already marked %s from %s to %s as unavailable')
+			return dajax.json()
+		sessionList = request.session['timesUnavailable']
+		sessionList.append(timeTuple)
+	else:
+		sessionList.append(timeTuple)
+	request.session['timesUnavailable'] = sessionList
+
+	print request.session['timesUnavailable']
 
 	return dajax.json()
 
-def weeklyScheduleRows(meetingTimes, time):
+def weeklyScheduleRows(meetingTimes, time, proposedCourse=None):
 	tableRow = []
 
 	for day in range(6):
@@ -116,18 +154,21 @@ def weeklyScheduleRows(meetingTimes, time):
 						except ValueError: 
 							testTime = testTime.replace(hour=testTime.hour+1, minute=0)
 						rowCount += 1
-					tableRow.append('\n\t<td rowspan="%i" class="scheduleTableCell scheduleTableclass" id={{ meeting%s.id }}>\n\t\t<span class="classDescription" id={{ meeting%s.id }}>{{ meeting%s.course }}<br />{{ meeting%s.typeChoice }}<br />{{ meeting%s.start_time }} to {{ meeting%s.end_time }}<br />{{ meeting%s.room }}</span></td>' % (rowCount, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id))
+					scheduledOrProposed = "scheduleTableClass" if (meeting.course != proposedCourse) else "scheduleTableProposedClass"
+					tableRow.append('\n\t<td rowspan="%i" class="scheduleTableCell %s" id={{ meeting%s.id }}>\n\t\t<span class="classDescription" id={{ meeting%s.id }}>{{ meeting%s.course }}<br />{{ meeting%s.typeChoice }}<br />{{ meeting%s.start_time }} to {{ meeting%s.end_time }}<br />{{ meeting%s.room }}</span></td>' % (rowCount, scheduledOrProposed, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id))
 					break
 				elif meeting.start_time < time and time <= meeting.end_time:
 					break
-		
 		else:
 			tableRow.append('\n\t<td class="scheduleTableCell">&nbsp;</td>')
 	
 	return ''.join(tableRow)
 
-def weeklySchedule(meetingTimes):
-	meetingTimes = sorted(meetingTimes, key=lambda meetingTime: meetingTime.start_time)
+def weeklySchedule(scheduledTimes, proposedTimes=[]):
+	meetingTimes = scheduledTimes
+	meetingTimes.extend(proposedTimes)
+	meetingTimes = sorted(meetingTimes, key=lambda meeting: meeting.start_time)
+	proposedCourse = proposedTimes[0].course if proposedTimes else None
 	meetingTable = []
 	meetingContext = {}
 	earlyBound = meetingTimes[0].start_time
@@ -146,14 +187,14 @@ def weeklySchedule(meetingTimes):
 		meetingContext[('time%s' % slot.hour)] = slot
 	
 		# First Row (Top of the Hour)
-		meetingTable.append('\n<tr class="scheduleTableRow topHour"><th rowspan="2">{{ time%s }}</th>' % slot.hour)
-		meetingTable.append(weeklyScheduleRows(meetingTimes, slot))
+		meetingTable.append('\n<tr class="scheduleTableRow topHour"><th class="scheduleTableTime" rowspan="2">{{ time%s }}</th>' % slot.hour)
+		meetingTable.append(weeklyScheduleRows(meetingTimes, slot, proposedCourse))
 		meetingTable.append('\n</tr>')
 		
 		# Second Row (Bottom of the Hour)
 		slot = slot.replace(minute=slot.minute+30)
 		meetingTable.append('\n<tr class="scheduleTableRow bottomHour">')
-		meetingTable.append(weeklyScheduleRows(meetingTimes, slot))
+		meetingTable.append(weeklyScheduleRows(meetingTimes, slot, proposedCourse))
 		meetingTable.append('\n</tr>')
 	
 	return Template(''.join(meetingTable)).render(Context(meetingContext))
@@ -171,17 +212,23 @@ def getUnavailability(request):
 @dajaxice_register
 def generateSchedule(request, form):
 	dajax = Dajax()
-	dajax.clear('#scheduleViewDiv', 'innerHTML')
+	selectedCourses = Course.objects.none()
+	timesUnavailable = []
 
 	# Get the data
-	selectedCourses = Course.objects.none()
-	numClasses =  int(form['numTaking'])
-	for i in range(numClasses):
-		selectedCourses = selectedCourses | Course.objects.filter(subject=form['courseSubject%i' % (i+1)], number=form['courseNumber%i' % (i+1)])
+	numClasses = int(form['numClasses'])
+	if 'byCourse' in request.session:
+		for courseTuple in request.session['byCourse']:
+			selectedCourses = selectedCourses | Course.objects.filter(subject=courseTuple[0], number=courseTuple[1])
+	if 'byProf' in request.session:
+		for profTuple in request.session['byProf']:
+			selectedCourses = selectedCourses | Instructor.objects.get(userid=profTuple[1]).course.filter(subject=profTuple[0], number=profTuple[2])
+	if 'timesUnavailable' in request.session:
+		for time in request.session['timesUnavailable']:
+			timesUnavailable = timesUnavailable.append(time)
 
 	# Process the data
-	#warning this will now filter out distance ed coures
-	processedCourses = createOptimalSchedule(numClasses, selectedCourses, False)
+	processedCourses = createOptimalSchedule(numClasses, selectedCourses)
 
 	optimalCourses = processedCourses[1]
 	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)	
@@ -193,7 +240,8 @@ def generateSchedule(request, form):
 	rejectedMeetingTimes = processedCourses[2]
 
 	processedData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'optimalExamTimes': optimalExamTimes, 'rejectedCourses': rejectedCourses, 'rejectedInstructors': rejectedInstructors, 'rejectedMeetingTimes': rejectedMeetingTimes}
-
+	request.session['processedData'] = processedData
+	
 	# Serve the data
 	dajax.assign('#scheduleViewDiv', 'innerHTML', render_to_response('schedulerSchedule.html', processedData).content)
 	dajax.assign('#scheduleTableBody', 'innerHTML', weeklySchedule(optimalMeetingTimes))
@@ -225,7 +273,7 @@ def listOfNumbersByProf(request, option):
 	for i in d:
 		for j in i.course.all():
 			courseNum = j.number
-			out.append("<option value='%s'>%s</option>" % (str(j.id), str(courseNum)))
+			out.append("<option value='%s'>%s</option>" % (str(courseNum), str(courseNum)))
 
 	dajax.assign('#courseNumberByProf', 'innerHTML', ''.join(out))
 	return dajax.json()

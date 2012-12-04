@@ -2,31 +2,107 @@
 
 {% block content %}
 <h1>{{ course }}</h1>
-<h2>Course Information:</h2>
-<ul>
-	<li>Campus: {{ course.campusChoice }}</li>
-	<li>Section: {{ course.section }}</li>
-	<li>Mode: {{ course.componentChoice }}</li>
-</ul>
-<h2>Instructor{{ course.instructor_set.all|pluralize }}:</h3>
-<ul>
-	{% for instructor in course.instructor_set.all|dictsort:'last_name' %}
-		<li>{% if instructor.userid != '. Tbd' and instructor.userid != '. Sessional' and instructor.userid != '. Faculty' and " " not in instructor.userid %} <a href="{% url scheduler_instructor instructor.pk %}">{{ instructor.name }}</a> (<a href="mailto:{{ instructor.userid }}@sfu.ca">{{ instructor.userid }}@sfu.ca</a>) {% else %} {{ instructor.userid }} {% endif %}</li>
-	{% endfor %}
-</ul>
-<h2>Meeting Times:</h2>
-{% regroup course.meetingtime_set.all|dictsort:'type' by typeChoice as typeList %}
-<ul>
-	{% for type in typeList %}
-	<li>{{ type.grouper }}{{ type.list|pluralize }}
-		<ul class="times">	
-			{% for meetingTime in type.list %}
-	    		<li class="{% if meetingTime.type == 'EXAM' or meetingTime.type == 'MIDT' %}exam{% else %}classOrLab{% endif %} time">{{ meetingTime.dayChoice }}{% if meetingTime.type == "EXAM" or meetingTime.type == "MIDT" %}, {{ meetingTime.start_day }} {% endif %} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} {% if meetingTime.room %} in  {{ meetingTime.room }} {% else %} room TBA {% endif %}</li>
-			{% endfor %}
+<div id="courseInfo">
+	<h2>Course Information:</h2>
+	<ul>
+		<li>Campus: {{ course.campusChoice }}</li>
+		<li>Section: {{ course.section }}</li>
+		<li>Mode: {{ course.componentChoice }}</li>
+	</ul>
+	<h2>Instructor{{ course.instructor_set.all|pluralize }}:</h2>
+	<ul>
+		{% for instructor in course.instructor_set.all|dictsort:'last_name' %}
+			<li>{% if instructor.userid != '. Tbd' and instructor.userid != '. Sessional' and instructor.userid != '. Faculty' and " " not in instructor.userid %} <a href="{% url scheduler_instructor instructor.pk %}">{{ instructor.name }}</a> (<a href="mailto:{{ instructor.userid }}@sfu.ca">{{ instructor.userid }}@sfu.ca</a>) {% else %} {{ instructor.userid }} {% endif %}</li>
+		{% endfor %}
+	</ul>
+</div>
+<div id="courseMeetings">
+	<h2>Meeting Times:</h2>
+	{% regroup course.meetingtime_set.all|dictsort:'type' by typeChoice as typeList %}
+	<ul>
+		{% for type in typeList %}
+		<li>{{ type.grouper }}{{ type.list|pluralize }}
+			<ul class="times">	
+				{% for meetingTime in type.list %}
+					<li class="{% if meetingTime.type == 'EXAM' or meetingTime.type == 'MIDT' %}exam{% else %}classOrLab{% endif %} time">{{ meetingTime.dayChoice }}{% if meetingTime.type == "EXAM" or meetingTime.type == "MIDT" %}, {{ meetingTime.start_day }} {% endif %} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} {% if meetingTime.room %} in  {{ meetingTime.room }} {% else %} room TBA {% endif %}</li>
+				{% endfor %}
+			</ul>
+		</li>
+		{% empty %}
+			<li>No meetings scheduled</li>
+		{% endfor %}
+	</ul>
+</div>
+<div id="courseSchedule">
+<h1>Your Projected Schedule</h1>
+<div id="existingSchedule">		
+{% if scheduledCourses %}
+	<ul class="scheduled courses">
+	{% for course in scheduledCourses %}
+		<li><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
+		<ul class="scheduled course">
+		{% for instructor in course.instructor_set.all|dictsort:'last_name' %}
+			<li>Instructor: {% if instructor.userid != '. Tbd' and instructor.userid != '. Sessional' and instructor.userid != '. Faculty' and " " not in instructor.userid %} <a href="{% url scheduler_instructor instructor.pk %}">{{ instructor.name }}</a> {% else %} {{ instructor.userid }} {% endif %}</li>
+		{% endfor %}
+			<li>Campus: {{ course.campusChoice }}</li>
+			<li>Meeting Times:</li>
+				<ul class="scheduled times">
+				{% for meetingTime in scheduledMeetingTimes %}
+					{% if meetingTime.course == course %}
+						{% if meetingTime.type == "LEC" or meetingTime.type == "LAB" %}
+							<li class="classOrLab time">{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} in {{ meetingTime.room }}</li>
+						{% else %}
+							<li class="exam time">{{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
+						{% endif %}
+					{% endif %}
+				{% empty %}
+					<li>No meetings scheduled.</li>
+				{% endfor %}
+				</ul>
 		</ul>
-	</li>
-	{% empty %}
-		<li>No meetings scheduled</li>
 	{% endfor %}
-</ul>
+	</ul>
+{% endif %}
+</div>
+<h2>Your Exam Schedule</h2>
+<div id="scheduleViewExams">
+	<ol class="scheduled exams">
+	{% for meetingTime in scheduledExamTimes %}
+		<li class="exam">{{ meetingTime.course.subject}} {{ meetingTime.course.number}} {{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
+	{% empty %}
+		<span class="noexam">No Exams Scheduled!</span>
+	{% endfor %}
+	</ol>
+</div>
+<h2>Your Projected Week</h2>
+<table id="scheduleTable">
+	<colgroup span="1" width="10%" align="center" valign="center"></colgroup>
+	<colgroup span="6" width="15%" align="center" valign="center"></colgroup>
+	<thead id="scheduleTableHead">
+		<tr>
+			<th class="scheduleTableCell">&nbsp;</th>
+			<th class="scheduleTableCell">Monday</th>
+			<th class="scheduleTableCell">Tuesday</th>
+			<th class="scheduleTableCell">Wednesday</th>
+			<th class="scheduleTableCell">Thursday</th>
+			<th class="scheduleTableCell">Friday</th>
+			<th class="scheduleTableCell">Saturday</th>
+		</tr>
+	</thead>
+	<tbody id="scheduleTableBody">
+		{{ scheduledHTML|safe }}
+	</tbody>
+	<tfoot id="scheduleTableFoot">
+		<tr>
+			<td>Legend:</td>
+			<td class="scheduleTableClass">&nbsp;</td>
+			<td colspan="2">Meetings in your schedule</td>
+			<td class="scheduleTableProposedClass">&nbsp;</td>
+			<td colspan="2">Meetings for this class</td>
+		</tr>
+	</tfoot>
+</table>
+</div>
+<div id="courseCart">
+</div>
 {% endblock %}

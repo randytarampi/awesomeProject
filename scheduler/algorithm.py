@@ -271,7 +271,7 @@ def meetingTimesListConflict(firstListOfMeetingTimes, secondListOfMeetingTimes):
 	return False
 
 #meeting Times conflict checker that also tells which meetingTimse conflict with which meeting Times
-def meetingTimesNewTimesOldTimesFilter(newTimesList, oldTimesList):
+def meetingTimesFilter(oldTimesList, newTimesList):
 	listOfNonConflictingNewTimes = []
 	#For each new time 
 	for i in range (0, len(newTimesList)):

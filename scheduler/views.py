@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.views.generic import *
 from scheduler.models import *
+from scheduler.ajax import *
 
 def index(request):
 	allSubjects = Course.objects.values_list('subject', flat=True).distinct()
@@ -30,7 +31,7 @@ def instructions(request):
 def examples(request):
 	return render_to_response('schedulerExamples.html')
     
-class SubjectListView(ListView):
+class courseSubjectListView(ListView):
 	context_object_name = "courses"
 	template_name = "schedulerCoursesSubject.html"
 
@@ -41,11 +42,11 @@ class SubjectListView(ListView):
 		return queryset
 
 	def get_context_data(self, **kwargs):
-		context = super(SubjectListView, self).get_context_data(**kwargs)
+		context = super(courseSubjectListView, self).get_context_data(**kwargs)
 		context['subject'] = self.kwargs['subject']
 		return context
 
-class SubjectNumberListView(ListView):
+class courseSubjectNumberListView(ListView):
 	context_object_name = "courses"
 	template_name = "schedulerCoursesSubjectNumber.html"
 
@@ -53,7 +54,7 @@ class SubjectNumberListView(ListView):
 		return get_list_or_404(Course, subject=self.kwargs['subject'], number=self.kwargs['number'])
 
 	def get_context_data(self, **kwargs):
-		context = super(SubjectNumberListView, self).get_context_data(**kwargs)
+		context = super(courseSubjectNumberListView, self).get_context_data(**kwargs)
 		context['subject'] = self.kwargs['subject']
 		context['number'] = self.kwargs['number']
 		return context
@@ -61,4 +62,21 @@ class SubjectNumberListView(ListView):
 	def render_to_response(self, context):
 		if len(self.object_list) == 1:
 			return redirect('scheduler_course', self.object_list[0].id)
-		return super(SubjectNumberListView, self).render_to_response(context)
+		return super(courseSubjectNumberListView, self).render_to_response(context)
+
+class courseDetailView(DetailView):
+	model = Course
+	template_name = "schedulerCourse.html"
+	
+	def get_context_data(self, **kwargs):
+		context = super(courseDetailView, self).get_context_data(**kwargs)
+		if 'processedData' in self.request.session:
+			context['scheduledCourses'] = self.request.session['processedData']['optimalCourses']
+			context['scheduledInstructors'] = self.request.session['processedData']['optimalInstructors']
+			context['scheduledMeetingTimes'] = self.request.session['processedData']['optimalMeetingTimes']
+			context['scheduledExamTimes'] = self.request.session['processedData']['optimalExamTimes']
+			context['scheduledHTML'] = weeklySchedule(context['scheduledMeetingTimes'], kwargs['object'].meetingtime_set.exclude(type="EXAM").exclude(type="MIDT"))
+		else:
+			context['scheduledHTML'] = weeklySchedule([], kwargs['object'].meetingtime_set.exclude(type="EXAM").exclude(type="MIDT"))
+		return context
+

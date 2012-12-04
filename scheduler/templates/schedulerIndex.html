@@ -44,11 +44,11 @@
 			&nbsp;
 			<select id="courseNumberByProf" name="courseNumberByProf">
 				{% for i in initNumsByProf %}
-				<option value="{{ i.id }}">{{ i.number }}</option>
+				<option value="{{ i.number }}">{{ i.number }}</option>
 				{% endfor %}
 			</select>
 			&nbsp;
-			<input id="courseSubmitByProf" type="button" value="Submit!"/>
+			<input id="courseSubmitByProf" type="button" value="Submit!" onclick="addCourseByProfToSession()"/>
 		</div>
 	</form>
 
@@ -59,10 +59,10 @@
 			<select id="day" name="day">
 				<option value="0">Monday</option>
 				<option value="1">Tuesday</option>
-				<option value="2">Thursday</option>
-				<option value="3">Friday</option>
-				<option value="4">Saturday</option>
-				<option value="5">Sunday</option>
+				<option value="2">Wednesday</option>
+				<option value="3">Thursday</option>
+				<option value="4">Friday</option>
+				<option value="5">Saturday</option>
 			</select>
 			at
 			<select id="startHour" name="startHour" onchange="Dajaxice.scheduler.amORpmStart(Dajax.process, {'option':this.value})">
@@ -84,7 +84,7 @@
 			</select>
 			<span>:</span>
 			<select id="startMinute" name="startMinute">
-				<option value="0">0</option>
+				<option value="0">00</option>
 				<option value="10">10</option>
 				<option value="20">20</option>
 				<option value="30">30</option>
@@ -112,7 +112,7 @@
 			</select>
 			<span>:</span>
 			<select id="endMinute" name="endMinute">
-				<option value="0">0</option>
+				<option value="0">00</option>
 				<option value="10">10</option>
 				<option value="20">20</option>
 				<option value="30">30</option>
@@ -120,14 +120,14 @@
 				<option value="50">50</option>
 			</select>
 			<span id="endT">am</span>
-			<input id="timeUnavailable" type="button" value="Submit!"/>
+			<input id="timeUnavailable" type="button" value="Submit!" onclick="addUnavailableToSession()"/>
 		</div>
 	</form>
 
 	<form id="scheduleForm" method="POST">
 	{% csrf_token %}
 		<span>How many classes are you considering?
-			<select id="numClasses" name="numClasses" onchange="Dajaxice.scheduler.updatingCourseForm(Dajax.process, {'option':this.value})" size="1">
+			<select id="numClasses" name="numClasses" size="1">
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
@@ -140,15 +140,31 @@
 				<option value="10">10</option>
 			</select>
 		</span>
-		<div id="listClasses" onchange="">
-		</div>
-		<span id="numTakingSpan">
-		</span>
-		<br>
-		<div id="unavailable">
-		</div>
 		<input id="scheduleSubmit" type="button" value="Generate Schedule" onclick="generateSchedule()"/>
 	</form>
+
+<h3>View Your Shopping Cart</h3>
+<div id="mainCartDiv">
+	<div id="coursesCart">
+		<h5>Added Courses:</h5>
+		<ul id="addCourseList">
+			<li id=""></li>
+		</ul>
+	</div>
+	<div id="coursesByProfCart">
+		<h5>Added Courses With Respect To Instructor:</h5>
+		<ul id="addCourseByProfList">
+			<li id=""></li>
+		</ul>
+	</div>
+	<div id="unavailableTimesCart">
+		<h5>Times You Are Unavailable:</h5>
+		<ul id="addTimeList">
+			<li id=""></li>
+		</ul>
+	</div>
+</div>
+
 </div>
 <div class="emptySchedule" id="scheduleViewDiv">
 </div>
