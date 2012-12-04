@@ -76,5 +76,7 @@ class courseDetailView(DetailView):
 			context['scheduledMeetingTimes'] = self.request.session['processedData']['optimalMeetingTimes']
 			context['scheduledExamTimes'] = self.request.session['processedData']['optimalExamTimes']
 			context['scheduledHTML'] = weeklySchedule(context['scheduledMeetingTimes'], kwargs['object'].meetingtime_set.exclude(type="EXAM").exclude(type="MIDT"))
+		else:
+			context['scheduledHTML'] = weeklySchedule([], kwargs['object'].meetingtime_set.exclude(type="EXAM").exclude(type="MIDT"))
 		return context
 

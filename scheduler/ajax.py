@@ -1,5 +1,5 @@
 from datetime import time
-from django.shortcuts import *
+from django.shortcuts import render_to_response
 from django.template import Context, Template, RequestContext
 from django.db.models import Q
 from dajaxice.decorators import dajaxice_register
@@ -150,7 +150,7 @@ def weeklyScheduleRows(meetingTimes, time, proposedCourse=None):
 						except ValueError: 
 							testTime = testTime.replace(hour=testTime.hour+1, minute=0)
 						rowCount += 1
-					scheduledOrProposed = "scheduleTableclass" if (meeting.course != proposedCourse) else "scheduleTableProposedClass"
+					scheduledOrProposed = "scheduleTableClass" if (meeting.course != proposedCourse) else "scheduleTableProposedClass"
 					tableRow.append('\n\t<td rowspan="%i" class="scheduleTableCell %s" id={{ meeting%s.id }}>\n\t\t<span class="classDescription" id={{ meeting%s.id }}>{{ meeting%s.course }}<br />{{ meeting%s.typeChoice }}<br />{{ meeting%s.start_time }} to {{ meeting%s.end_time }}<br />{{ meeting%s.room }}</span></td>' % (rowCount, scheduledOrProposed, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id, meeting.id))
 					break
 				elif meeting.start_time < time and time <= meeting.end_time:
@@ -162,8 +162,7 @@ def weeklyScheduleRows(meetingTimes, time, proposedCourse=None):
 
 def weeklySchedule(scheduledTimes, proposedTimes=[]):
 	meetingTimes = scheduledTimes
-	for proposedTime in proposedTimes:
-		meetingTimes.append(proposedTime)
+	meetingTimes.extend(proposedTimes)
 	meetingTimes = sorted(meetingTimes, key=lambda meeting: meeting.start_time)
 	proposedCourse = proposedTimes[0].course if proposedTimes else None
 	meetingTable = []
@@ -240,16 +239,12 @@ def generateSchedule(request, form):
 	request.session['processedData'] = processedData
 	
 	# Serve the data
-	print "FUCK"
 	dajax.assign('#scheduleViewDiv', 'innerHTML', render_to_response('schedulerSchedule.html', processedData).content)
-	print "YOU"
 	dajax.assign('#scheduleTableBody', 'innerHTML', weeklySchedule(optimalMeetingTimes))
-	print "BITCHES"
 	dajax.script('$(\'#scheduleViewDiv\').activity(false);')
 	dajax.script('$(document).ready(jQueryEffects());')
 	dajax.remove_css_class('#scheduleViewDiv', 'emptySchedule');
 	dajax.add_css_class('#scheduleViewDiv', 'fullSchedule');
-	print ":)"
 	return dajax.json()
 
 @dajaxice_register
