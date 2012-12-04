@@ -11,7 +11,7 @@ from scheduler.algorithm import *
 def amORpmStart(request, option):
 	dajax = Dajax()
 
-	if int(option) > 12:
+	if int(option) >= 12:
 		out = "pm"
 	else:
 		out = "am"
@@ -22,7 +22,7 @@ def amORpmStart(request, option):
 def amORpmEnd(request, option):
 	dajax = Dajax()
 
-	if int(option) > 12:
+	if int(option) >= 12:
 		out = "pm"
 	else:
 		out = "am"
@@ -109,6 +109,20 @@ def addCourseByProfToSession(request, form):
 @dajaxice_register
 def addUnavailableToSession(request, form):
 	dajax = Dajax()
+
+	sessionList = []
+	d = int(form['day'])
+	t1 = time(int(form['startHour']), int(form['startMinute']))
+	t2 = time(int(form['endHour']), int(form['endMinute']))
+	timeTuple = (d, t1, t2)
+	if 'timesUnavailable' in request.session:
+		sessionList = request.session['timesUnavailable']
+		sessionList.append(timeTuple)
+	else:
+		sessionList.append(timeTuple)
+	request.session['timesUnavailable'] = sessionList
+
+	print request.session['timesUnavailable']
 
 	return dajax.json()
 
