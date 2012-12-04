@@ -7,14 +7,27 @@ from dajax.core import Dajax
 from scheduler.models import *
 from scheduler.algorithm import *
 
+def hourIsAMorPM(h):
+	if h >= 12:
+		out = "p.m."
+	else:
+		out = "a.m."
+	return out
+
+def changeFrom24To12(h):
+	out = h % 12
+	if out == 0:
+		out = 12
+	return out
+
 @dajaxice_register
 def amORpmStart(request, option):
 	dajax = Dajax()
 
 	if int(option) >= 12:
-		out = "pm"
+		out = "p.m."
 	else:
-		out = "am"
+		out = "a.m."
 	dajax.assign('#startT', 'innerHTML', out)
 	return dajax.json()
 
@@ -23,9 +36,9 @@ def amORpmEnd(request, option):
 	dajax = Dajax()
 
 	if int(option) >= 12:
-		out = "pm"
+		out = "p.m."
 	else:
-		out = "am"
+		out = "a.m."
 	dajax.assign('#endT', 'innerHTML', out)
 	return dajax.json()
 
@@ -132,7 +145,7 @@ def addUnavailableToSession(request, form):
 	
 	if 'timesUnavailable' in request.session:
 		if timeTuple in request.session['timesUnavailable']:
-			dajax.alert('You have already marked %s from %s:%s to %s:%s as unavailable' % (listOfDays[d], form['startHour'], form['startMinute'], form['endHour'], form['endMinute']))
+			dajax.alert('You have already marked %s from %i:%s %s to %i:%s %s as unavailable' % (listOfDays[d], changeFrom24To12(int(form['startHour'])), form['startMinute'], hourIsAMorPM(int(form['startHour'])), changeFrom24To12(int(form['endHour'])), form['endMinute'], hourIsAMorPM(int(form['endHour']))))
 			return dajax.json()
 		sessionList = request.session['timesUnavailable']
 		sessionList.append(timeTuple)
@@ -153,7 +166,7 @@ def addUnavailableToSession(request, form):
 		else:
 			lastMinute = str(i[2].minute)
 
-		out.append("<li>%s from %s:%s to %s:%s</li>" % (listOfDays[i[0]], i[1].hour, firstMinute, i[2].hour, lastMinute))
+		out.append("<li>%s from %s:%s %s to %s:%s %s</li>" % (listOfDays[i[0]], changeFrom24To12(i[1].hour), firstMinute, hourIsAMorPM(i[1].hour), changeFrom24To12(i[2].hour), lastMinute, hourIsAMorPM(i[2].hour)))
 
 	dajax.assign('#addTimeList', 'innerHTML', ''.join(out))
 
