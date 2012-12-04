@@ -93,6 +93,17 @@ def addCourseToSession(request, form):
 def addCourseByProfToSession(request, form):
 	dajax = Dajax()
 
+	sessionList = []
+	courseTuple = (form['courseSubjectByProf'], form['subjectProfs'], form['courseNumberByProf'])
+	if 'byProf' in request.session:
+		sessionList = request.session['byProf']
+		sessionList.append(courseTuple)
+	else:
+		sessionList.append(courseTuple)
+	request.session['byProf'] = sessionList
+
+	print request.session['byProf']
+
 	return dajax.json()
 
 @dajaxice_register
@@ -225,7 +236,7 @@ def listOfNumbersByProf(request, option):
 	for i in d:
 		for j in i.course.all():
 			courseNum = j.number
-			out.append("<option value='%s'>%s</option>" % (str(j.id), str(courseNum)))
+			out.append("<option value='%s'>%s</option>" % (str(courseNum), str(courseNum)))
 
 	dajax.assign('#courseNumberByProf', 'innerHTML', ''.join(out))
 	return dajax.json()

@@ -44,11 +44,11 @@
 			&nbsp;
 			<select id="courseNumberByProf" name="courseNumberByProf">
 				{% for i in initNumsByProf %}
-				<option value="{{ i.id }}">{{ i.number }}</option>
+				<option value="{{ i.number }}">{{ i.number }}</option>
 				{% endfor %}
 			</select>
 			&nbsp;
-			<input id="courseSubmitByProf" type="button" value="Submit!"/>
+			<input id="courseSubmitByProf" type="button" value="Submit!" onclick="addCourseByProfToSession()"/>
 		</div>
 	</form>
 
@@ -120,7 +120,7 @@
 				<option value="50">50</option>
 			</select>
 			<span id="endT">am</span>
-			<input id="timeUnavailable" type="button" value="Submit!"/>
+			<input id="timeUnavailable" type="button" value="Submit!" onclick="addUnavailableToSession()"/>
 		</div>
 	</form>
 
