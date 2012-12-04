@@ -124,6 +124,18 @@ lockC = schedule.poolOfLockedCourses
 #dataBaseCourse
 
 for course in output[3]: print course, course.section
+
+#def courseFitsWithMeetingTimeListTest():
+
+cFI1 = cmpt165List[1] 
+cFI2 = MeetingTime.objects.filter(course = 511)
+cFO = courseFitsWithMeetingTimeList(cFI1, cFI2)
+
+if cFO == []:
+	print "courseFitsWithMeetingTimeList We have a conflict with the course"
+else:
+	print "courseFitsWithMeetingTimeList fits = " 
+	print cFO
 #1l, 4l, 5l, 78l, 147l
 
 #c2 = output[1]
