@@ -22,8 +22,29 @@ def largeTest():
 	cmpt165List = Course.objects.filter(subject="CMPT", number=165)
 	cmpt165 = cmpt165List[0]
 	#return createOptimalSchedule(1, cmpt165List)
-	return createOptimalSchedule(4, selectedCourses)
+	
 
+	#H:M:S
+	#convertStringToTime(inputstring)
+	stringArray = ["19:30:00"]
+	
+	daysArray = [1]
+	#for i in range (0, len(stringArray)):
+	#firstUnavaiableMeetingTime = (0, convertStringToTime("10:00:00"), convertStringToTime("14:30:00"))
+	#listUnavailableMeetingTimes = [firstUnavaiableMeetingTime]
+	listUnavailableMeetingTimes = []
+	startArray = ["10:30:00"]
+	endArray = ["14:30:00"]
+	weekdayArray = [0]
+	if len(startArray) == len(endArray) == len(weekdayArray):
+		for i in range (0, len (startArray)):	
+			unavailableTimeFromArrays = (weekdayArray[i], convertStringToTime(startArray[i]), convertStringToTime(endArray[i]))
+			listUnavailableMeetingTimes.append(unavailableTimeFromArrays)
+	return createOptimalSchedule(4, selectedCourses, listUnavailableMeetingTimes)
+	
+	
+	
+	
 	#return createOptimalSchedule(3, Course.objects.filter(subject="CMPT", number=165))
 	#return createOptimalSchedule(3, createOptimalSchedule(4, selectedCourses)[1])
 	#return createOptimalSchedule(5, selectedCourses)
@@ -51,14 +72,14 @@ meet = output[0]
 for i in range (0, len (meet)):
 	print meet[i].type
 c1 = output[1][0]
-#c2 = output[1][1]
-#c3 = output[1][2]
-#c4 = output[1][3]
+c2 = output[1][1]
+c3 = output[1][2]
+c4 = output[1][3]
 #c5 = output[1][4]
 mt1 = MeetingTime.objects.filter(course = c1.id)
-#mt2 = MeetingTime.objects.filter(course = c2.id)
-#mt3 = MeetingTime.objects.filter(course = c3.id)
-#mt4 = MeetingTime.objects.filter(course = c4.id)
+mt2 = MeetingTime.objects.filter(course = c2.id)
+mt3 = MeetingTime.objects.filter(course = c3.id)
+mt4 = MeetingTime.objects.filter(course = c4.id)
 #mt5 = MeetingTime.objects.filter(course = c5.id)
 
 
@@ -125,17 +146,18 @@ lockC = schedule.poolOfLockedCourses
 
 for course in output[3]: print course, course.section
 
-#def courseFitsWithMeetingTimeListTest():
+def courseFitsWithMeetingTimeListTest():
+	cFI1 = cmpt165List[1] 
+	cFI2 = MeetingTime.objects.filter(course = 511)
+	cFO = courseFitsWithMeetingTimeList(cFI1, cFI2)
 
-cFI1 = cmpt165List[1] 
-cFI2 = MeetingTime.objects.filter(course = 511)
-cFO = courseFitsWithMeetingTimeList(cFI1, cFI2)
+	if cFO == []:
+		print "courseFitsWithMeetingTimeList We have a conflict with the course"
+	else:
+		print "courseFitsWithMeetingTimeList fits = " 
+		print cFO
 
-if cFO == []:
-	print "courseFitsWithMeetingTimeList We have a conflict with the course"
-else:
-	print "courseFitsWithMeetingTimeList fits = " 
-	print cFO
+
 #1l, 4l, 5l, 78l, 147l
 
 #c2 = output[1]

@@ -84,6 +84,9 @@ class Schedule:
     #Locks slots start-->end, on the given workday
     	def lockMeetingTime(self, startTime, endTime, weekday):
         	lockSlotThrough(startTime, endTime, self.convertWeekDayToProperArray(weekday))
+	#basically just like lock meeting time but it only locks 
+	def lockMeetingTimeUnavailable(self, startTime, endTime, weekday):
+        	lockSlotThroughUnavailable(startTime, endTime, self.convertWeekDayToProperArray(weekday))
 	def lockMeetingTimeCampus(self, startTime, endTime, weekday, campus):
         	lockSlotThroughCampus(startTime, endTime, self.convertWeekDayToProperArray(weekday), campus)
     #Frees slots start-->end, on the given workday
@@ -329,6 +332,9 @@ def unlockSlotThroughCampus(startTime, endTime, timeSlotArray, campus):
 
 def lockSlotThrough(startTime, endTime, timeSlotArray):	
 	for x in range (startTime, endTime+1):
+		timeSlotArray[x] = 2
+def lockSlotThroughUnavailable(startTime, endTime, timeSlotArray):	
+	for x in range (startTime, endTime):
 		timeSlotArray[x] = 2
 
 def setSlotThrough(startTime, endTime, timeSlotArray):

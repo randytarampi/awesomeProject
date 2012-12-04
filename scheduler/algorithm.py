@@ -14,7 +14,7 @@ from scheduler.datetimeconverter import *
 #that will be in an optimal schedule
 #def createOptimalSchedule(numberOfCourses, listofCourses):
 	
-def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses = False):
+def createOptimalSchedule(numberOfCourses, listofCourses, unavailableMeetingTimes, filterDistanceCourses = False):
 	schedule = Schedule()
 	#schedule.poolOfLockedCourses = []
    	newListOfCourses = []
@@ -33,12 +33,17 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses 
     			
 			#newCourse = newListOfCourses[0]
     			#newMeetingTimes = newCourse.meetingTimes
+	#Handle unavailable times
+	handleUnavailableMeetingTimes(unavailableMeetingTimes, schedule)
+	#Handle needs
+		
+	#Handle wants
     	for i in range (0, numberOfCourses):
         	iterateBEHEMOTH(schedule, newListOfCourses, numberOfCourses)
     	outPutListOfLockedCourses = []
     	
 
-
+	#everythingElse
 	unUsedCourseList = []	
 	for i in range (0, len(newListOfCourses)):
 		unUsedCourseList.append(newListOfCourses[i])
@@ -110,6 +115,22 @@ def createOptimalSchedule(numberOfCourses, listofCourses, filterDistanceCourses 
 	#largerOutputArray.append(meetingTime)
     	return largerOutputArray
 
+
+
+def handleUnavailableMeetingTimes(unavailableMeetingTimes, schedule):
+		
+	for i in range(0, len(unavailableMeetingTimes)):
+		unavailableMeetingTime = unavailableMeetingTimes[i]	
+		weekday = unavailableMeetingTime[0]	
+		startTime = convertTimeToTimeSlot(unavailableMeetingTime[1])
+		endTime = convertTimeToTimeSlot(unavailableMeetingTime[2])
+		#lockMeetingTime #startTime, endTime, weekday):
+		#Locks the schedule through to a certain point...
+		schedule.lockMeetingTimeUnavailable(startTime, endTime, weekday)
+		#def lockMeetingTimeUnavailable(self, startTime, endTime, weekday):
+
+	#convertTimeToTimeSlot
+	#convertDayStringToDayInt
 
 #handles courses we need to take
 #Potential issue!
@@ -190,10 +211,6 @@ def convertCampusModelToInt(campus):
 		return 3
  	else :
 		return 0
-
-
-
-
 
 
 #Converts an input string into a date
@@ -545,16 +562,6 @@ def iterateBEHEMOTH(schedule, poolOfPotentialCourses, maxSize):
 		print "Maxed out on behe interation numbers"
 
 
-#def handleUnavailableMeetingTimes(MeetingTimesListFromWebsite, schedule):
-		
-#	for i in range(0, len(MeetingTimes):
-#		meetingTimeFromWebSite = MeetingTimesListFromWebsite[i]
-		#day = convertTimeToTimeSlot(meetingTimeFromWebSite[0])
-		#day = convertTimeToTimeSlot(meetingTimeFromWebSite[0])
-		#def lockMeetingTime(self, startTime, endTime, weekday):
-		#schedule.lockMeetingTime(startTime, endTime, weekday
-	#convertTimeToTimeSlot
-	#convertDayStringToDayInt
 
 #Potentially obsolete code
 #<MeetingTime: Monday - 10:30:00 to 12:20:00>
