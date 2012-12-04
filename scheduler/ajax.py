@@ -88,7 +88,11 @@ def addCourseToSession(request, form):
 		sessionList.append(courseTuple)
 	request.session['byCourse'] = sessionList
 
-	print request.session['byCourse']
+	out = []
+	for i in request.session['byCourse']:
+		out.append("<li>%s %s</li>" % (i[0], i[1]))
+
+	dajax.assign('#addCourseList', 'innerHTML', ''.join(out))
 
 	return dajax.json()
 
