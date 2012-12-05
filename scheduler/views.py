@@ -89,6 +89,7 @@ class courseDetailView(DetailView):
 		if 'processedData' in self.request.session:
 			if 'proposedSchedule' in context: del context['proposedSchedule']
 			if 'proposedMeetingTimes' in context: del context['proposedMeetingTimes']
+			if 'proposedExamTimes' in context: del context['proposedExamTimes']
 			if 'scheduledConflict' in context: del context['scheduledConflict']
 			context['scheduledCourses'] = self.request.session['processedData']['optimalCourses']
 			context['scheduledInstructors'] = self.request.session['processedData']['optimalInstructors']
@@ -96,11 +97,9 @@ class courseDetailView(DetailView):
 			context['scheduledExamTimes'] = self.request.session['processedData']['optimalExamTimes']
 			context['proposedSchedule'] = sorted(courseFitsWithMeetingTimeList(course, context['scheduledMeetingTimes']), key=lambda meeting: meeting.type)
 			if context['proposedSchedule']:
-				proposedWeeklyTimes = []
-				for time in context['proposedSchedule']: 
-					if time.type == "LEC" or time.type == "LAB": 
-						proposedWeeklyTimes.append(time)
-				context['scheduledHTML'] = weeklySchedule(context['scheduledMeetingTimes'], proposedWeeklyTimes)
+				context['proposedMeetingTimes'] = course.meetingtime_set.exclude(type="EXAM").exclude(type="MIDT")
+				context['proposedExamTimes'] = course.meetingtime_set.exclude(type="LAB").exclude(type="LEC")
+				context['scheduledHTML'] = weeklySchedule(context['scheduledMeetingTimes'], [meeting for meeting in context['proposedSchedule'] if (meeting.type == "LEC" or meeting.type == "LAB")])
 			else:
 				context['scheduledConflict'] = "Sorry, but this class conflicts with one of the classes in your schedule."
 				context['scheduledHTML'] = weeklySchedule(context['scheduledMeetingTimes'])

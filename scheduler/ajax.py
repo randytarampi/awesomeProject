@@ -199,14 +199,14 @@ def generateSchedule(request, form):
 	# Process the data
 	processedCourses = createOptimalSchedule(numClasses, selectedCourses, timesUnavailable)
 
-	optimalCourses = processedCourses[1]
-	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)	
-	optimalMeetingTimes = processedCourses[0]
-	optimalExamTimes = MeetingTime.objects.filter(course__in = optimalCourses).filter(Q(type="EXAM") | Q(type="MIDT"))
+	optimalCourses = list(set(processedCourses[1]))
+	optimalInstructors = list(set(Instructor.objects.filter(course__in = optimalCourses)))	
+	optimalMeetingTimes = list(set(processedCourses[0]))
+	optimalExamTimes = list(set(MeetingTime.objects.filter(course__in = optimalCourses).filter(Q(type="EXAM") | Q(type="MIDT"))))
 
-	rejectedCourses = processedCourses[3]
-	rejectedInstructors = Instructor.objects.filter(course__in = rejectedCourses)	
-	rejectedMeetingTimes = processedCourses[2]
+	rejectedCourses = list(set(processedCourses[3]))
+	rejectedInstructors = list(set(Instructor.objects.filter(course__in = rejectedCourses)))
+	rejectedMeetingTimes = list(set(processedCourses[2]))
 
 	processedData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'optimalExamTimes': optimalExamTimes, 'rejectedCourses': rejectedCourses, 'rejectedInstructors': rejectedInstructors, 'rejectedMeetingTimes': rejectedMeetingTimes}
 	request.session['processedData'] = processedData

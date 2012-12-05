@@ -89,22 +89,29 @@
 			</ul>
 	</ul>
 	{% else %}
-		<li><span class="conflict">{{ scheduledConflict }}</span></li>
+		{% if not course in scheduledCourses %}<li><span class="conflict">{{ scheduledConflict }}</span></li>{% endif %}
 	{% endif %}
 </ul>
 </div>
 <h2>Your Exam Schedule</h2>
 <div id="scheduleViewExams">
-	<ol class="scheduled exams">
-	{% for meetingTime in scheduledExamTimes %}
-		<li class="exam">{{ meetingTime.course.subject}} {{ meetingTime.course.number}} {{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
-	{% empty %}
+	{% if not scheduledExamTimes and not proposedExamTimes %}
+		<ol class="scheduled exams">
+		{% for meetingTime in scheduledExamTimes %}
+			<li class="exam">{{ meetingTime.course.subject}} {{ meetingTime.course.number}} {{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
+		{% endfor %}
+		</ol>
+		<ul class="proposed exams">
+		{% for meetingTime in proposedExamTimes %}
+			<li class="proposed exam">{{ meetingTime.course.subject}} {{ meetingTime.course.number}} {{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
+		{% endfor %}
+		</ul>
+	{% else %}
 		<span class="noexam">No Exams Scheduled!</span>
-	{% endfor %}
-	</ol>
+	{% endif %}
 </div>
 <h2>Your Projected Week</h2>
-{% if scheduledConflict %}
+{% if scheduledConflict and course not in scheduledCourses %}
 <ul><li><span class="conflict">{{ scheduledConflict }}</span></li></ul>
 {% endif %}
 <table id="scheduleTable">
