@@ -1,7 +1,7 @@
 {% load static %}{% get_static_prefix as STATIC_PREFIX %}
 <link rel="stylesheet" type="text/css" href="{{STATIC_PREFIX}}schedulerSchedule.css" />
 <script src="{{STATIC_PREFIX}}schedulerSchedule.js" type="text/javascript" charset="utf-8"></script>
-<h1>View Your Schedule</h1>
+<h1>Your Optimal Schedule</h1>
 <div id="scheduleViewList">
 	<ul id="scheduleCoursesList">
 		{% if rejectedCourses %}
@@ -77,10 +77,10 @@
 <h2>Your Typical Week</h2>
 <div id="scheduleViewWeek">
 	<table id="scheduleTable">
-		<colgroup span="1" width="10%" align="center" valign="center"></colgroup>
-		<colgroup span="6" width="15%" align="center" valign="center"></colgroup>
+		<colgroup span="1" id="scheduleTableTimes"></colgroup>
+		<colgroup span="6" id="scheduleTableDays"></colgroup>
 		<thead id="scheduleTableHead">
-			<tr>
+			<tr id="scheduleRowDays">
 				<th class="scheduleTableCell">&nbsp;</th>
 				<th class="scheduleTableCell">Monday</th>
 				<th class="scheduleTableCell">Tuesday</th>
@@ -91,9 +91,13 @@
 			</tr>
 		</thead>
 		<tbody id="scheduleTableBody">
+			{{ scheduledHTML|safe }}
 		</tbody>
 		<tfoot id="scheduleTableFoot">
-			<tr><td colspan="7">NOTE: There are no classes scheduled on Sundays</td></tr>
+			<tr id="scheduleRowNote">
+				<th>NOTE:</th>
+				<td colspan="7">There are no classes scheduled on Sundays</td>
+			</tr>
 		</tfoot>
 	</table>
 </div>

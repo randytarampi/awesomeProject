@@ -4,9 +4,13 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.views.generic import *
 from scheduler.models import *
+from scheduler.algorithm import *
 from scheduler.ajax import *
+#from scheduler.helpers import *
 
 def index(request):
+	context = {}
+	
 	allSubjects = Course.objects.values_list('subject', flat=True).distinct()
 
 	# Using the 0-th element so that any set of data will give the first element. This is using the same query as in ajax.py
@@ -22,8 +26,18 @@ def index(request):
 	for i in d:
 		for j in i.course.all():
 			instructorsCourses.append(j)
+			
+	# Build the context
+	if 'processedData' in request.session:
+		processedContext = request.session['processedData']
+		processedContext['scheduledHTML'] = weeklySchedule(processedContext['optimalMeetingTimes'])
+		context['processedHTML'] = render_to_response('schedulerSchedule.html', processedContext).content
+	context['subjects'] = allSubjects
+	context['initNums'] = initialNumbers
+	context['initProfs'] = initialProfs
+	context['initNumsByProf'] = instructorsCourses
 
-	return render_to_response('schedulerIndex.html', { 'subjects': allSubjects, 'initNums': initialNumbers, 'initProfs': initialProfs, 'initNumsByProf': instructorsCourses }, context_instance=RequestContext(request))
+	return render_to_response('schedulerIndex.html', context, context_instance=RequestContext(request))
 
 def instructions(request):
 	return render_to_response('schedulerInstructions.html')
@@ -70,13 +84,27 @@ class courseDetailView(DetailView):
 	
 	def get_context_data(self, **kwargs):
 		context = super(courseDetailView, self).get_context_data(**kwargs)
+		course = kwargs['object']
+		courseLabTimes = course.meetingtime_set.filter(type="LAB")
 		if 'processedData' in self.request.session:
+			if 'proposedSchedule' in context: del context['proposedSchedule']
+			if 'proposedMeetingTimes' in context: del context['proposedMeetingTimes']
+			if 'scheduledConflict' in context: del context['scheduledConflict']
 			context['scheduledCourses'] = self.request.session['processedData']['optimalCourses']
 			context['scheduledInstructors'] = self.request.session['processedData']['optimalInstructors']
 			context['scheduledMeetingTimes'] = self.request.session['processedData']['optimalMeetingTimes']
 			context['scheduledExamTimes'] = self.request.session['processedData']['optimalExamTimes']
-			context['scheduledHTML'] = weeklySchedule(context['scheduledMeetingTimes'], kwargs['object'].meetingtime_set.exclude(type="EXAM").exclude(type="MIDT"))
+			context['proposedSchedule'] = sorted(courseFitsWithMeetingTimeList(course, context['scheduledMeetingTimes']), key=lambda meeting: meeting.type)
+			if context['proposedSchedule']:
+				proposedWeeklyTimes = []
+				for time in context['proposedSchedule']: 
+					if time.type == "LEC" or time.type == "LAB": 
+						proposedWeeklyTimes.append(time)
+				context['scheduledHTML'] = weeklySchedule(context['scheduledMeetingTimes'], proposedWeeklyTimes)
+			else:
+				context['scheduledConflict'] = "Sorry, but this class conflicts with one of the classes in your schedule."
+				context['scheduledHTML'] = weeklySchedule(context['scheduledMeetingTimes'])
 		else:
-			context['scheduledHTML'] = weeklySchedule([], kwargs['object'].meetingtime_set.exclude(type="EXAM").exclude(type="MIDT"))
+			context['scheduledHTML'] = weeklySchedule([], courseMeetingTimes.exclude(type="EXAM").exclude(type="MIDT"))
 		return context
 

@@ -335,10 +335,10 @@ def generateSchedule(request, form):
 
 	processedData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'optimalExamTimes': optimalExamTimes, 'rejectedCourses': rejectedCourses, 'rejectedInstructors': rejectedInstructors, 'rejectedMeetingTimes': rejectedMeetingTimes}
 	request.session['processedData'] = processedData
+	processedData['scheduledHTML'] = weeklySchedule(optimalMeetingTimes)
 	
 	# Serve the data
 	dajax.assign('#scheduleViewDiv', 'innerHTML', render_to_response('schedulerSchedule.html', processedData).content)
-	dajax.assign('#scheduleTableBody', 'innerHTML', weeklySchedule(optimalMeetingTimes))
 	dajax.script('$(\'#scheduleViewDiv\').activity(false);')
 	dajax.script('$(document).ready(jQueryEffects());')
 	dajax.remove_css_class('#scheduleViewDiv', 'emptySchedule');

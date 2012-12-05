@@ -63,6 +63,11 @@ p {
 	margin: 8px;
 }
 
+.conflict {
+	color: red;
+	font-weight: bold;
+}
+
 .fullSchedule {
 	height: 100%;
 	width: 100%;
@@ -94,6 +99,7 @@ p {
 }
 
 .bottomHour {
+	background-color: #E3E4E1;
 	border-top-style: dotted;
 	border-bottom-style: solid;
 }
@@ -125,6 +131,10 @@ p {
 	border-color: #A07400;
 	border-top-style: solid;
 	border-bottom-style: solid;
+}
+
+.scheduleTableTime {
+	background-color: #EEE;
 }
 
 .classDescription {
@@ -234,6 +244,22 @@ li.break {
 	border-style: solid;
 }
 
+#scheduleTableHead {
+	background-color: #EEE;
+}
+
+#scheduleTableTimes {
+	width: 10%;
+	align: center;
+	valign: center;
+}
+
+#scheduleTableDays {
+	width: 15%;
+	align: center;
+	valign: center;
+}
+
 #scheduleTableBody tr {
 	border-width: 1px;
 	border-color: #A6192E;
@@ -241,4 +267,14 @@ li.break {
 
 #scheduleTableFoot {
 	font-weight: bold;
+}
+
+#scheduleRowNote {
+	align: center;
+	valign: center;
+}
+
+#scheduleRowLegend {
+	align: center;
+	valign: center;
 }

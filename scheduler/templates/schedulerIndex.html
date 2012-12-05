@@ -142,30 +142,37 @@
 		</span>
 		<input id="scheduleSubmit" type="button" value="Generate Schedule" onclick="generateSchedule()"/>
 	</form>
-
-<h3>View Your Shopping Cart</h3>
+</div>
 <div id="mainCartDiv">
+<h1>Your Schedule Selections</h1>
 	<div id="coursesCart">
-		<h5>Added Courses:</h5>
+		<h3>Added Courses:</h3>
 		<ul id="addCourseList">
-			<li id=""></li>
+			<span>There are no courses selected.</span>
 		</ul>
 	</div>
 	<div id="coursesByProfCart">
-		<h5>Added Courses With Respect To Instructor:</h5>
+		<h3>Added Courses With Respect To Instructor:</h3>
 		<ul id="addCourseByProfList">
-			<li id=""></li>
+			<span>There are no courses selected.</span>
 		</ul>
 	</div>
 	<div id="unavailableTimesCart">
-		<h5>Times You Are Unavailable:</h5>
+		<h3>Times You Are Unavailable:</h3>
 		<ul id="addTimeList">
-			<li id=""></li>
+			<span>There are no times specified.</span>
 		</ul>
 	</div>
 </div>
-
-</div>
+{% if processedHTML %}
+<div class="fullSchedule" id="scheduleViewDiv">
+	{{ processedHTML|safe }}
+{% else %}
 <div class="emptySchedule" id="scheduleViewDiv">
+	<h1>Your Optimal Schedule</h1>
+	<ul>
+		<span>You have not generated a schedule.</span>
+	</ul>
+{% endif %}
 </div>
 {% endblock %}
