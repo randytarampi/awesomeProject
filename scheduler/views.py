@@ -85,7 +85,7 @@ class courseDetailView(DetailView):
 	def get_context_data(self, **kwargs):
 		context = super(courseDetailView, self).get_context_data(**kwargs)
 		course = kwargs['object']
-		courseMeetingTimes = course.meetingtime_set.all
+		courseMeetingTimes = course.meetingtime_set.all()
 		if 'processedData' in self.request.session:
 			if 'proposedSchedule' in context: del context['proposedSchedule']
 			if 'proposedMeetingTimes' in context: del context['proposedMeetingTimes']
