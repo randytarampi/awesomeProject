@@ -19,6 +19,22 @@ def changeFrom24To12(h):
 		out = 12
 	return out
 
+def goingBackInTime(startTime, endTime):
+	if startTime.hour > endTime.hour:
+		return True
+	if startTime.hour == endTime.hour:
+		if startTime.minute > endTime.minute:
+			return True
+	return False
+
+# False if no overlap, True if overlap
+def overlappingTimes(d, startTime, endTime, dictionary):
+	for i in dictionary:
+		if d == i[0]:
+			if startTime < i[2] and endTime > i[1]:
+				return True
+	return False
+
 def weeklyScheduleRows(meetingTimes, time, proposedCourse=None):
 	tableRow = []
 
