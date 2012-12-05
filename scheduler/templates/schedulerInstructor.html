@@ -10,7 +10,7 @@
 <h2>Teaching in Spring 2013:</h2>
 <ul class="courses">
 	{% for course in instructor.course.all %}
-		<li class="course"><a href="{% url scheduler_course course.id %}">{{ course }}</a></li>
+		<li class="{% if forloop.first %}firstCourse{% else %}course{% endif %}"><a href="{% url scheduler_course course.id %}">{{ course }}</a></li>
 		<ul>
 			<li>Campus: {{ course.campusChoice }}</li>
 			<li>Section: {{ course.section }}</li>

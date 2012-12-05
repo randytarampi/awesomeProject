@@ -38,13 +38,13 @@
 <div id="courseSchedule">
 <h1>Your Projected Schedule</h1>
 {% if scheduledConflict and course not in scheduledCourses %}
-<ul><h3 class="conflict">{{ scheduledConflict }}</h3></ul>
+<h3 class="conflict">{{ scheduledConflict }}</h3>
 {% endif %}
 <div id="existingSchedule">		
 {% if scheduledCourses %}
 <ol class="scheduled courses">
 {% for course in scheduledCourses %}
-	<li><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
+	<li class="scheduled {% if forloop.first %}firstCourse{% else %}course{% endif %}"><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
 	<ul class="scheduled course">
 	{% for instructor in course.instructor_set.all|dictsort:'last_name' %}
 		<li>Instructor: {% if instructor.userid != '. Tbd' and instructor.userid != '. Sessional' and instructor.userid != '. Faculty' and " " not in instructor.userid %} <a href="{% url scheduler_instructor instructor.pk %}">{{ instructor.name }}</a> {% else %} {{ instructor.userid }} {% endif %}</li>
@@ -71,7 +71,7 @@
 {% if course not in scheduledCourses %}
 <ul class="proposed courses">
 	{% if not scheduledConflict %}
-		<li><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
+		<li class="proposed course"><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
 		<ul class="proposed course">
 	{% for instructor in course.instructor_set.all|dictsort:'last_name' %}
 		<li>Instructor: {% if instructor.userid != '. Tbd' and instructor.userid != '. Sessional' and instructor.userid != '. Faculty' and " " not in instructor.userid %} <a href="{% url scheduler_instructor instructor.pk %}">{{ instructor.name }}</a> {% else %} {{ instructor.userid }} {% endif %}</li>
@@ -140,7 +140,7 @@
 			<td class="scheduleTableClass">&nbsp;</td>
 			<td colspan="2">Meetings in your schedule</td>
 			<td class="scheduleTableProposedClass">&nbsp;</td>
-			<td colspan="2">Meetings for this class</td>
+			<td colspan="2">Meetings for {{ course.subject }} {{ course.number }}</td>
 		</tr>
 	</tfoot>
 </table>

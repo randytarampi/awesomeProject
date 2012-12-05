@@ -85,7 +85,7 @@ class courseDetailView(DetailView):
 	def get_context_data(self, **kwargs):
 		context = super(courseDetailView, self).get_context_data(**kwargs)
 		course = kwargs['object']
-		courseLabTimes = course.meetingtime_set.filter(type="LAB")
+		courseMeetingTimes = course.meetingtime_set.all
 		if 'processedData' in self.request.session:
 			if 'proposedSchedule' in context: del context['proposedSchedule']
 			if 'proposedMeetingTimes' in context: del context['proposedMeetingTimes']
@@ -95,13 +95,14 @@ class courseDetailView(DetailView):
 			context['scheduledInstructors'] = self.request.session['processedData']['optimalInstructors']
 			context['scheduledMeetingTimes'] = self.request.session['processedData']['optimalMeetingTimes']
 			context['scheduledExamTimes'] = self.request.session['processedData']['optimalExamTimes']
-			context['proposedSchedule'] = sorted(courseFitsWithMeetingTimeList(course, context['scheduledMeetingTimes']), key=lambda meeting: meeting.type)
+			context['proposedSchedule'] = courseFitsWithMeetingTimeList(course, context['scheduledMeetingTimes'])
 			if context['proposedSchedule']:
+				context['proposedSchedule'] = sorted(context['proposedSchedule'], key=lambda meeting: meeting.type)
 				context['proposedMeetingTimes'] = course.meetingtime_set.exclude(type="EXAM").exclude(type="MIDT")
 				context['proposedExamTimes'] = course.meetingtime_set.exclude(type="LAB").exclude(type="LEC")
 				context['scheduledHTML'] = weeklySchedule(context['scheduledMeetingTimes'], [meeting for meeting in context['proposedSchedule'] if (meeting.type == "LEC" or meeting.type == "LAB")])
 			else:
-				context['scheduledConflict'] = "Sorry, but this class conflicts with one of the classes in your schedule."
+				context['scheduledConflict'] = "Sorry, but %s %s conflicts with at least one of the classes in your schedule." % (course.subject, course.number)
 				context['scheduledHTML'] = weeklySchedule(context['scheduledMeetingTimes'])
 		else:
 			context['scheduledHTML'] = weeklySchedule([], courseMeetingTimes.exclude(type="EXAM").exclude(type="MIDT"))
