@@ -4,15 +4,22 @@
 <div id="schedulerInstructors">
 	<h1>Instructors By Last Name</h1>
 	{% regroup instructors by firstLetter as letterList %}
-	<ul> 
+	<ul class="instructorsNav">
+	{% for letter in letterList %}
+		<li class="instructorsNav"><a href="{% url scheduler_instructors %}#{{ letter.grouper }}">{{ letter.grouper }}</a>{% if not forloop.last %} | {% endif %}</li>
+	{% endfor %}
+	</ul>
+	<hr class="letter" />
+	<ul>
 	{% for letter in letterList %}
 	  <li id="{{ letter.grouper }}">{{ letter.grouper }}
 		<ul>
 		    {% for instructor in letter.list %}
-		    <li><a href="{% url scheduler_instructor instructor.pk %}">{{ instructor.name }}</a></li>
+		    <li class="{% if forloop.first %}firstInstructor{% else %}instructor{% endif %}"><a href="{% url scheduler_instructor instructor.pk %}">{{ instructor.name }}</a></li>
 		    {% endfor %}
 		</ul>
 	  </li>
+		{% if not forloop.last %}<hr class="letter" />{% endif %}
 	{% endfor %}
 	</ul>
 </div>

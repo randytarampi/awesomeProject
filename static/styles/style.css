@@ -63,6 +63,15 @@ p {
 	margin: 8px;
 }
 
+ul.instructorsNav {
+	padding: 0;
+	text-align: center;
+}
+
+li.instructorsNav {
+	display: inline;
+}
+
 ul.subjectsNav {
 	padding: 0;
 	text-align: justify;
@@ -70,10 +79,6 @@ ul.subjectsNav {
 
 li.subjectsNav {
 	display: inline;
-}
-
-li.firstLevel {
-	padding-top: 0px;
 }
 
 ul.levelsNav {
@@ -93,9 +98,14 @@ li.subject {
 	padding-top: 10px;
 }
 
+li.instructor {
+	padding-top: 10px;
+}
+
 .conflict {
 	color: red;
 	font-weight: bold;
+	text-align: center;
 }
 
 .proposed {
