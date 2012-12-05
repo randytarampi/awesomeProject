@@ -36,7 +36,7 @@
 				{% endfor %}
 			</select>
 			&nbsp;
-			<select id="subjectProfs" name="subjectProfs" onchange="Dajaxice.scheduler.listOfNumbersByProf(Dajax.process, {'option':this.value})">
+			<select id="subjectProfs" name="subjectProfs" onchange="Dajaxice.scheduler.listOfNumbersByProf(Dajax.process, {'option':this.value, 'subj':$('#courseSubjectByProf option:selected').text()})">
 				{% for i in initProfs %}
 				<option value="{{ i.userid }}">{{ i.first_name }} {{ i.last_name }}</option>
 				{% endfor %}

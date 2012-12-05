@@ -359,15 +359,16 @@ def listOfProfs(request, option):
 	return dajax.json()
 
 @dajaxice_register
-def listOfNumbersByProf(request, option):
+def listOfNumbersByProf(request, option, subj):
 	dajax = Dajax()
 	out = []
 
 	d = Instructor.objects.filter(userid=option)
 	for i in d:
 		for j in i.course.all():
-			courseNum = j.number
-			out.append("<option value='%s'>%s</option>" % (str(courseNum), str(courseNum)))
+			if j.subject == subj:
+				courseNum = j.number
+				out.append("<option value='%s'>%s</option>" % (str(courseNum), str(courseNum)))
 
 	dajax.assign('#courseNumberByProf', 'innerHTML', ''.join(out))
 	return dajax.json()
