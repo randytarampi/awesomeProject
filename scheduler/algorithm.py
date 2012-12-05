@@ -598,7 +598,6 @@ def completePasturize(inputCoursesList, schedule, numberOfCourses):
 	outPutList.append(oldList)
 	outPutList.append(cutCourses)
 	print "completePasturize len(outPutList)"
-	#print "completePasturize len(outPutList)"
 	return outPutList
 
 

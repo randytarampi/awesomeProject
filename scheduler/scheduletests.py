@@ -144,13 +144,13 @@ travels = stats.crossCampusTravels
 
 schedule = output[5]
 
-monday = schedule.mondayTimeSlotAvailability
-tuesday = schedule.tuesdayTimeSlotAvailability
-wednesday = schedule.wednesdayTimeSlotAvailability
-thursday = schedule.thursdayTimeSlotAvailability
-friday = schedule.fridayTimeSlotAvailability
-saturday = schedule.saturdayTimeSlotAvailability
-sunday = schedule.sundayTimeSlotAvailability
+monday = schedule.mondayS
+tuesday = schedule.tuesdayS
+wednesday = schedule.wednesdayS
+thursday = schedule.thursdayS
+friday = schedule.fridayS
+saturday = schedule.saturdayS
+sunday = schedule.sundayS
 
 
 c = Course.objects.get(id = 2562)

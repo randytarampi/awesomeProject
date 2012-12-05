@@ -2,86 +2,69 @@
 
 class Schedule:
     #def __init__(self):  
-   	mondayTimeSlotAvailability = [0] * 144
-   	tuesdayTimeSlotAvailability = [0] * 144
-   	wednesdayTimeSlotAvailability = [0] * 144
-   	thursdayTimeSlotAvailability = [0] * 144
-   	fridayTimeSlotAvailability = [0] * 144
-   	saturdayTimeSlotAvailability = [0] * 144
-   	sundayTimeSlotAvailability = [0] * 144
+   	mondayS = [0] * 144
+   	tuesdayS = [0] * 144
+   	wednesdayS = [0] * 144
+   	thursdayS = [0] * 144
+   	fridayS = [0] * 144
+   	saturdayS = [0] * 144
+   	sundayS = [0] * 144
 	poolOfLockedCourses = []
 	poolOfCutCourses = []
-
+	#TimeSlotAvailability
    	def __init__(self):  
-   		self.mondayTimeSlotAvailability = [0] * 144
-   		self.tuesdayTimeSlotAvailability = [0] * 144
-   		self.wednesdayTimeSlotAvailability = [0] * 144
-   		self.thursdayTimeSlotAvailability = [0] * 144
-   		self.fridayTimeSlotAvailability = [0] * 144
-   		self.saturdayTimeSlotAvailability = [0] * 144
-   		self.sundayTimeSlotAvailability = [0] * 144
+   		self.mondayS = [0] * 144
+   		self.tuesdayS = [0] * 144
+   		self.wednesdayS = [0] * 144
+   		self.thursdayS = [0] * 144
+   		self.fridayS = [0] * 144
+   		self.saturdayS = [0] * 144
+   		self.sundayS = [0] * 144
 		self.poolOfLockedCourses = []
 		self.poolOfCutCourses = []
-    #def getTotalDays(self):
 
-    #see if the timeslice conflicts with the current weekly schedule
-    	#def checkTimeWeekConflict(self, startTime, endTime, weekday):
-#		if weekday ==0:
-#			return checkIfTimeDayConflict(startTime, endTime, self.mondayTimeSlotAvailability)#
-#		elif weekday ==1:
-#		    	return checkIfTimeDayConflict(startTime, endTime, self.tuesdayTimeSlotAvailability)
-#		elif weekday ==2:
-#		    	return checkIfTimeDayConflict(startTime, endTime, self.wednesdayTimeSlotAvailability)
-	    
-#		elif weekday ==3:
-#		    	return checkIfTimeDayConflict(startTime, endTime, self.thursdayTimeSlotAvailability)
 
-#		elif weekday ==4:
-#		    	return checkIfTimeDayConflict(startTime, endTime, self.fridayTimeSlotAvailability)
+	
+	#def checkTimeWeekConflictCampus(self, startTime, endTime, weekday, campus):
+	#	if weekday ==0:
+	#		return checkIfTimeDayConflictV2(startTime, endTime, self.mondayS, campus)
+	#	elif weekday ==1:
+	#	    	return checkIfTimeDayConflictV2(startTime, endTime, self.tuesdayS, campus)
+	#	elif weekday ==2:
+	#	    	return checkIfTimeDayConflictV2(startTime, endTime, self.wednesdayS, campus)
+	 #   
+	#	elif weekday ==3:
+	#	    	return checkIfTimeDayConflictV2(startTime, endTime, self.thursdayS, campus)
 
-#		elif weekday ==5:
-#		    	return checkIfTimeDayConflict(startTime, endTime, self.saturdayTimeSlotAvailability)
+	#	elif weekday ==4:
+	#	    	return checkIfTimeDayConflictV2(startTime, endTime, self.fridayS, campus)
 
-#		elif weekday ==6:
-#		    	return checkIfTimeDayConflict(startTime, endTime, self.sundayTimeSlotAvailability)
-	def checkTimeWeekConflictCampus(self, startTime, endTime, weekday, campus):
-		if weekday ==0:
-			return checkIfTimeDayConflictV2(startTime, endTime, self.mondayTimeSlotAvailability, campus)
-		elif weekday ==1:
-		    	return checkIfTimeDayConflictV2(startTime, endTime, self.tuesdayTimeSlotAvailability, campus)
-		elif weekday ==2:
-		    	return checkIfTimeDayConflictV2(startTime, endTime, self.wednesdayTimeSlotAvailability, campus)
-	    
-		elif weekday ==3:
-		    	return checkIfTimeDayConflictV2(startTime, endTime, self.thursdayTimeSlotAvailability, campus)
+	#	elif weekday ==5:
+		#    	return checkIfTimeDayConflictV2(startTime, endTime, self.saturdayS, campus)
 
-		elif weekday ==4:
-		    	return checkIfTimeDayConflictV2(startTime, endTime, self.fridayTimeSlotAvailability, campus)
-
-		elif weekday ==5:
-		    	return checkIfTimeDayConflictV2(startTime, endTime, self.saturdayTimeSlotAvailability, campus)
-
-		elif weekday ==6:
-		    	return checkIfTimeDayConflictV2(startTime, endTime, self.sundayTimeSlotAvailability, campus)
+		#elif weekday ==6:
+		#    	return checkIfTimeDayConflictV2(startTime, endTime, self.sundayS, campus)
 
     #i.e. input 0 to get monday, 1 to get tuesday... 6 to get sunday
 	def convertWeekDayToProperArray(self, weekday):
 		if weekday ==0:
-		    	return self.mondayTimeSlotAvailability
+		    	return self.mondayS
 		elif weekday ==1:
-		    	return self.tuesdayTimeSlotAvailability
+		    	return self.tuesdayS
 		elif weekday ==2:
-		    	return self.wednesdayTimeSlotAvailability
+		    	return self.wednesdayS
 		elif weekday ==3:
-		   	 return self.thursdayTimeSlotAvailability
+		   	 return self.thursdayS
 		elif weekday ==4:
-		   	 return self.fridayTimeSlotAvailability
+		   	 return self.fridayS
 		elif weekday ==5:
-		  	 return self.saturdayTimeSlotAvailability
+		  	 return self.saturdayS
 		elif weekday ==6:
-		  	 return self.sundayTimeSlotAvailability
-
-    #Locks slots start-->end, on the given workday
+		  	 return self.sundayS
+	#checks if the given time conflits with the schedule
+	def checkTimeWeekConflictCampus(self, startTime, endTime, weekday, campus):
+		return checkIfTimeDayConflictV2(startTime, endTime, self.convertWeekDayToProperArray(weekday), campus)
+    	#Locks slots start-->end, on the given workday
     	def lockMeetingTime(self, startTime, endTime, weekday):
         	lockSlotThrough(startTime, endTime, self.convertWeekDayToProperArray(weekday))
 	#basically just like lock meeting time but it only locks 
@@ -89,7 +72,7 @@ class Schedule:
         	lockSlotThroughUnavailable(startTime, endTime, self.convertWeekDayToProperArray(weekday))
 	def lockMeetingTimeCampus(self, startTime, endTime, weekday, campus):
         	lockSlotThroughCampus(startTime, endTime, self.convertWeekDayToProperArray(weekday), campus)
-    #Frees slots start-->end, on the given workday
+   	 #Frees slots start-->end, on the given workday
 	def unlockMeetingTime(self, startTime, endTime, weekday):
 		unlockSlotThrough(startTime, endTime, self.convertWeekDayToProperArray(weekday))
 	def unlockMeetingTimeCampus(self, startTime, endTime, weekday, campus):
@@ -106,75 +89,75 @@ class Schedule:
 
 	def getTotalTimeGap(self):
 		weekTotalTimeGap = 0
-		weekTotalTimeGap += getTimeGapForDay(self.mondayTimeSlotAvailability)
-		weekTotalTimeGap += getTimeGapForDay(self.tuesdayTimeSlotAvailability)
-		weekTotalTimeGap += getTimeGapForDay(self.thursdayTimeSlotAvailability)
-		weekTotalTimeGap += getTimeGapForDay(self.wednesdayTimeSlotAvailability)
-		weekTotalTimeGap += getTimeGapForDay(self.fridayTimeSlotAvailability)
-		weekTotalTimeGap += getTimeGapForDay(self.saturdayTimeSlotAvailability)
-		weekTotalTimeGap += getTimeGapForDay(self.sundayTimeSlotAvailability)
+		weekTotalTimeGap += getTimeGapForDay(self.mondayS)
+		weekTotalTimeGap += getTimeGapForDay(self.tuesdayS)
+		weekTotalTimeGap += getTimeGapForDay(self.thursdayS)
+		weekTotalTimeGap += getTimeGapForDay(self.wednesdayS)
+		weekTotalTimeGap += getTimeGapForDay(self.fridayS)
+		weekTotalTimeGap += getTimeGapForDay(self.saturdayS)
+		weekTotalTimeGap += getTimeGapForDay(self.sundayS)
 		return weekTotalTimeGap
 	def getTotalDays(self):
 		totalDays = 0
 		listtocompare = [1, 2, 4, 5, 7,8,10,11]
-		if len(list(set(listtocompare) & set(self.mondayTimeSlotAvailability))) != 0:
+		if len(list(set(listtocompare) & set(self.mondayS))) != 0:
 	    		totalDays += 1
-		if len(list(set(listtocompare) & set(self.tuesdayTimeSlotAvailability))) != 0:
+		if len(list(set(listtocompare) & set(self.tuesdayS))) != 0:
 			totalDays += 1
-		if len(list(set(listtocompare) & set(self.wednesdayTimeSlotAvailability))) != 0:
+		if len(list(set(listtocompare) & set(self.wednesdayS))) != 0:
 			totalDays += 1
-		if len(list(set(listtocompare) & set(self.thursdayTimeSlotAvailability))) != 0:
+		if len(list(set(listtocompare) & set(self.thursdayS))) != 0:
 			totalDays += 1
-		if len(list(set(listtocompare) & set(self.fridayTimeSlotAvailability))) != 0:
+		if len(list(set(listtocompare) & set(self.fridayS))) != 0:
 			totalDays += 1
-		if len(list(set(listtocompare) & set(self.saturdayTimeSlotAvailability))) != 0:
+		if len(list(set(listtocompare) & set(self.saturdayS))) != 0:
 			totalDays += 1
-		if len(list(set(listtocompare) & set(self.sundayTimeSlotAvailability))) != 0:
+		if len(list(set(listtocompare) & set(self.sundayS))) != 0:
 			totalDays += 1
 		return totalDays
     
 	def getTotalCrossCampusTravels(self):
 		weekTotalCampusTravels = 0
-		weekTotalCampusTravels += getNumberCampusTripsForDay(self.mondayTimeSlotAvailability)
-		weekTotalCampusTravels += getNumberCampusTripsForDay(self.tuesdayTimeSlotAvailability)
-		weekTotalCampusTravels += getNumberCampusTripsForDay(self.wednesdayTimeSlotAvailability)
-		weekTotalCampusTravels += getNumberCampusTripsForDay(self.thursdayTimeSlotAvailability)
-		weekTotalCampusTravels += getNumberCampusTripsForDay(self.fridayTimeSlotAvailability)
-		weekTotalCampusTravels += getNumberCampusTripsForDay(self.saturdayTimeSlotAvailability)
-		weekTotalCampusTravels += getNumberCampusTripsForDay(self.sundayTimeSlotAvailability)
+		weekTotalCampusTravels += getNumberCampusTripsForDay(self.mondayS)
+		weekTotalCampusTravels += getNumberCampusTripsForDay(self.tuesdayS)
+		weekTotalCampusTravels += getNumberCampusTripsForDay(self.wednesdayS)
+		weekTotalCampusTravels += getNumberCampusTripsForDay(self.thursdayS)
+		weekTotalCampusTravels += getNumberCampusTripsForDay(self.fridayS)
+		weekTotalCampusTravels += getNumberCampusTripsForDay(self.saturdayS)
+		weekTotalCampusTravels += getNumberCampusTripsForDay(self.sundayS)
 		return weekTotalCampusTravels
 
     	def totalPurge(self):
-		self.mondayTimeSlotAvailability = [0] * 144
-		self.tuesdayTimeSlotAvailability = [0] * 144
-		self.wednesdayTimeSlotAvailability = [0] * 144
-		self.thursdayTimeSlotAvailability = [0] * 144
-		self.fridayTimeSlotAvailability = [0] * 144
-		self.saturdayTimeSlotAvailability = [0] * 144
-		self.sundayTimeSlotAvailability = [0] * 144
+		self.mondayS = [0] * 144
+		self.tuesdayS = [0] * 144
+		self.wednesdayS = [0] * 144
+		self.thursdayS = [0] * 144
+		self.fridayS = [0] * 144
+		self.saturdayS = [0] * 144
+		self.sundayS = [0] * 144
 	#needs to be reworked for ... multiple campuses    	
 	def clearSchedule(self):
-        	for i in range (0, len(self.mondayTimeSlotAvailability)):
-          		if self.mondayTimeSlotAvailability[i] in [1, 4, 7, 10]:
-                		self.mondayTimeSlotAvailability[i] = 0 
-        	for i in range (0, len(self.tuesdayTimeSlotAvailability)):
-           		if self.tuesdayTimeSlotAvailability[i] in [1, 4, 7, 10]:
-                		self.tuesdayTimeSlotAvailability[i] = 0
-		for i in range (0, len(self.wednesdayTimeSlotAvailability)):
-		    	if self.wednesdayTimeSlotAvailability[i] in [1, 4, 7, 10]:
-		        	self.wednesdayTimeSlotAvailability[i] = 0
-		for i in range (0, len(self.thursdayTimeSlotAvailability)):
-			if self.thursdayTimeSlotAvailability[i] in [1, 4, 7, 10]:
-				self.thursdayTimeSlotAvailability[i] = 0
-		for i in range (0, len(self.fridayTimeSlotAvailability)):
-		    	if self.fridayTimeSlotAvailability[i] in [1, 4, 7, 10]:
-		        	self.fridayTimeSlotAvailability[i] = 0
-		for i in range (0, len(self.saturdayTimeSlotAvailability)):
-		    	if self.saturdayTimeSlotAvailability[i] in [1, 4, 7, 10]:
-		       		self.saturdayTimeSlotAvailability[i] = 0
-		for i in range (0, len(self.sundayTimeSlotAvailability)):
-			if self.sundayTimeSlotAvailability[i] in [1, 4, 7, 10]:
-		       		self.sundayTimeSlotAvailability[i] = 0
+        	for i in range (0, len(self.mondayS)):
+          		if self.mondayS[i] in [1, 4, 7, 10]:
+                		self.mondayS[i] = 0 
+        	for i in range (0, len(self.tuesdayS)):
+           		if self.tuesdayS[i] in [1, 4, 7, 10]:
+                		self.tuesdayS[i] = 0
+		for i in range (0, len(self.wednesdayS)):
+		    	if self.wednesdayS[i] in [1, 4, 7, 10]:
+		        	self.wednesdayS[i] = 0
+		for i in range (0, len(self.thursdayS)):
+			if self.thursdayS[i] in [1, 4, 7, 10]:
+				self.thursdayS[i] = 0
+		for i in range (0, len(self.fridayS)):
+		    	if self.fridayS[i] in [1, 4, 7, 10]:
+		        	self.fridayS[i] = 0
+		for i in range (0, len(self.saturdayS)):
+		    	if self.saturdayS[i] in [1, 4, 7, 10]:
+		       		self.saturdayS[i] = 0
+		for i in range (0, len(self.sundayS)):
+			if self.sundayS[i] in [1, 4, 7, 10]:
+		       		self.sundayS[i] = 0
                 
     #totalPurge and clear schedule should be methods here
 
