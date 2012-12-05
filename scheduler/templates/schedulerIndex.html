@@ -169,13 +169,9 @@
 	<div id="unavailableTimesCart">
 		<h3>Times You Are Unavailable:</h3>
 		<ul id="addTimeList">
-					{{ timesUnavailable }}
-					{% for x in timesUnavailable %}
-						<li>{{ listOfDays.x.0 }}</li>
-					{% endfor %}
 			{% if timesUnavailable %}
-				{% for i,j,k in timesUnavailable %}
-					<li>{{ listOfDays.4 }} from {{ j }} to {{ k }} <a onclick="Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'{{ i }}', 'startMinute':'{{ j.minute }}', 'startHour':'{{ j.hour }}', 'endMinute':'{{ k.minute }}', 'endHour':'{{ k.hour }}' })">remove</a></li>
+				{% for i,j,k,l in timesUnavailable %}
+					<li>{{ l }} from {{ j }} to {{ k }} <a onclick="Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'{{ i }}', 'startMinute':'{{ j.minute }}', 'startHour':'{{ j.hour }}', 'endMinute':'{{ k.minute }}', 'endHour':'{{ k.hour }}' })">remove</a></li>
 				{% endfor %}
 			{% else %}
 				<span>There are no times specified.</span>

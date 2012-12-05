@@ -12,7 +12,6 @@ def index(request):
 	context = {}
 	
 	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-	context['listOfDays'] = listOfDays
 
 	allSubjects = Course.objects.values_list('subject', flat=True).distinct()
 
@@ -37,8 +36,11 @@ def index(request):
 	if 'byProf' in request.session:
 		context['byProf'] = request.session['byProf']
 
+	dayTupleList = []
 	if 'timesUnavailable' in request.session:
-		context['timesUnavailable'] = request.session['timesUnavailable']
+		for x in request.session['timesUnavailable']:
+			dayTupleList.append((x[0], x[1], x[2], listOfDays[x[0]]))
+		context['timesUnavailable'] = dayTupleList
 
 	# Build the context
 	if 'processedData' in request.session:
