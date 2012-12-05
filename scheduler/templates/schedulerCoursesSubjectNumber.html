@@ -6,6 +6,24 @@
 	<ul class="courses">	
 		{% for course in courses %}
     		<li class="course"><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
+			<ul class="course">
+			{% for instructor in course.instructor_set.all|dictsort:'last_name' %}
+				<li>Instructor: {% if instructor.userid != '. Tbd' and instructor.userid != '. Sessional' and instructor.userid != '. Faculty' and " " not in instructor.userid %} <a href="{% url scheduler_instructor instructor.pk %}">{{ instructor.name }}</a> {% else %} {{ instructor.userid }} {% endif %}</li>
+			{% endfor %}
+				<li>Campus: {{ course.campusChoice }}</li>
+				<li>Meeting Times:</li>
+					<ul class="times">
+					{% for meetingTime in course.meetingtime_set.all|dictsort:'type' %}
+							{% if meetingTime.type == "LEC" or meetingTime.type == "LAB" %}
+								<li class="classOrLab time">{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} in {{ meetingTime.room }}</li>
+							{% else %}
+								<li class="exam time">{{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
+							{% endif %}
+					{% empty %}
+						<li>No meetings scheduled.</li>
+					{% endfor %}
+					</ul>
+			</ul>
 		{% endfor %}
 	</ul>
 </div>

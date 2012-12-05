@@ -63,6 +63,36 @@ p {
 	margin: 8px;
 }
 
+ul.subjectsNav {
+	padding: 0;
+	text-align: justify;
+}
+
+li.subjectsNav {
+	display: inline;
+}
+
+li.firstLevel {
+	padding-top: 0px;
+}
+
+ul.levelsNav {
+	padding: 0;
+	text-align: center;
+}
+
+li.levelsNav {
+	display: inline;
+}
+
+li.course {
+	padding-top: 10px;
+}
+
+li.subject {
+	padding-top: 10px;
+}
+
 .conflict {
 	color: red;
 	font-weight: bold;

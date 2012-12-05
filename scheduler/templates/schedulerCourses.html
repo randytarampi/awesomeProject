@@ -4,15 +4,22 @@
 <div id="schedulerClasses">
 	<h1>Classes By Subject</h1>
 	{% regroup courses by subject as subjectList %}
+	<!--<ul class="subjectsNav">
+	{% for subject in subjectList %}
+		<li class="subjectsNav"><a href="{% url scheduler_courses %}#{{ subject.grouper }}">{{ subject.grouper }}</a>{% if not forloop.last %} | {% endif %}</li>
+	{% endfor %}
+	</ul>
+	<hr class="subject" />-->
 	<ul class="courses"> 
 	{% for subject in subjectList %}
-	  <li id="{{ subject.grouper }}"><a href="{% url scheduler_coursesSubject subject.grouper %}">{{ subject.grouper }}</a>
+	  <li class="subject" id="{{ subject.grouper }}"><a href="{% url scheduler_coursesSubject subject.grouper %}">{{ subject.grouper }}</a>
 		<ul class="courses">	
 			{% for course in subject.list %}
 	    		<li class="course"><a href="{% url scheduler_coursesSubjectNumber course.subject course.number %}">{{ course.subject }} {{ course.number }} : {{ course.title }}</a></li>
 			{% endfor %}
 		</ul>
 	  </li>
+	  {% if not forloop.last %}<hr class="subject" />{% endif %}
 	{% endfor %}
 	</ul>
 </div>

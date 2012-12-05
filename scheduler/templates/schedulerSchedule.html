@@ -34,7 +34,7 @@
 		{% endif %}
 		{% if optimalCourses %}
 			<li class="optimal toggleCollapse"><h3>Optimal Courses</h3></li>
-			<ul class="optimal courses">
+			<ol class="optimal courses">
 			{% for course in optimalCourses %}
 				<li><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
 				<ul class="optimal course">
@@ -58,7 +58,7 @@
 						</ul>
 				</ul>
 			{% endfor %}
-			</ul>
+			</ol>
 		{% else %}
 			{% if rejectedCourses %}<span class="error">All of the courses specified conflicted.</span>{% endif %}<span class="error">Please specify a set of classes.</span>
 		{% endif %}
