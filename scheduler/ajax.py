@@ -86,6 +86,22 @@ def listOfSubjects():
 	return ''.join(datList)
 
 @dajaxice_register
+def deleteCourseFromSession(request, course, number):
+	dajax = Dajax()
+
+	sesList = request.session['byCourse']
+	sesList.remove((course, number))
+	request.session['byCourse'] = sesList
+
+	out = []
+	for i in request.session['byCourse']:
+		out.append("<li>%s %s <a onclick=\"Dajaxice.scheduler.deleteCourseFromSession(Dajax.process, { 'course':'%s', 'number':'%s' })\">remove</a></li>" % (i[0], i[1], i[0], i[1]))
+
+	dajax.assign('#addCourseList', 'innerHTML', ''.join(out))
+
+	return dajax.json()
+
+@dajaxice_register
 def addCourseToSession(request, form):
 	dajax = Dajax()
 	sessionList = []
@@ -103,9 +119,25 @@ def addCourseToSession(request, form):
 
 	out = []
 	for i in request.session['byCourse']:
-		out.append("<li>%s %s</li>" % (i[0], i[1]))
+		out.append("<li>%s %s <a onclick=\"Dajaxice.scheduler.deleteCourseFromSession(Dajax.process, { 'course':'%s', 'number':'%s' })\">remove</a></li>" % (i[0], i[1], i[0], i[1]))
 
 	dajax.assign('#addCourseList', 'innerHTML', ''.join(out))
+
+	return dajax.json()
+
+@dajaxice_register
+def deleteCourseByProfFromSession(request, course, prof, number):
+	dajax = Dajax()
+
+	sesList = request.session['byProf']
+	sesList.remove((course, prof, number))
+	request.session['byProf'] = sesList
+
+	out = []
+	for i in request.session['byProf']:
+		out.append("<li>%s %s taught by: %s <a onclick=\"Dajaxice.scheduler.deleteCourseByProfFromSession(Dajax.process, { 'course':'%s', 'prof':'%s', 'number':'%s' })\">remove</a></li>" % (i[0], i[2], i[1], i[0], i[1], i[2]))
+
+	dajax.assign('#addCourseByProfList', 'innerHTML', ''.join(out))
 
 	return dajax.json()
 
@@ -127,7 +159,7 @@ def addCourseByProfToSession(request, form):
 
 	out = []
 	for i in request.session['byProf']:
-		out.append("<li>%s %s taught by: %s</li>" % (i[0], i[2], i[1]))
+		out.append("<li>%s %s taught by: %s <a onclick=\"Dajaxice.scheduler.deleteCourseByProfFromSession(Dajax.process, { 'course':'%s', 'prof':'%s', 'number':'%s' })\">remove</a></li>" % (i[0], i[2], i[1], i[0], i[1], i[2]))
 
 	dajax.assign('#addCourseByProfList', 'innerHTML', ''.join(out))
 
