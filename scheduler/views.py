@@ -26,7 +26,23 @@ def index(request):
 	for i in d:
 		for j in i.course.all():
 			instructorsCourses.append(j)
-			
+
+	# If session data already exists, list it out on first load of the page
+	sessionCourses = []
+	if 'byCourse' in request.session:
+		for i in request.session['byCourse']:
+			sessionCourses.append(i)
+
+	sessionCoursesByProf = []
+	if 'byProf' in request.session:
+		for i in request.session['byProf']:
+			sessionCoursesByProf.append(i)
+
+	sessionTimes = []
+	if 'timesUnavailable' in request.session:
+		for i in request.session['timesUnavailable']:
+			sessionTimes.append(i)
+
 	# Build the context
 	if 'processedData' in request.session:
 		processedContext = request.session['processedData']
@@ -36,6 +52,10 @@ def index(request):
 	context['initNums'] = initialNumbers
 	context['initProfs'] = initialProfs
 	context['initNumsByProf'] = instructorsCourses
+
+	context['byCourse'] = sessionCourses
+	context['byProf'] = sessionCoursesByProf
+	context['timesUnavailable'] = sessionTimes
 
 	return render_to_response('schedulerIndex.html', context, context_instance=RequestContext(request))
 
