@@ -166,6 +166,35 @@ def addCourseByProfToSession(request, form):
 	return dajax.json()
 
 @dajaxice_register
+def deleteUnavailableFromSession(request, day, startMinute, startHour, endMinute, endHour):
+	dajax = Dajax()
+
+	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+	t1 = time(int(startHour), int(startMinute))
+	t2 = time(int(endHour), int(endMinute))
+	sesList = request.session['timesUnavailable']
+	sesList.remove((int(day), t1, t2))
+	request.session['timesUnavailable'] = sesList
+
+	out = []
+	for i in request.session['timesUnavailable']:
+
+		if int(i[1].minute) < 10:
+			firstMinute = str(i[1].minute) + '0'
+		else:
+			firstMinute = str(i[1].minute)
+		if int(i[2].minute) < 10:
+			lastMinute = str(i[2].minute) + '0'
+		else:
+			lastMinute = str(i[2].minute)
+
+		out.append("<li>%s from %s:%s %s to %s:%s %s <a onclick=\"Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'%s', 'startMinute':'%s', 'startHour':'%s', 'endMinute':'%s', 'endHour':'%s' })\">remove</a></li>" % (listOfDays[i[0]], changeFrom24To12(i[1].hour), firstMinute, hourIsAMorPM(i[1].hour), changeFrom24To12(i[2].hour), lastMinute, hourIsAMorPM(i[2].hour), i[0], i[1].minute, i[1].hour, i[2].minute, i[2].hour))
+
+	dajax.assign('#addTimeList', 'innerHTML', ''.join(out))
+
+	return dajax.json()
+
+@dajaxice_register
 def addUnavailableToSession(request, form):
 	dajax = Dajax()
 	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -198,7 +227,7 @@ def addUnavailableToSession(request, form):
 		else:
 			lastMinute = str(i[2].minute)
 
-		out.append("<li>%s from %s:%s %s to %s:%s %s</li>" % (listOfDays[i[0]], changeFrom24To12(i[1].hour), firstMinute, hourIsAMorPM(i[1].hour), changeFrom24To12(i[2].hour), lastMinute, hourIsAMorPM(i[2].hour)))
+		out.append("<li>%s from %s:%s %s to %s:%s %s <a onclick=\"Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'%s', 'startMinute':'%s', 'startHour':'%s', 'endMinute':'%s', 'endHour':'%s' })\">remove</a></li>" % (listOfDays[i[0]], changeFrom24To12(i[1].hour), firstMinute, hourIsAMorPM(i[1].hour), changeFrom24To12(i[2].hour), lastMinute, hourIsAMorPM(i[2].hour), i[0], i[1].minute, i[1].hour, i[2].minute, i[2].hour))
 
 	dajax.assign('#addTimeList', 'innerHTML', ''.join(out))
 
