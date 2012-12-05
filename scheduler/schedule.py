@@ -24,27 +24,6 @@ class Schedule:
 		self.poolOfCutCourses = []
 
 
-	
-	#def checkTimeWeekConflictCampus(self, startTime, endTime, weekday, campus):
-	#	if weekday ==0:
-	#		return checkIfTimeDayConflictV2(startTime, endTime, self.mondayS, campus)
-	#	elif weekday ==1:
-	#	    	return checkIfTimeDayConflictV2(startTime, endTime, self.tuesdayS, campus)
-	#	elif weekday ==2:
-	#	    	return checkIfTimeDayConflictV2(startTime, endTime, self.wednesdayS, campus)
-	 #   
-	#	elif weekday ==3:
-	#	    	return checkIfTimeDayConflictV2(startTime, endTime, self.thursdayS, campus)
-
-	#	elif weekday ==4:
-	#	    	return checkIfTimeDayConflictV2(startTime, endTime, self.fridayS, campus)
-
-	#	elif weekday ==5:
-		#    	return checkIfTimeDayConflictV2(startTime, endTime, self.saturdayS, campus)
-
-		#elif weekday ==6:
-		#    	return checkIfTimeDayConflictV2(startTime, endTime, self.sundayS, campus)
-
     #i.e. input 0 to get monday, 1 to get tuesday... 6 to get sunday
 	def convertWeekDayToProperArray(self, weekday):
 		if weekday ==0:
@@ -63,7 +42,7 @@ class Schedule:
 		  	 return self.sundayS
 	#checks if the given time conflits with the schedule
 	def checkTimeWeekConflictCampus(self, startTime, endTime, weekday, campus):
-		return checkIfTimeDayConflictV2(startTime, endTime, self.convertWeekDayToProperArray(weekday), campus)
+		return checkIfTimeDayConflict(startTime, endTime, self.convertWeekDayToProperArray(weekday), campus)
     	#Locks slots start-->end, on the given workday
     	def lockMeetingTime(self, startTime, endTime, weekday):
         	lockSlotThrough(startTime, endTime, self.convertWeekDayToProperArray(weekday))
@@ -89,17 +68,16 @@ class Schedule:
 
 	def getTotalTimeGap(self):
 		weekTotalTimeGap = 0
-		weekTotalTimeGap += getTimeGapForDay(self.mondayS)
-		weekTotalTimeGap += getTimeGapForDay(self.tuesdayS)
-		weekTotalTimeGap += getTimeGapForDay(self.thursdayS)
-		weekTotalTimeGap += getTimeGapForDay(self.wednesdayS)
-		weekTotalTimeGap += getTimeGapForDay(self.fridayS)
-		weekTotalTimeGap += getTimeGapForDay(self.saturdayS)
-		weekTotalTimeGap += getTimeGapForDay(self.sundayS)
+		for i in range (0, 7):
+			weekTotalTimeGap += getTimeGapForDay(self.convertWeekDayToProperArray(i))
 		return weekTotalTimeGap
 	def getTotalDays(self):
 		totalDays = 0
 		listtocompare = [1, 2, 4, 5, 7,8,10,11]
+		#for i in range (0, 7):
+		#	if len(list(set(listtocompare) & set(getTimeGapForDay(self.convertWeekDayToProperArray(i)))))) != 0:
+	    	#		totalDays += 1
+			#weekTotalTimeGap += getTimeGapForDay(self.convertWeekDayToProperArray(i))
 		if len(list(set(listtocompare) & set(self.mondayS))) != 0:
 	    		totalDays += 1
 		if len(list(set(listtocompare) & set(self.tuesdayS))) != 0:
@@ -118,13 +96,8 @@ class Schedule:
     
 	def getTotalCrossCampusTravels(self):
 		weekTotalCampusTravels = 0
-		weekTotalCampusTravels += getNumberCampusTripsForDay(self.mondayS)
-		weekTotalCampusTravels += getNumberCampusTripsForDay(self.tuesdayS)
-		weekTotalCampusTravels += getNumberCampusTripsForDay(self.wednesdayS)
-		weekTotalCampusTravels += getNumberCampusTripsForDay(self.thursdayS)
-		weekTotalCampusTravels += getNumberCampusTripsForDay(self.fridayS)
-		weekTotalCampusTravels += getNumberCampusTripsForDay(self.saturdayS)
-		weekTotalCampusTravels += getNumberCampusTripsForDay(self.sundayS)
+		for i in range (0, 7):
+			weekTotalCampusTravels += getNumberCampusTripsForDay(self.convertWeekDayToProperArray(i))
 		return weekTotalCampusTravels
 
     	def totalPurge(self):
@@ -161,15 +134,17 @@ class Schedule:
                 
     #totalPurge and clear schedule should be methods here
 
-def checkIfTimeDayConflict(startTime, endTime, timeSlotArray):
-	for i in range (startTime, endTime+1):
-        	if timeSlotArray[i] != 0:
-            		return True
-    	return False
- 
-# 0=burn,1=surrey, 2 = vancouver
+
+
+
+#==================================================================================================
+#Finds if times will conflict with schedule
+#===================================================================================================
+
+# 0=burnaby,1=surrey, 2 = vancouver
 # we can place them we just need to solidify what happens after
-def checkIfTimeDayConflictV2(startTime, endTime, timeSlotArray, campus):
+def checkIfTimeDayConflict(startTime, endTime, timeSlotArray, campus):
+	#burnaby	
 	if campus == 1:
 		#make sure we can set the course
 		for i in range (startTime, endTime+1):
@@ -200,7 +175,6 @@ def checkIfTimeDayConflictV2(startTime, endTime, timeSlotArray, campus):
 	elif campus == 3:
 	        for i in range (startTime, endTime+1):
 	                if timeSlotArray[i] != 0 and timeSlotArray[i] != 9 :
-	                        #here the timeslot can = 0 or ... 4
 	                        return True
 	        return False
 		
@@ -220,26 +194,18 @@ def checkIfTimeDayConflictV2(startTime, endTime, timeSlotArray, campus):
 
 	#check that we can get from it... i.e. if we have courses afterwards taht we can 
 
-#burnaby
-#if campus == 0:
-#
-#surrey
-#elif campus == 1:
-#...
-#vancouver
-#elif campus == 2   
 
-#for i in range (startTime, endTime+1):
-#if timeSlotArray[i] != 0:
-#    return True
-#return False
+
+#==================================================================================================
+#Find schedule utility functions (let us alter the schedule)
+#===================================================================================================
+
 
 def lockSlotThroughCampus(startTime, endTime, timeSlotArray, campus):
-	#print "lockSlotThroughCampus, campus = " + str(campus)
 	if campus == 1:
 		for x in range (startTime, endTime+1):
 			timeSlotArray[x] = 5
-		#cover other parts
+		#cover the hour following this time... for travel reasons
 		for x in range (endTime+1, endTime+7):
 			if timeSlotArray[x] == 0:	
 				timeSlotArray[x] = 3
@@ -256,7 +222,6 @@ def lockSlotThroughCampus(startTime, endTime, timeSlotArray, campus):
 			if timeSlotArray[x] == 0:	
 				timeSlotArray[x] = 9
 	else:
-		#print "locking neutral campus"
 		for x in range (startTime, endTime+1):
 			timeSlotArray[x] = 2
 
@@ -264,7 +229,7 @@ def setSlotThroughCampus(startTime, endTime, timeSlotArray, campus):
     	if campus == 1:
 		for x in range (startTime, endTime+1):
 			timeSlotArray[x] = 4
-		#cover other parts
+		#cover other parts ... i.e. the hour following this time
 		for x in range (endTime+1, endTime+7):
 			if timeSlotArray[x] == 0:	
 				timeSlotArray[x] = 3
@@ -337,6 +302,14 @@ def freeSlotThrough(startTime, endTime, timeSlotArray):
 def checkSlot(slotNumber, timeSlotArray):
 	return timeSlotArray[slotNumber]
 
+
+
+#==================================================================================================
+#Find stats on schedule (such as number of days etc)
+#===================================================================================================
+
+
+
 #Finds the total amout of gap in the schedule for one timeSlotArray
 def getTimeGapForDay(timeSlotArray):
 	totalGap = 0
@@ -350,8 +323,8 @@ def getTimeGapForDay(timeSlotArray):
 			if checkSlot(i, timeSlotArray) not in [0, 3, 6, 9]:
                 		marker = i
     	return totalGap
-#finds the number of campuses we travel to in a day
 
+#finds the number of campuses we travel to in a day
 def getNumberCampusesForDay(timeSlotArray):
 	totalCampuses = 0 
 	if 4 in timeSlotArray or 5 in timeSlotArray:

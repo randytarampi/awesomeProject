@@ -12,12 +12,9 @@ class SchedulingCourse:
         #we may want to include the id in course here...
     	def addMeetingTime(self, meetingTime):
         	self.meetingTimes.append(meetingTime)
-    		#priority ... number
-   	 	#has priority? boolean
 
 
 class SchedulingMeetingTime:
-    #def __init__(self, startTime, endTime, weekday, startDate, endDate):
 	def __init__(self, startTime, endTime, weekday, startDate, endDate, meetingType, meetingTimeID):
 		self.startTime = startTime
 		self.endTime = endTime
