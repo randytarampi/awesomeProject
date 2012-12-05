@@ -5,10 +5,10 @@
 <div id="scheduleViewList">
 	<ul id="scheduleCoursesList">
 		{% if rejectedCourses %}
-			<li class="rejected toggleExpand"><h3>Rejected Courses</h3></li>
+			<li class="rejected collapsible toggleExpand"><h3>Rejected Courses</h3></li>
 			<ul class="rejected courses">
 			{% for course in rejectedCourses %}
-				<li class="rejected {% if forloop.first %}firstCourse{% else %}course{% endif %}"><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a> was Rejected</li>
+				<li class="rejected {% if forloop.first %}firstCourse{% else %}course{% endif %}"><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a><span class="wasRejected"> was Rejected</a></li>
 				<ul class="rejected course">
 				{% for instructor in course.instructor_set.all|dictsort:'last_name' %}
 					<li>Instructor: {% if instructor.userid != '. Tbd' and instructor.userid != '. Sessional' and instructor.userid != '. Faculty' and " " not in instructor.userid %} <a href="{% url scheduler_instructor instructor.pk %}">{{ instructor.name }}</a> {% else %} {{ instructor.userid }} {% endif %}</li>
@@ -33,7 +33,7 @@
 			</ul>
 		{% endif %}
 		{% if optimalCourses %}
-			<li class="optimal toggleCollapse"><h3>Optimal Courses</h3></li>
+			<li class="optimal collapsible toggleCollapse"><h3>Optimal Courses</h3></li>
 			<ol class="optimal courses">
 			{% for course in optimalCourses %}
 				<li class="optimal {% if forloop.first %}firstCourse{% else %}course{% endif %}"><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
