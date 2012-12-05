@@ -33,8 +33,7 @@ def createOptimalSchedule(numberOfCourses, listofNeedsCourses, unavailableMeetin
 			#handle additional labs
     			
 			#newCourse = newListOfCourses[0]
-    			#newMeetingTimes = newCourse.meetingTimes
-
+    			#newMeetingTimes = newCourse.meetingTime
 
 
     	#for i in range (0, len(listofWantsCourses)):
@@ -46,16 +45,22 @@ def createOptimalSchedule(numberOfCourses, listofNeedsCourses, unavailableMeetin
 
 	#Handle unavailable times
 	handleUnavailableMeetingTimes(unavailableMeetingTimes, schedule)
+	
 	#Handle needs
-	for i in range (0, numberOfCourses):
-        	iterateBEHEMOTH(schedule, newListOfNeedsCourses, numberOfCourses)
-    	outPutListOfLockedCourses = []	
+	#completePasturize(inputCoursesList, schedule, numberOfCourses):
+	#find top picks for course options
+	#completePasturize(newListOfNeedsCourses, schedule, numberOfCourses)
+	#findPasturizeTopPickDarwinism(listOfPotentialSchedules, schedule):
+	#for i in range (0, numberOfCourses):
+        	#iterateBEHEMOTH(schedule, newListOfNeedsCourses, numberOfCourses)
+    	#outPutListOfLockedCourses = []	
 	#Handle wants
-    	#for i in range (0, numberOfCourses):
-        #	iterateBEHEMOTH(schedule, newListOfWantsCourses, numberOfCourses)
-    	#outPutListOfLockedCourses = []
+    	for i in range (0, numberOfCourses):
+        	iterateBEHEMOTH(schedule, newListOfNeedsCourses, numberOfCourses)
+    	outPutListOfLockedCourses = []
     	
-
+		
+	
 	#everythingElse
 	unUsedCourseList = []	
 	for i in range (0, len(newListOfNeedsCourses)):
@@ -127,7 +132,7 @@ def createOptimalSchedule(numberOfCourses, listofNeedsCourses, unavailableMeetin
 	TotalDays = schedule.getTotalDays()
     	TotalTimeGap = schedule.getTotalTimeGap()
     	crossCampusTravels = schedule.getTotalCrossCampusTravels()
-    	currentChoiceStats = ChoiceStats(TotalDays, TotalTimeGap, crossCampusTravels)
+    	currentChoiceStats = ChoiceStats(TotalDays, TotalTimeGap, crossCampusTravels, len(outPutListOfLockedCourses))
     	largerOutputArray.append(currentChoiceStats)
     	largerOutputArray.append(schedule)
 	#list of meeting times
@@ -148,9 +153,6 @@ def handleUnavailableMeetingTimes(unavailableMeetingTimes, schedule):
 		#Locks the schedule through to a certain point...
 		schedule.lockMeetingTimeUnavailable(startTime, endTime, weekday)
 		#def lockMeetingTimeUnavailable(self, startTime, endTime, weekday):
-
-	#convertTimeToTimeSlot
-	#convertDayStringToDayInt
 
 #handles courses we need to take
 #Potential issue!
@@ -300,7 +302,7 @@ def courseExamConflict(course, listOfLockedCourses):
 def meetingTimesListConflict(firstListOfMeetingTimes, secondListOfMeetingTimes):
 	for i in range (0, len(firstListOfMeetingTimes)):
 	    	meetingTimeOne = firstListOfMeetingTimes[i]
-	    	for j in range (0, len(firstListOfMeetingTimes)):
+	    	for j in range (0, len(secondListOfMeetingTimes)):
 	    		meetingTimeTwo = secondListOfMeetingTimes[j]
 			#This function works for all courses
 	    		if meetingTimesConflict(meetingTimeOne, meetingTimeTwo) == True:
@@ -337,9 +339,15 @@ def meetingTimesConflict(firstMeetingTime, secondMeetingTime):
 #checks if a db course conflicts with a set of meeting Times
 #returns the meeting times of the course....
 #if it is an empty list we coudln't get the course to fit
+
+
 def courseFitsWithMeetingTimeList(dbCourse, meetingTimeList):
+	algorithmCourse = convertCourseModelToCourseObject(dbCourse, False)
+	courseFromAlgorithmFitsWithMeetingTimeList(algorithmCourse, meetingTimeList)
+	
+def courseFromAlgorithmFitsWithMeetingTimeList(course, meetingTimeList):
 	outPutAppropriateTimes = []	
-	course = convertCourseModelToCourseObject(dbCourse, False)
+	#course = convertCourseModelToCourseObject(dbCourse, False)
 	lectureMeetingTimes = course.meetingTimes
 	#first check meeting times of the course... they all have to fit with the times
 	#if it works ...add the lecture tiems to the output times to te output  otherwise return blank
@@ -347,7 +355,7 @@ def courseFitsWithMeetingTimeList(dbCourse, meetingTimeList):
 		for i in range (0, len(lectureMeetingTimes)):
 			outPutAppropriateTimes.append(lectureMeetingTimes[i])		
 	else:
-		print "courseFitsWithMeetingTimeList lecture conflict"
+		#print "courseFitsWithMeetingTimeList lecture conflict"
 		return []
 	#Handle the exam times... all of them have to work
 	examTimes = course.exams
@@ -543,7 +551,7 @@ def iterateBEHEMOTH(schedule, poolOfPotentialCourses, maxSize):
                 		newTotalDays = schedule.getTotalDays()
                 		newTotalTimeGap = schedule.getTotalTimeGap()
 				newCrossCampusTravels = schedule.getTotalCrossCampusTravels()
-                		currentChoiceStats = ChoiceStats(newTotalDays, newTotalTimeGap, newCrossCampusTravels)
+                		currentChoiceStats = ChoiceStats(newTotalDays, newTotalTimeGap, newCrossCampusTravels, 1)
                			choiceStatsList.append(currentChoiceStats)
                 		#free certain course
                 		freeCourse(courseWeTryToAdd, schedule)
@@ -607,27 +615,120 @@ def regroupCoursesForPasturize(inputCoursesList):
 	#we should now have a group of properly organized courses
 	return properlyOrganizedCourseGroupList
 
-#number of courses that we need to add...
-def completePasturize(inputCoursesList, schedule):
+
+
+
+def completePasturizeTotalMax(inputCoursesList, schedule):
 	regroupedCourses = regroupCoursesForPasturize(inputCoursesList)
 	numberOfGroups = len(regroupedCourses)
 	potentialOutPutList = []
-	for i in range (0, len(regroupedCourses[0])):
-		regroupedCourseInitial = regroupedCourses[0][i]
-		if canAddCourseToPairing(regroupedCourseInitial, [], schedule):
-			potentialOutPutList.append(regroupedCourseInitial)
-
-	#for i in range (0, len(regroupedCourses):
-	#	for i in range
-	#do first one...
-	#second one...
-	#for i in range (0, len(outPutList)):
-		
-	#try the other courses
-#try going from 2--> 3
 	
-#def handl
-#handle an iteration from 2-->3
+	#handleOneIterationOfPasturize(attemptedAddedCourseList, inputCoursePairingList, schedule)
+	newList = []
+	oldList = [[]]
+	for i in range (0, numberOfGroups):
+		print "Start iteration of Pasturize, size of oldList = " + str(len(oldList))
+		newList = handleOneIterationOfPasturizeTotalMax(regroupedCourses[i], oldList, schedule)
+		#oldList = copy.deepcopy(newList)
+		oldList = newList
+		print "End iteration of Pasturize, size of oldList = " + str(len(oldList))
+	return oldList
+
+#Slow if we don't do anything special
+def handleOneIterationOfPasturizeTotalMax(attemptedAddedCourseList, inputPairingMeetingTimesList, schedule):
+	outputList = []	
+	#For each pairing
+	for i in range (0, len(inputPairingMeetingTimesList)):
+		inputMeetPairing = inputPairingMeetingTimesList[i]
+		#for each course...
+		for j in range (0, len(attemptedAddedCourseList)):
+			courseWeAttemptToAdd = attemptedAddedCourseList[j]
+			
+			#if checkCourseConflictsWithPairing(courseWeAttemptToAdd, inputCoursePairing, schedule) == False:
+				#testcourse = copy.deepcopy(inputCourse)
+			#newCoursePairing.append(courseWeAttemptToAdd)
+			if courseFromAlgorithmFitsWithMeetingTimeList(courseWeAttemptToAdd, inputMeetPairing) != []:
+				newMeetPairing = copy.deepcopy(inputMeetPairing)
+				for i in range(len (courseWeAttemptToAdd.meetingTimes)):
+					newMeetPairing.append(courseWeAttemptToAdd.meetingTimes[i])
+				for i in range(len (courseWeAttemptToAdd.exams)):
+					newMeetPairing.append(courseWeAttemptToAdd.exams[i])
+				for i in range(len (courseWeAttemptToAdd.labs)):	
+					newMeetPairing.append(courseWeAttemptToAdd.labs[i])					
+				outputList.append(newMeetPairing)
+	#THis should be our new listofCoursePairings for future iterations	
+	return outputList
+
+#number of courses that we need to add...
+def completePasturizeExtraHeavy(inputCoursesList, schedule):
+	regroupedCourses = regroupCoursesForPasturize(inputCoursesList)
+	numberOfGroups = len(regroupedCourses)
+	potentialOutPutList = []
+	
+	#handleOneIterationOfPasturize(attemptedAddedCourseList, inputCoursePairingList, schedule)
+	newList = []
+	oldList = [[]]
+	for i in range (0, numberOfGroups):
+		print "Start iteration of Pasturize, size of oldList = " + str(len(oldList))
+		newList = handleOneIterationOfPasturizeExtraHeavy(regroupedCourses[i], oldList, schedule)
+		oldList = newList
+		#oldList = 
+		print "End iteration of Pasturize, size of oldList = " + str(len(oldList))
+	return oldList
+
+def handleOneIterationOfPasturizeExtraHeavy(attemptedAddedCourseList, inputCoursePairingList, schedule):
+	outputList = []	
+	#For each pairing
+	for i in range (0, len(inputCoursePairingList)):
+		inputCoursePairing = inputCoursePairingList[i]
+		#for each course...
+		for j in range (0, len(attemptedAddedCourseList)):
+			courseWeAttemptToAdd = attemptedAddedCourseList[j]
+			if checkCourseConflictsWithPairing(courseWeAttemptToAdd, inputCoursePairing, schedule) == False:
+				newCoursePairing = copy.deepcopy(inputCoursePairing)
+				newCoursePairing.append(courseWeAttemptToAdd)
+				outputList.append(newCoursePairing)
+			else:
+				outputList.append(inputCoursePairing)
+	#THis should be our new listofCoursePairings for future iterations	
+	return outputList
+
+
+#courseFromAlgorithmFitsWithMeetingTimeList
+#def handleOneIterationOfPasturizeSpeed(attemptedAddedCourseList, inputMeetingTime, schedule):
+#	outputList = []	
+	#For each pairing
+#	for i in range (0, len(inputCoursePairingList)):
+#		inputCoursePairing = inputCoursePairingList[i]
+		#for each course...
+#		for j in range (0, len(attemptedAddedCourseList)):
+#			courseWeAttemptToAdd = attemptedAddedCourseList[j]
+#			newCoursePairing = copy.deepcopy(inputCoursePairing)
+#			courseFromAlgorithmFitsWithMeetingTimeList
+#			if checkCourseConflictsWithPairing(courseWeAttemptToAdd, inputCoursePairing, schedule) == False:
+				#testcourse = copy.deepcopy(inputCourse)
+#				newCoursePairing.append(courseWeAttemptToAdd)
+#			outputList.append(newCoursePairing)
+	#THis should be our new listofCoursePairings for future iterations	
+#	return outputList
+
+
+#number of courses that we need to add...
+def completePasturize(inputCoursesList, schedule, numberOfCourses):
+	regroupedCourses = regroupCoursesForPasturize(inputCoursesList)
+	numberOfGroups = len(regroupedCourses)
+	potentialOutPutList = []
+	
+	#handleOneIterationOfPasturize(attemptedAddedCourseList, inputCoursePairingList, schedule)
+	newList = []
+	oldList = [[]]
+	for i in range (0, numberOfGroups):
+		print "Start iteration of Pasturize, size of oldList = " + str(len(oldList))
+		newList = handleOneIterationOfPasturize(regroupedCourses[i], oldList, schedule)
+		if newList != []:
+			oldList = newList
+		print "End iteration of Pasturize, size of oldList = " + str(len(oldList))
+	return oldList
 
 
 #for each pairing of two
@@ -636,46 +737,107 @@ def completePasturize(inputCoursesList, schedule):
 
 def handleOneIterationOfPasturize(attemptedAddedCourseList, inputCoursePairingList, schedule):
 	outputList = []	
+	#For each pairing
 	for i in range (0, len(inputCoursePairingList)):
 		inputCoursePairing = inputCoursePairingList[i]
+		#for each course...
+		for j in range (0, len(attemptedAddedCourseList)):
+			courseWeAttemptToAdd = attemptedAddedCourseList[j]
+			if checkCourseConflictsWithPairing(courseWeAttemptToAdd, inputCoursePairing, schedule) == False:
+				#testcourse = copy.deepcopy(inputCourse)
+				newCoursePairing = copy.deepcopy(inputCoursePairing)
+				newCoursePairing.append(courseWeAttemptToAdd)
+				outputList.append(newCoursePairing)
+	#THis should be our new listofCoursePairings for future iterations	
+	return outputList
+#Finds the best solution out of the picks we have				
+def findPasturizeTopPickDarwinism(listOfPotentialSchedules, schedule):
+	numberOfOptions = len(listOfPotentialSchedules)
+	#gather stats
+	listOfOptionsStats = []
+	if numberOfOptions >= 1:	
+		for i in range (numberOfOptions):
+			currentOption = listOfPotentialSchedules[i]
+			listOfOptionsStats.append(gatherStatsOnPotentialCourseSchedule(currentOption, schedule))
+
+	#evaluate stats
+	#only use options with the greatest number of options
+	bestOptionNumber = evaluateStatsForPasturize(listOfOptionsStats, schedule)
 		
-		#for j in range (0, len(attemptedAddedCourseList)):
-		#	courseWeAttemptToAdd = attemptedAddedCourseList[j]
-		#	checkCourseConflictsWithPairing(courseWeAttemptToAdd, inputCoursePairing, schedule) == True:
-		#	else:
-				
-				
-	#for i in range (0, len(attemptedAddedCourseList)):
-	#	attemptedAddedCourse = attemptedAddedCourseList[i]
-		#if attemptToAddCourseToPairing(attemptedAddedCourse, inputCoursePairingList, schedule) != []:
-	#	if canAddCourseToPairing(attemptedAddedCourse, 	
-	#for i in range (0, len(inputCoursePairingList)):
-		
+	bestCourseOption = listOfPotentialSchedules[bestOptionNumber]
+	#Act on those stats
+	bestCourseOptionClone = copy.deepcopy(bestCourseOption)
+	return bestCourseOption
+	#for i in range (0, len (bestCourseOption)):
+		#we lock 0 here because the list gets smaller.. it moves...
+	#	lockCourse(bestCourseOption[i], schedule, bestCourseOptionClone)
+    		#get the Course that has risen above all others and solidify its position in the schedule
+	
 
-def attemptToAddCourseToPairing(inputCourse, inputPairingOfCourses, schedule):
-	if canAddCourseToPairing(inputCourse, inputPairingOfCourses, schedule):
-		return inputCoursePairing.append(inputCourse)
-	else:
-		return []
+def gatherStatsOnPotentialCourseSchedule(potentialCourses, schedule):
+	#set the courses	
+	for i in range (0, len(potentialCourses)):
+		courseWeWantToSet = potentialCourses[i]
+		setCourse(courseWeWantToSet, schedule)
+	#get the stats 
+	newTotalDays = schedule.getTotalDays()
+	newTotalTimeGap = schedule.getTotalTimeGap()
+	newCrossCampusTravels = schedule.getTotalCrossCampusTravels()
+	currentChoiceStats = ChoiceStats(newTotalDays, newTotalTimeGap, newCrossCampusTravels, len(potentialCourses))
+	#choiceStatsList.append(currentChoiceStats)
+		#free certain course
+	for i in range (0, len(potentialCourses)):
+		courseWeWantToFree = potentialCourses[i]
+		freeCourse(courseWeWantToFree, schedule)
+	return currentChoiceStats
 
-#ok we have two lsits of courses... lets see if 
-#def findAllMeetingTimePairings(, LargerPairing):
 
-#checks if this particular course can be added to the pairing of the course
+def evaluateStatsForPasturize(listOfOptionsStats, schedule):
+	#try to make the best decision as to which course we should lock
+    	currentPositionOfChoice = 0
+    	currentBestChoiceStats = listOfOptionsStats[currentPositionOfChoice]
+	
+	for i in range (1, len(listOfOptionsStats)):
+        	currentChoiceStats = listOfOptionsStats[i]
+        	# find the best course
+		if currentChoiceStats.numberOfCourses >= currentBestChoiceStats.numberOfCourses:
+			if currentChoiceStats.numberOfCourses > currentBestChoiceStats.numberOfCourses:
+				currentBestChoiceStats = currentChoiceStats;
+				currentPositionOfChoice = i;
+			else:
+				if currentChoiceStats.numberOfDays <= currentBestChoiceStats.numberOfDays:
+			    		if currentChoiceStats.numberOfDays < currentBestChoiceStats.numberOfDays:
+						currentBestChoiceStats = currentChoiceStats;
+						currentPositionOfChoice = i;
+			    		elif (currentChoiceStats.crossCampusTravels <= currentBestChoiceStats.crossCampusTravels):
+						if (currentChoiceStats.crossCampusTravels < currentBestChoiceStats.crossCampusTravels):
+				    			currentBestChoiceStats = currentChoiceStats
+				    			currentPositionOfChoice = i
+			    			elif (currentChoiceStats.totalGap < currentBestChoiceStats.totalGap):
+				    			currentBestChoiceStats = currentChoiceStats
+	#this is the best choice we made
+	return currentPositionOfChoice
+    		
 
-#def checkCourseConflictsWithPairing(inputCourse, inputPairingOfCourses, schedule):
-#	for i in range (0, len(inputPairingOfCourses):
-#		pairedCourse = inputPairingOfCourses[i]
-#		lockCourse(pairedCourse, schedule, inputPairingOfCourses)
+def checkCourseConflictsWithPairing(inputCourse, inputPairingOfCourses, schedule):
+	listCoursesToUnlock = []
+	originalPairingLength = len(inputPairingOfCourses)
+	#inputPairingOfCoursesClone = copy.deepcopy(inputPairingOfCourses)
+
+	for i in range (0, originalPairingLength):
+		#We choose 0 every time because the list is shrinking
+		pairedCourse = inputPairingOfCourses[0]
+		lockCourse(pairedCourse, schedule, inputPairingOfCourses)
+		listCoursesToUnlock.append(pairedCourse)
+		#listCoursesToUnlock.append(pairedCourse)
 	#def lockCourse(course, schedule, poolOfPotentialCourses):
-#	outputBoolean = checkCourseConflict(inputCourse, schedule)
-#	unLockCourse(inputPairedCourse, schedule, inputPairingOfCourses)
-#	return outputBoolean
+	outputBoolean = checkCourseConflict(inputCourse, schedule)
+	for i in range (0, originalPairingLength):
+		pairedCourse = listCoursesToUnlock[i] 
+		unlockCourse(pairedCourse, schedule, inputPairingOfCourses)
+	#print "checkCourseConflictsWithPairing output"
+	return outputBoolean
 
-	#if checkCourseConflict(course,inputCourse) == True:
-	#	return True
-	#else:
-	#	return False
 		
 
 #Potentially obsolete code
