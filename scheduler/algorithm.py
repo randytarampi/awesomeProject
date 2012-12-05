@@ -14,43 +14,63 @@ from scheduler.datetimeconverter import *
 #that will be in an optimal schedule
 #def createOptimalSchedule(numberOfCourses, listofCourses):
 	
-def createOptimalSchedule(numberOfCourses, listofCourses, unavailableMeetingTimes, filterDistanceCourses = False):
+def createOptimalSchedule(numberOfCourses, listofNeedsCourses, unavailableMeetingTimes, filterDistanceCourses = False):
 	schedule = Schedule()
 	#schedule.poolOfLockedCourses = []
-   	newListOfCourses = []
+   	newListOfNeedsCourses = []
+	newListOfWantsCourses = []
     	poolOfCutCourses = []
-    	for i in range (0, len(listofCourses)):
-		newCourse = convertCourseModelToCourseObject(listofCourses[i], filterDistanceCourses)
+	for i in range (0, len(listofNeedsCourses)):
+		newCourse = convertCourseModelToCourseObject(listofNeedsCourses[i], filterDistanceCourses)
 		if (newCourse != False):
 	    		#print "Course is acceptable"
 	    		#newListOfCourses.append(newCourse)
 			#This handles labs and appends the course
 			
-			handleLabsForCourse(newCourse, newListOfCourses)
+			handleLabsForCourse(newCourse, newListOfNeedsCourses)
    			#print "size of newListOfCourses =" + str(len(newListOfCourses))
     			#print "new newlistcourse = " + str(newListOfCourses[0])
 			#handle additional labs
     			
 			#newCourse = newListOfCourses[0]
     			#newMeetingTimes = newCourse.meetingTimes
+
+
+
+    	#for i in range (0, len(listofWantsCourses)):
+	#	newCourse = convertCourseModelToCourseObject(listofWantsCourses[i], filterDistanceCourses)
+	#	if (newCourse != False):	
+	#		handleLabsForCourse(newCourse, newListOfWantsCourses)
+
+
+
 	#Handle unavailable times
 	handleUnavailableMeetingTimes(unavailableMeetingTimes, schedule)
 	#Handle needs
-		
+	for i in range (0, numberOfCourses):
+        	iterateBEHEMOTH(schedule, newListOfNeedsCourses, numberOfCourses)
+    	outPutListOfLockedCourses = []	
 	#Handle wants
-    	for i in range (0, numberOfCourses):
-        	iterateBEHEMOTH(schedule, newListOfCourses, numberOfCourses)
-    	outPutListOfLockedCourses = []
+    	#for i in range (0, numberOfCourses):
+        #	iterateBEHEMOTH(schedule, newListOfWantsCourses, numberOfCourses)
+    	#outPutListOfLockedCourses = []
     	
 
 	#everythingElse
 	unUsedCourseList = []	
-	for i in range (0, len(newListOfCourses)):
-		unUsedCourseList.append(newListOfCourses[i])
+	for i in range (0, len(newListOfNeedsCourses)):
+		unUsedCourseList.append(newListOfNeedsCourses[i])
 	for i in range (0, len(unUsedCourseList)):
 		unUsedCourse = unUsedCourseList[i]
 		schedule.poolOfCutCourses.append(unUsedCourse)
-		newListOfCourses.remove(unUsedCourse)
+		newListOfNeedsCourses.remove(unUsedCourse)
+	
+	#for i in range (0, len(newListOfWantsCourses)):
+	#	unUsedCourseList.append(newListOfWantsCourses[i])
+	#for i in range (0, len(unUsedCourseList)):
+	#	unUsedCourse = unUsedCourseList[i]
+	#	schedule.poolOfCutCourses.append(unUsedCourse)
+	#	newListOfWantsCourses.remove(unUsedCourse)
 
 	#Locked meeting times
 	listMeetingTimes = []
@@ -343,7 +363,8 @@ def courseFitsWithMeetingTimeList(dbCourse, meetingTimeList):
 	if labTimes != []:
 		acceptableLabTimes = meetingTimesFilter(meetingTimeList, labTimes)
 		if len (acceptableLabTimes) != 0:
-			outPutAppropriateTimes.append(acceptableLabTimes[i])
+			for i in range (0, len(acceptableLabTimes)):
+				outPutAppropriateTimes.append(acceptableLabTimes[i])
 		else:
 			#print "courseFitsWithMeetingTimeList lab conflict"
 			return []
@@ -562,6 +583,100 @@ def iterateBEHEMOTH(schedule, poolOfPotentialCourses, maxSize):
 		print "Maxed out on behe interation numbers"
 
 
+#divide everything into groups based on the course title
+def regroupCoursesForPasturize(inputCoursesList):
+	#Find out what the different titles of the courses are	
+	listOfCourseTitles = []
+	for i in range (0, len(inputCoursesList)):
+		inputCourse = inputCoursesList[i]
+		if inputCourse.title not in listOfCourseTitles:
+			listOfCourseTitles.append(inputCourse.title)
+	#From this we know how many groups we need to divide our input courses into	
+	numberOfGroups = len(listOfCourseTitles)
+	
+	#We gotta have a list of lists for each course
+	properlyOrganizedCourseGroupList = []
+	for i in range (0, numberOfGroups):
+		properlyOrganizedCourseGroupList.append([])
+
+	#divide the courses into their proper groups
+	for i in range (0, len(inputCoursesList)):
+		inputCourse = inputCoursesList[i]
+		groupNumber = listOfCourseTitles.index(inputCourse.title)
+		properlyOrganizedCourseGroupList[groupNumber].append(inputCourse)
+	#we should now have a group of properly organized courses
+	return properlyOrganizedCourseGroupList
+
+#number of courses that we need to add...
+def completePasturize(inputCoursesList, schedule):
+	regroupedCourses = regroupCoursesForPasturize(inputCoursesList)
+	numberOfGroups = len(regroupedCourses)
+	potentialOutPutList = []
+	for i in range (0, len(regroupedCourses[0])):
+		regroupedCourseInitial = regroupedCourses[0][i]
+		if canAddCourseToPairing(regroupedCourseInitial, [], schedule):
+			potentialOutPutList.append(regroupedCourseInitial)
+
+	#for i in range (0, len(regroupedCourses):
+	#	for i in range
+	#do first one...
+	#second one...
+	#for i in range (0, len(outPutList)):
+		
+	#try the other courses
+#try going from 2--> 3
+	
+#def handl
+#handle an iteration from 2-->3
+
+
+#for each pairing of two
+#	for each attempted to add course
+#		try to add taht course
+
+def handleOneIterationOfPasturize(attemptedAddedCourseList, inputCoursePairingList, schedule):
+	outputList = []	
+	for i in range (0, len(inputCoursePairingList)):
+		inputCoursePairing = inputCoursePairingList[i]
+		
+		#for j in range (0, len(attemptedAddedCourseList)):
+		#	courseWeAttemptToAdd = attemptedAddedCourseList[j]
+		#	checkCourseConflictsWithPairing(courseWeAttemptToAdd, inputCoursePairing, schedule) == True:
+		#	else:
+				
+				
+	#for i in range (0, len(attemptedAddedCourseList)):
+	#	attemptedAddedCourse = attemptedAddedCourseList[i]
+		#if attemptToAddCourseToPairing(attemptedAddedCourse, inputCoursePairingList, schedule) != []:
+	#	if canAddCourseToPairing(attemptedAddedCourse, 	
+	#for i in range (0, len(inputCoursePairingList)):
+		
+
+def attemptToAddCourseToPairing(inputCourse, inputPairingOfCourses, schedule):
+	if canAddCourseToPairing(inputCourse, inputPairingOfCourses, schedule):
+		return inputCoursePairing.append(inputCourse)
+	else:
+		return []
+
+#ok we have two lsits of courses... lets see if 
+#def findAllMeetingTimePairings(, LargerPairing):
+
+#checks if this particular course can be added to the pairing of the course
+
+#def checkCourseConflictsWithPairing(inputCourse, inputPairingOfCourses, schedule):
+#	for i in range (0, len(inputPairingOfCourses):
+#		pairedCourse = inputPairingOfCourses[i]
+#		lockCourse(pairedCourse, schedule, inputPairingOfCourses)
+	#def lockCourse(course, schedule, poolOfPotentialCourses):
+#	outputBoolean = checkCourseConflict(inputCourse, schedule)
+#	unLockCourse(inputPairedCourse, schedule, inputPairingOfCourses)
+#	return outputBoolean
+
+	#if checkCourseConflict(course,inputCourse) == True:
+	#	return True
+	#else:
+	#	return False
+		
 
 #Potentially obsolete code
 #<MeetingTime: Monday - 10:30:00 to 12:20:00>

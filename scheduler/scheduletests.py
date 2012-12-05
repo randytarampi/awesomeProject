@@ -20,6 +20,7 @@ def largeTest():
 	selectedCourses = Course.objects.filter(subject="CMPT", number=125) | Course.objects.filter(subject="CMPT", number=150) | Course.objects.filter(subject="CMPT", number=165) | Course.objects.filter(subject="MACM", number=201) | Course.objects.filter(subject="POL", number=100)
 	#createOptimalSchedule(5, selectedCourses)
 	cmpt165List = Course.objects.filter(subject="CMPT", number=165)
+	cmpt125List = Course.objects.filter(subject="CMPT", number=125)
 	cmpt165 = cmpt165List[0]
 	#return createOptimalSchedule(1, cmpt165List)
 	
@@ -40,6 +41,7 @@ def largeTest():
 		for i in range (0, len (startArray)):	
 			unavailableTimeFromArrays = (weekdayArray[i], convertStringToTime(startArray[i]), convertStringToTime(endArray[i]))
 			listUnavailableMeetingTimes.append(unavailableTimeFromArrays)
+	#return createOptimalSchedule(4, cmpt125List, selectedCourses, listUnavailableMeetingTimes)
 	return createOptimalSchedule(4, selectedCourses, listUnavailableMeetingTimes)
 	
 	
@@ -64,10 +66,8 @@ def conradTest():
 
 #output = conradTest()
 #simpleTest()
+#Tests for behemoth algorithm output
 output = largeTest()
-
-
-
 meet = output[0]
 for i in range (0, len (meet)):
 	print meet[i].type
@@ -81,6 +81,26 @@ mt2 = MeetingTime.objects.filter(course = c2.id)
 mt3 = MeetingTime.objects.filter(course = c3.id)
 mt4 = MeetingTime.objects.filter(course = c4.id)
 #mt5 = MeetingTime.objects.filter(course = c5.id)
+
+#Testing pasturize
+selectedCourses = Course.objects.filter(subject="CMPT", number=125) | Course.objects.filter(subject="CMPT", number=150) | Course.objects.filter(subject="CMPT", number=165) | Course.objects.filter(subject="MACM", number=201) | Course.objects.filter(subject="POL", number=100)
+print "Len selectedCourses = " + str(len(selectedCourses))
+newSelectedCourses = []
+for i in range (0, len(selectedCourses)):
+	newCourse = convertCourseModelToCourseObject(selectedCourses[i], False)
+	if (newCourse != False):
+		handleLabsForCourse(newCourse, newSelectedCourses)
+print "Len newSelectedCourses = " + str(len(newSelectedCourses))
+past = regroupCoursesForPasturize(newSelectedCourses)
+pastLen = len(past)
+for i in range (0, pastLen):
+	print "Print past list number " + str (i)
+	pastSubList = past[i]
+	for j in range (0, len(pastSubList)):
+		pastCourse = pastSubList[j]
+		print "course Title = " + pastCourse.title
+
+
 
 
 #mtList1 = [mt1] 
@@ -113,9 +133,9 @@ s = Schedule()
 #if (meetingTimesConflict(mt1[0], mt1[0])
 #	print "Conflict Mt1,
 
-meetOne = []
-for i in range (0, len(mt1)):
-	meetOne.append(mt1[i])
+#meetOne = []
+#for i in range (0, len(mt1)):
+#	meetOne.append(mt1[i])
 
 #if meetingTimesNewTimesOldTimesFilter(meetOne, meetOne) == []:
 #	print "Conflict Mt1, MT1"
@@ -146,9 +166,16 @@ lockC = schedule.poolOfLockedCourses
 
 for course in output[3]: print course, course.section
 
+
+
 def courseFitsWithMeetingTimeListTest():
-	cFI1 = cmpt165List[1] 
-	cFI2 = MeetingTime.objects.filter(course = 511)
+	
+	cmpt125List = Course.objects.filter(subject="CMPT", number=125)
+	cFI1 = cmpt125List[0] 
+	#cFI1 = cmpt165List[1] 
+	
+	cFI2 = MeetingTime.objects.filter(course = 1)
+	#cFI2 = MeetingTime.objects.filter(course = 511)
 	cFO = courseFitsWithMeetingTimeList(cFI1, cFI2)
 
 	if cFO == []:
@@ -157,7 +184,7 @@ def courseFitsWithMeetingTimeListTest():
 		print "courseFitsWithMeetingTimeList fits = " 
 		print cFO
 
-
+courseFitsWithMeetingTimeListTest()
 #1l, 4l, 5l, 78l, 147l
 
 #c2 = output[1]
