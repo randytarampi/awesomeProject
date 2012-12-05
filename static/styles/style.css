@@ -63,7 +63,52 @@ p {
 	margin: 8px;
 }
 
+ul.instructorsNav {
+	padding: 0;
+	text-align: center;
+}
+
+li.instructorsNav {
+	display: inline;
+}
+
+ul.subjectsNav {
+	padding: 0;
+	text-align: justify;
+}
+
+li.subjectsNav {
+	display: inline;
+}
+
+ul.levelsNav {
+	padding: 0;
+	text-align: center;
+}
+
+li.levelsNav {
+	display: inline;
+}
+
+li.course {
+	padding-top: 10px;
+}
+
+li.subject {
+	padding-top: 10px;
+}
+
+li.instructor {
+	padding-top: 10px;
+}
+
 .conflict {
+	color: red;
+	font-weight: bold;
+	text-align: center;
+}
+
+.wasRejected {
 	color: red;
 	font-weight: bold;
 }
@@ -217,6 +262,7 @@ li.break {
 	width: 170px;
 	text-align: right;
 	overflow: hidden;
+	clear: right;
 }
 
 #sidebar .side li {
@@ -227,9 +273,20 @@ li.break {
 	padding: 0;
 }
 
+#breadCrumbs {
+	padding: 3px;
+	background-color: #6D6D64;
+}
+
+#centre {
+	overflow: hidden;
+}
+
 #content {
 	min-height: 600px;
-	padding: 12px;
+	width: 590px;
+	float: left;
+	padding: 6px 12px 12px 12px;
 	background-color: white;
 	overflow: hidden;
 }

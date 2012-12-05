@@ -46,8 +46,8 @@
 	<div id="navigation">
 	{% block navigation %}
 		<ul class="side">
-			<li><a href="{% url scheduler_index %}">Home</a></li>
-			<li><a href="{% url about_index %}">About</a></li>
+			<li><a href="{% url scheduler_index %}">Scheduler Home</a></li>
+			<li><a href="{% url about_index %}">About the Scheduler</a></li>
 			{% block extranav %}{% endblock %}
 			<li class="break"></li>
 			<li><a href="http://students.sfu.ca/">Student
@@ -66,21 +66,25 @@
 		</ul>
 	{% endblock %}
 	</div>
-	
-	<div id="sidebar">
-		{% block sidebar %}
-		<ul class="side">
-			<li>Loaded at: {% now "g:i a" %}</li>
-			{% block extraside %}{% endblock %}
-			<li>{% now "F jS, Y" %}</li>
-			<li class="break"></li>
-			<li>Data for: Spring 2013</li>
-		</ul>
-		{% endblock %}
-	</div>
 
-	<div id="content">
-		{% block content %}	{% endblock %}
+	<div id="centre">
+		<div id="breadCrumbs">
+			{% block breadCrumbs %}BreadCrumbs PlaceHolder{% endblock %}
+		</div>
+		<div id="content">
+		{% block content %}{% endblock %}
+		</div>
+		<div id="sidebar">
+			{% block sidebar %}
+			<ul class="side">
+				<li>Loaded at: {% now "g:i a" %}</li>
+				{% block extraside %}{% endblock %}
+				<li>{% now "F jS, Y" %}</li>
+				<li class="break"></li>
+				<li>Data for: Spring 2013</li>
+			</ul>
+			{% endblock %}
+		</div>
 	</div>
 {% endblock %}
 </div>

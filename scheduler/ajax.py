@@ -153,6 +153,19 @@ def addUnavailableToSession(request, form):
 		if timeTuple in request.session['timesUnavailable']:
 			dajax.alert('You have already marked %s from %i:%s %s to %i:%s %s as unavailable' % (listOfDays[d], changeFrom24To12(int(form['startHour'])), form['startMinute'], hourIsAMorPM(int(form['startHour'])), changeFrom24To12(int(form['endHour'])), form['endMinute'], hourIsAMorPM(int(form['endHour']))))
 			return dajax.json()
+
+		if goingBackInTime(t1, t2):
+			dajax.alert('The entered time\'s start time is larger than its end time')
+			return dajax.json()
+		if t1.hour == t2.hour:
+			if t1.minute == t2.minute:
+				dajax.alert('The entered time\'s start time is the same as its end time')
+				return dajax.json()
+
+		if overlappingTimes(d, t1, t2, request.session['timesUnavailable']):
+			dajax.alert('The entered time overlaps with a time already in the list')
+			return dajax.json()
+
 		sessionList = request.session['timesUnavailable']
 		sessionList.append(timeTuple)
 	else:
