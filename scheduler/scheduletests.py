@@ -64,23 +64,7 @@ def conradTest():
     	#print createOptimalSchedule(2, testCourseList)
     	return createOptimalSchedule(2, testCourseList, True)
 
-#output = conradTest()
-#simpleTest()
-#Tests for behemoth algorithm output
-output = largeTest()
-meet = output[0]
-for i in range (0, len (meet)):
-	print meet[i].type
-c1 = output[1][0]
-c2 = output[1][1]
-c3 = output[1][2]
-c4 = output[1][3]
-#c5 = output[1][4]
-mt1 = MeetingTime.objects.filter(course = c1.id)
-mt2 = MeetingTime.objects.filter(course = c2.id)
-mt3 = MeetingTime.objects.filter(course = c3.id)
-mt4 = MeetingTime.objects.filter(course = c4.id)
-#mt5 = MeetingTime.objects.filter(course = c5.id)
+
 
 #Testing pasturize
 selectedCourses = Course.objects.filter(subject="CMPT", number=125) | Course.objects.filter(subject="CMPT", number=150) | Course.objects.filter(subject="CMPT", number=165) | Course.objects.filter(subject="MACM", number=201) | Course.objects.filter(subject="POL", number=100)
@@ -100,8 +84,27 @@ for i in range (0, pastLen):
 		pastCourse = pastSubList[j]
 		print "course Title = " + pastCourse.title
 
-
-
+schedule = Schedule()
+compPast = completePasturize(newSelectedCourses, schedule, 4)
+#findPasturizeTopPickDarwinism(listOfPotentialSchedules, schedule):
+bestP = findPasturizeTopPickDarwinism(compPast, schedule)
+#output = conradTest()
+#simpleTest()
+#Tests for behemoth algorithm output
+output = largeTest()
+meet = output[0]
+for i in range (0, len (meet)):
+	print meet[i].type
+c1 = output[1][0]
+c2 = output[1][1]
+c3 = output[1][2]
+c4 = output[1][3]
+#c5 = output[1][4]
+mt1 = MeetingTime.objects.filter(course = c1.id)
+mt2 = MeetingTime.objects.filter(course = c2.id)
+mt3 = MeetingTime.objects.filter(course = c3.id)
+mt4 = MeetingTime.objects.filter(course = c4.id)
+#mt5 = MeetingTime.objects.filter(course = c5.id)
 
 #mtList1 = [mt1] 
 #mtList2 = [mt2]
@@ -184,7 +187,8 @@ def courseFitsWithMeetingTimeListTest():
 		print "courseFitsWithMeetingTimeList fits = " 
 		print cFO
 
-courseFitsWithMeetingTimeListTest()
+#courseFitsWithMeetingTimeListTest()
+
 #1l, 4l, 5l, 78l, 147l
 
 #c2 = output[1]
