@@ -14,7 +14,7 @@ from scheduler.datetimeconverter import *
 #that will be in an optimal schedule
 #def createOptimalSchedule(numberOfCourses, listofCourses):
 	
-def createOptimalSchedule(numberOfCourses, listofNeedsCourses, unavailableMeetingTimes, filterDistanceCourses = False):
+def createOptimalSchedule(numberOfCourses, listofNeedsCourses, listofWantsCourses, unavailableMeetingTimes, filterDistanceCourses = False):
 	schedule = Schedule()
 	#schedule.poolOfLockedCourses = []
    	newListOfNeedsCourses = []
@@ -36,10 +36,10 @@ def createOptimalSchedule(numberOfCourses, listofNeedsCourses, unavailableMeetin
     			#newMeetingTimes = newCourse.meetingTime
 
 
-    	#for i in range (0, len(listofWantsCourses)):
-	#	newCourse = convertCourseModelToCourseObject(listofWantsCourses[i], filterDistanceCourses)
-	#	if (newCourse != False):	
-	#		handleLabsForCourse(newCourse, newListOfWantsCourses)
+    	for i in range (0, len(listofWantsCourses)):
+		newCourse = convertCourseModelToCourseObject(listofWantsCourses[i], filterDistanceCourses)
+		if (newCourse != False):	
+			handleLabsForCourse(newCourse, newListOfWantsCourses)
 
 
 
@@ -49,14 +49,19 @@ def createOptimalSchedule(numberOfCourses, listofNeedsCourses, unavailableMeetin
 	#Handle needs
 	#completePasturize(inputCoursesList, schedule, numberOfCourses):
 	#find top picks for course options
-	#completePasturize(newListOfNeedsCourses, schedule, numberOfCourses)
-	#findPasturizeTopPickDarwinism(listOfPotentialSchedules, schedule):
+	needAlgorithmOutputs = completePasturize(newListOfNeedsCourses, schedule, numberOfCourses)
+	needAlgorithmTopChoices = needAlgorithmOutputs[0]
+	needAlgorithmCutCourses = needAlgorithmOutputs[1]
+	topNeedsCoursePicks = findPasturizeTopPickDarwinism(needAlgorithmOutputs, schedule)
+	pasturizeActOnTopPick(topNeedsCoursePicks, schedule, numberOfCourses)
+	for i in range (0, len(needAlgorithmCutCourses)):
+		schedule.poolOfCutCourses.append(needAlgorithmCutCourses[i])
 	#for i in range (0, numberOfCourses):
         	#iterateBEHEMOTH(schedule, newListOfNeedsCourses, numberOfCourses)
     	#outPutListOfLockedCourses = []	
 	#Handle wants
     	for i in range (0, numberOfCourses):
-        	iterateBEHEMOTH(schedule, newListOfNeedsCourses, numberOfCourses)
+        	iterateBEHEMOTH(schedule, newListOfWantsCourses, numberOfCourses)
     	outPutListOfLockedCourses = []
     	
 		
@@ -69,13 +74,13 @@ def createOptimalSchedule(numberOfCourses, listofNeedsCourses, unavailableMeetin
 		unUsedCourse = unUsedCourseList[i]
 		schedule.poolOfCutCourses.append(unUsedCourse)
 		newListOfNeedsCourses.remove(unUsedCourse)
-	
-	#for i in range (0, len(newListOfWantsCourses)):
-	#	unUsedCourseList.append(newListOfWantsCourses[i])
-	#for i in range (0, len(unUsedCourseList)):
-	#	unUsedCourse = unUsedCourseList[i]
-	#	schedule.poolOfCutCourses.append(unUsedCourse)
-	#	newListOfWantsCourses.remove(unUsedCourse)
+	unUsedCourseList = []
+	for i in range (0, len(newListOfWantsCourses)):
+		unUsedCourseList.append(newListOfWantsCourses[i])
+	for i in range (0, len(unUsedCourseList)):
+		unUsedCourse = unUsedCourseList[i]
+		schedule.poolOfCutCourses.append(unUsedCourse)
+		newListOfWantsCourses.remove(unUsedCourse)
 
 	#Locked meeting times
 	listMeetingTimes = []
@@ -85,16 +90,12 @@ def createOptimalSchedule(numberOfCourses, listofNeedsCourses, unavailableMeetin
 			meetingTime = meetingTimes[j]
 			listMeetingTimes.append(meetingTime)
 	#Locked Courses
-    	outPutListOfCutCourses = []
-	for i in range (0, len(schedule.poolOfCutCourses)):
-		cutCourse = schedule.poolOfCutCourses[i]
-		outputCourse = cutCourse.dataBaseCourse
-		outPutListOfCutCourses.append(outputCourse)
-	#Possible fix to insufficient number of cut classes
-	
-		
-		
-	
+	for i in range (0, len(schedule.poolOfLockedCourses)):
+		lockedCourse = schedule.poolOfLockedCourses[i]
+		outputCourse = lockedCourse.dataBaseCourse		
+       		outPutListOfLockedCourses.append(outputCourse)
+
+
 	
 	#Cut MeetingTimes
 	listCutMeetingTimes = []
@@ -105,11 +106,12 @@ def createOptimalSchedule(numberOfCourses, listofNeedsCourses, unavailableMeetin
 			listCutMeetingTimes.append(meetingTime)
 
 	#Cut Courses
-    	for i in range (0, len(schedule.poolOfLockedCourses)):
-		lockedCourse = schedule.poolOfLockedCourses[i]
-		outputCourse = lockedCourse.dataBaseCourse		
-       		outPutListOfLockedCourses.append(outputCourse)
-	
+	#Possible fix to insufficient number of cut classes
+    	outPutListOfCutCourses = []
+	for i in range (0, len(schedule.poolOfCutCourses)):
+		cutCourse = schedule.poolOfCutCourses[i]
+		outputCourse = cutCourse.dataBaseCourse
+		outPutListOfCutCourses.append(outputCourse)
 	
 	
 	
@@ -717,17 +719,22 @@ def handleOneIterationOfPasturizeExtraHeavy(attemptedAddedCourseList, inputCours
 def completePasturize(inputCoursesList, schedule, numberOfCourses):
 	regroupedCourses = regroupCoursesForPasturize(inputCoursesList)
 	numberOfGroups = len(regroupedCourses)
-	potentialOutPutList = []
+	outPutList = []
 	
 	#handleOneIterationOfPasturize(attemptedAddedCourseList, inputCoursePairingList, schedule)
 	newList = []
 	oldList = [[]]
+	cutCourses = []
 	for i in range (0, numberOfGroups):
 		print "Start iteration of Pasturize, size of oldList = " + str(len(oldList))
 		newList = handleOneIterationOfPasturize(regroupedCourses[i], oldList, schedule)
 		if newList != []:
 			oldList = newList
+		else:
+			cutCourses.append(regroupedCourses[i][0])
 		print "End iteration of Pasturize, size of oldList = " + str(len(oldList))
+	outPutList.append(oldList)
+	outPutList.append(cutCourses)
 	return oldList
 
 
@@ -818,6 +825,21 @@ def evaluateStatsForPasturize(listOfOptionsStats, schedule):
 	#this is the best choice we made
 	return currentPositionOfChoice
     		
+def pasturizeActOnTopPick(topCoursesPicks, schedule, NumberOfCourses):
+	bestCourseOption = topCoursesPicks
+	#Act on those stats
+	bestCourseOptionClone = copy.deepcopy(bestCourseOption)
+	#return bestCourseOption
+	for i in range (0, len (bestCourseOption)):
+		#we lock 0 here because the list gets smaller.. it moves...
+		if i < NumberOfCourses:
+			lockCourse(bestCourseOption[0], schedule, bestCourseOption)
+    		#get the Course that has risen above all others and solidify its position in the schedule
+
+	#for i in range (0, len(topCoursesPicks)):
+	#	courseWeWantToFree = potentialCourses[i]
+	#	freeCourse(courseWeWantToFree, schedule)
+	#return currentChoiceStats
 
 def checkCourseConflictsWithPairing(inputCourse, inputPairingOfCourses, schedule):
 	listCoursesToUnlock = []

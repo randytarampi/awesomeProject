@@ -20,6 +20,7 @@ def largeTest():
 	selectedCourses = Course.objects.filter(subject="CMPT", number=125) | Course.objects.filter(subject="CMPT", number=150) | Course.objects.filter(subject="CMPT", number=165) | Course.objects.filter(subject="MACM", number=201) | Course.objects.filter(subject="POL", number=100)
 	#createOptimalSchedule(5, selectedCourses)
 	cmpt165List = Course.objects.filter(subject="CMPT", number=165)
+	macm201List = Course.objects.filter(subject="MACM", number=201)
 	cmpt125List = Course.objects.filter(subject="CMPT", number=125)
 	cmpt165 = cmpt165List[0]
 	#return createOptimalSchedule(1, cmpt165List)
@@ -41,8 +42,8 @@ def largeTest():
 		for i in range (0, len (startArray)):	
 			unavailableTimeFromArrays = (weekdayArray[i], convertStringToTime(startArray[i]), convertStringToTime(endArray[i]))
 			listUnavailableMeetingTimes.append(unavailableTimeFromArrays)
-	#return createOptimalSchedule(4, cmpt125List, selectedCourses, listUnavailableMeetingTimes)
-	return createOptimalSchedule(4, selectedCourses, listUnavailableMeetingTimes)
+	return createOptimalSchedule(2, cmpt125List, cmpt165List, listUnavailableMeetingTimes)
+	#return createOptimalSchedule(4, selectedCourses, listUnavailableMeetingTimes)
 	
 	
 	
@@ -96,14 +97,14 @@ meet = output[0]
 for i in range (0, len (meet)):
 	print meet[i].type
 c1 = output[1][0]
-c2 = output[1][1]
-c3 = output[1][2]
-c4 = output[1][3]
+#c2 = output[1][1]
+#c3 = output[1][2]
+#c4 = output[1][3]
 #c5 = output[1][4]
 mt1 = MeetingTime.objects.filter(course = c1.id)
-mt2 = MeetingTime.objects.filter(course = c2.id)
-mt3 = MeetingTime.objects.filter(course = c3.id)
-mt4 = MeetingTime.objects.filter(course = c4.id)
+#mt2 = MeetingTime.objects.filter(course = c2.id)
+#mt3 = MeetingTime.objects.filter(course = c3.id)
+#mt4 = MeetingTime.objects.filter(course = c4.id)
 #mt5 = MeetingTime.objects.filter(course = c5.id)
 
 #mtList1 = [mt1] 
