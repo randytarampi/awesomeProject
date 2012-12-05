@@ -296,7 +296,45 @@ def meetingTimesConflict(firstMeetingTime, secondMeetingTime):
 		else:
 			return False
 	return False
+
+#checks if a db course conflicts with a set of meeting Times
+#returns the meeting times of the course....
+#if it is an empty list we coudln't get the course to fit
+def courseFitsWithMeetingTimeList(dbCourse, meetingTimeList):
+	outPutAppropriateTimes = []	
+	course = convertCourseModelToCourseObject(dbCourse, False)
+	lectureMeetingTimes = course.meetingTimes
+	#first check meeting times of the course... they all have to fit with the times
+	#if it works ...add the lecture tiems to the output times to te output  otherwise return blank
+	if  meetingTimesListConflict(lectureMeetingTimes, meetingTimeList) == False:
+		for i in range (0, len(lectureMeetingTimes)):
+			outPutAppropriateTimes.append(lectureMeetingTimes[i])		
+	else:
+		print "courseFitsWithMeetingTimeList lecture conflict"
+		return []
+	#Handle the exam times... all of them have to work
+	examTimes = course.exams
+	if examTimes != []:
+		if  meetingTimesListConflict(examTimes, meetingTimeList) == False:
+			for i in range (0, len(examTimes)):
+				outPutAppropriateTimes.append(examTimes[i])		
+		else:
+			#print "courseFitsWithMeetingTimeList Exam conflict"
+			return []	
+	#Handle the lab times... at least One has to work	
+	labTimes = course.labs
+	if labTimes != []:
+		acceptableLabTimes = meetingTimesNewTimesOldTimesFilter(labTimes, meetingTimeList)
+		if len (acceptableLabTimes) != 0:
+			outPutAppropriateTimes.append(acceptableLabTimes[i])
+		else:
+			#print "courseFitsWithMeetingTimeList lab conflict"
+			return []
+	#return what we have	
+	return outPutAppropriateTimes
+
 		
+	
 
 
 #check if two courses have the same name
