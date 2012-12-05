@@ -14,30 +14,31 @@ from scheduler.datetimeconverter import *
 #that will be in an optimal schedule
 #def createOptimalSchedule(numberOfCourses, listofCourses):
 	
-def createOptimalSchedule(numberOfCourses, listofNeedsCourses, listofWantsCourses, unavailableMeetingTimes, filterDistanceCourses = False):
+def createOptimalSchedule(numberOfCourses, listofWantsCourses, unavailableMeetingTimes, listofNeedsCourses = []):
 	schedule = Schedule()
 	#schedule.poolOfLockedCourses = []
    	newListOfNeedsCourses = []
 	newListOfWantsCourses = []
     	poolOfCutCourses = []
-	for i in range (0, len(listofNeedsCourses)):
-		newCourse = convertCourseModelToCourseObject(listofNeedsCourses[i], filterDistanceCourses)
-		if (newCourse != False):
-	    		#print "Course is acceptable"
-	    		#newListOfCourses.append(newCourse)
-			#This handles labs and appends the course
+	if listofNeedsCourses != []:
+		for i in range (0, len(listofNeedsCourses)):
+			newCourse = convertCourseModelToCourseObject(listofNeedsCourses[i])
+			if (newCourse != False):
+		    		#print "Course is acceptable"
+		    		#newListOfCourses.append(newCourse)
+				#This handles labs and appends the course
 			
-			handleLabsForCourse(newCourse, newListOfNeedsCourses)
-   			#print "size of newListOfCourses =" + str(len(newListOfCourses))
-    			#print "new newlistcourse = " + str(newListOfCourses[0])
-			#handle additional labs
-    			
-			#newCourse = newListOfCourses[0]
-    			#newMeetingTimes = newCourse.meetingTime
+				handleLabsForCourse(newCourse, newListOfNeedsCourses)
+	   			#print "size of newListOfCourses =" + str(len(newListOfCourses))
+	    			#print "new newlistcourse = " + str(newListOfCourses[0])
+				#handle additional labs
+	    			
+				#newCourse = newListOfCourses[0]
+	    			#newMeetingTimes = newCourse.meetingTime
 
 
     	for i in range (0, len(listofWantsCourses)):
-		newCourse = convertCourseModelToCourseObject(listofWantsCourses[i], filterDistanceCourses)
+		newCourse = convertCourseModelToCourseObject(listofWantsCourses[i])
 		if (newCourse != False):	
 			handleLabsForCourse(newCourse, newListOfWantsCourses)
 
@@ -49,13 +50,14 @@ def createOptimalSchedule(numberOfCourses, listofNeedsCourses, listofWantsCourse
 	#Handle needs
 	#completePasturize(inputCoursesList, schedule, numberOfCourses):
 	#find top picks for course options
-	needAlgorithmOutputs = completePasturize(newListOfNeedsCourses, schedule, numberOfCourses)
-	needAlgorithmTopChoices = needAlgorithmOutputs[0]
-	needAlgorithmCutCourses = needAlgorithmOutputs[1]
-	topNeedsCoursePicks = findPasturizeTopPickDarwinism(needAlgorithmOutputs, schedule)
-	pasturizeActOnTopPick(topNeedsCoursePicks, schedule, numberOfCourses)
-	for i in range (0, len(needAlgorithmCutCourses)):
-		schedule.poolOfCutCourses.append(needAlgorithmCutCourses[i])
+	if listofNeedsCourses != []:
+		needAlgorithmOutputs = completePasturize(newListOfNeedsCourses, schedule, numberOfCourses)
+		needAlgorithmTopChoices = needAlgorithmOutputs[0]
+		needAlgorithmCutCourses = needAlgorithmOutputs[1]
+		topNeedsCoursePicks = findPasturizeTopPickDarwinism(needAlgorithmTopChoices, schedule)
+		pasturizeActOnTopPick(topNeedsCoursePicks, schedule, numberOfCourses)
+		for i in range (0, len(needAlgorithmCutCourses)):
+			schedule.poolOfCutCourses.append(needAlgorithmCutCourses[i])
 	#for i in range (0, numberOfCourses):
         	#iterateBEHEMOTH(schedule, newListOfNeedsCourses, numberOfCourses)
     	#outPutListOfLockedCourses = []	
@@ -194,7 +196,7 @@ def handleLabsForCourse(inputCourse, listofCourses):
 #Turns a course model object into a course object that we can use in the scheduler
 #Converts : course from database --> course usable by scheduler
 #def convertCourseModelToCourseObject(inputCourse):
-def convertCourseModelToCourseObject(inputCourse, filterDistanceCourses):
+def convertCourseModelToCourseObject(inputCourse):
     	id = inputCourse.id		
     	listofmeetingTimes = MeetingTime.objects.filter(course = id)
 	#Filters out distance courses	
@@ -271,6 +273,9 @@ def checkCourseConflict(course, schedule):
 
 #check to see if the coures conflicts with the schedule
 def checkCourseTimeConflict(course, schedule):
+	#print "checkCourseTimeConflict course=="
+	#print course
+	#print "checkCourseTimeConflict"
 	campus = course.campus
 
     	for i in range (0, len(course.meetingTimes)):
@@ -344,8 +349,8 @@ def meetingTimesConflict(firstMeetingTime, secondMeetingTime):
 
 
 def courseFitsWithMeetingTimeList(dbCourse, meetingTimeList):
-	algorithmCourse = convertCourseModelToCourseObject(dbCourse, False)
-	courseFromAlgorithmFitsWithMeetingTimeList(algorithmCourse, meetingTimeList)
+	algorithmCourse = convertCourseModelToCourseObject(dbCourse)
+	return courseFromAlgorithmFitsWithMeetingTimeList(algorithmCourse, meetingTimeList)
 	
 def courseFromAlgorithmFitsWithMeetingTimeList(course, meetingTimeList):
 	outPutAppropriateTimes = []	
@@ -357,7 +362,7 @@ def courseFromAlgorithmFitsWithMeetingTimeList(course, meetingTimeList):
 		for i in range (0, len(lectureMeetingTimes)):
 			outPutAppropriateTimes.append(lectureMeetingTimes[i])		
 	else:
-		#print "courseFitsWithMeetingTimeList lecture conflict"
+		print "courseFitsWithMeetingTimeList lecture conflict"
 		return []
 	#Handle the exam times... all of them have to work
 	examTimes = course.exams
@@ -366,7 +371,7 @@ def courseFromAlgorithmFitsWithMeetingTimeList(course, meetingTimeList):
 			for i in range (0, len(examTimes)):
 				outPutAppropriateTimes.append(examTimes[i])		
 		else:
-			#print "courseFitsWithMeetingTimeList Exam conflict"
+			print "courseFitsWithMeetingTimeList Exam conflict"
 			return []	
 	#Handle the lab times... at least One has to work	
 	labTimes = course.labs
@@ -376,7 +381,7 @@ def courseFromAlgorithmFitsWithMeetingTimeList(course, meetingTimeList):
 			for i in range (0, len(acceptableLabTimes)):
 				outPutAppropriateTimes.append(acceptableLabTimes[i])
 		else:
-			#print "courseFitsWithMeetingTimeList lab conflict"
+			print "courseFitsWithMeetingTimeList lab conflict"
 			return []
 	#return what we have	
 	return outPutAppropriateTimes
@@ -735,7 +740,9 @@ def completePasturize(inputCoursesList, schedule, numberOfCourses):
 		print "End iteration of Pasturize, size of oldList = " + str(len(oldList))
 	outPutList.append(oldList)
 	outPutList.append(cutCourses)
-	return oldList
+	print "completePasturize len(outPutList)"
+	#print "completePasturize len(outPutList)"
+	return outPutList
 
 
 #for each pairing of two
@@ -760,12 +767,18 @@ def handleOneIterationOfPasturize(attemptedAddedCourseList, inputCoursePairingLi
 #Finds the best solution out of the picks we have				
 def findPasturizeTopPickDarwinism(listOfPotentialSchedules, schedule):
 	numberOfOptions = len(listOfPotentialSchedules)
+	print "findPasturizeTopPickDarwinism, numberOfOptions == " + str(numberOfOptions)
+	print "findPasturizeTopPickDarwinism, listOfPotentialSchedules[0] == " 
+	print listOfPotentialSchedules[0]
+	#print "findPasturizeTopPickDarwinism, listOfPotentialSchedules[1] == " + str(numberOfOptions)
+	print listOfPotentialSchedules[1]
 	#gather stats
 	listOfOptionsStats = []
 	if numberOfOptions >= 1:	
 		for i in range (numberOfOptions):
-			currentOption = listOfPotentialSchedules[i]
-			listOfOptionsStats.append(gatherStatsOnPotentialCourseSchedule(currentOption, schedule))
+			currentOptionOfCourses = listOfPotentialSchedules[i]
+			currentStats = gatherStatsOnPotentialCourseSchedule(currentOptionOfCourses, schedule)
+			listOfOptionsStats.append(currentStats)
 
 	#evaluate stats
 	#only use options with the greatest number of options
@@ -782,7 +795,18 @@ def findPasturizeTopPickDarwinism(listOfPotentialSchedules, schedule):
 	
 
 def gatherStatsOnPotentialCourseSchedule(potentialCourses, schedule):
-	#set the courses	
+	#set the courses
+	#print "gatherStatsOnPotentialCourseSchedule potentialCourses [0] == " 
+	#print potentialCourses[0]
+	#print "gatherStatsOnPotentialCourseSchedule len(potentialCourses) == " + str(len(potentialCourses))
+	#print "gatherStatsOnPotentialCourseSchedule potentialCourses [1] == "
+	#print potentialCourses[1]
+	#print "gatherStatsOnPotentialCourseSchedule potentialCourses [0][0] == "
+	#print potentialCourses[0][0]
+	#print potentialCourses[0][0][0]
+	#print "gatherStatsOnPotentialCourseSchedule"
+	#print "gatherStatsOnPotentialCourseSchedule campus == " + potentialCourses[0].campus
+	
 	for i in range (0, len(potentialCourses)):
 		courseWeWantToSet = potentialCourses[i]
 		setCourse(courseWeWantToSet, schedule)
