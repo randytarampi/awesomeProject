@@ -11,6 +11,8 @@ from scheduler.ajax import *
 def index(request):
 	context = {}
 	
+	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
 	allSubjects = Course.objects.values_list('subject', flat=True).distinct()
 
 	# Using the 0-th element so that any set of data will give the first element. This is using the same query as in ajax.py
@@ -28,20 +30,17 @@ def index(request):
 			instructorsCourses.append(j)
 
 	# If session data already exists, list it out on first load of the page
-	sessionCourses = []
 	if 'byCourse' in request.session:
-		for i in request.session['byCourse']:
-			sessionCourses.append(i)
+		context['byCourse'] = request.session['byCourse']
 
-	sessionCoursesByProf = []
 	if 'byProf' in request.session:
-		for i in request.session['byProf']:
-			sessionCoursesByProf.append(i)
+		context['byProf'] = request.session['byProf']
 
-	sessionTimes = []
+	dayTupleList = []
 	if 'timesUnavailable' in request.session:
-		for i in request.session['timesUnavailable']:
-			sessionTimes.append(i)
+		for x in request.session['timesUnavailable']:
+			dayTupleList.append((x[0], x[1], x[2], listOfDays[x[0]]))
+		context['timesUnavailable'] = dayTupleList
 
 	# Build the context
 	if 'processedData' in request.session:
@@ -52,10 +51,6 @@ def index(request):
 	context['initNums'] = initialNumbers
 	context['initProfs'] = initialProfs
 	context['initNumsByProf'] = instructorsCourses
-
-	context['byCourse'] = sessionCourses
-	context['byProf'] = sessionCoursesByProf
-	context['timesUnavailable'] = sessionTimes
 
 	return render_to_response('schedulerIndex.html', context, context_instance=RequestContext(request))
 

@@ -148,16 +148,34 @@
 	<div id="coursesCart">
 		<h3>Added Courses:</h3>
 		<ul id="addCourseList">
-			<span>There are no courses specified by subject and number.</span>
+			{% if byCourse %}
+				{% for i in byCourse %}
+					<li>{{ i.0 }} {{ i.1 }} <a onclick="Dajaxice.scheduler.deleteCourseFromSession(Dajax.process, { 'course':'{{ i.0 }}', 'number':'{{ i.1 }}' })">remove</a></li>
+				{% endfor %}
+			{% else %}
+				<span>There are no courses specified by subject and number.</span>
+			{% endif %}
 		</ul>
 		<ul id="addCourseByProfList">
-			<span>There are no courses specified with respect to instructor.</span>
+			{% if byProf %}
+				{% for i in byProf %}
+					<li>{{ i.0 }} {{ i.2 }} taught by: {{ i.1 }} <a onclick="Dajaxice.scheduler.deleteCourseByProfFromSession(Dajax.process, { 'course':'{{ i.0 }}', 'prof':'{{ i.1 }}', 'number':'{{ i.2 }}' })">remove</a></li>
+				{% endfor %}
+			{% else %}
+				<span>There are no courses specified with respect to instructor.</span>
+			{% endif %}
 		</ul>
 	</div>
 	<div id="unavailableTimesCart">
 		<h3>Times You Are Unavailable:</h3>
 		<ul id="addTimeList">
-			<span>There are no times specified.</span>
+			{% if timesUnavailable %}
+				{% for i,j,k,l in timesUnavailable %}
+					<li>{{ l }} from {{ j }} to {{ k }} <a onclick="Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'{{ i }}', 'startMinute':'{{ j.minute }}', 'startHour':'{{ j.hour }}', 'endMinute':'{{ k.minute }}', 'endHour':'{{ k.hour }}' })">remove</a></li>
+				{% endfor %}
+			{% else %}
+				<span>There are no times specified.</span>
+			{% endif %}
 		</ul>
 	</div>
 </div>
