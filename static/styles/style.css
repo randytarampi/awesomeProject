@@ -68,6 +68,10 @@ p {
 	font-weight: bold;
 }
 
+.proposed {
+	font-weight: bold;
+}
+
 .fullSchedule {
 	height: 100%;
 	width: 100%;
