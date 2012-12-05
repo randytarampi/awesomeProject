@@ -322,7 +322,7 @@ def generateSchedule(request, form):
 			timesUnavailable = timesUnavailable.append(time)
 
 	# Process the data
-	processedCourses = createOptimalSchedule(numClasses, selectedCourses)
+	processedCourses = createOptimalSchedule(numClasses, selectedCourses, timesUnavailable)
 
 	optimalCourses = processedCourses[1]
 	optimalInstructors = Instructor.objects.filter(course__in = optimalCourses)	
@@ -336,7 +336,7 @@ def generateSchedule(request, form):
 	processedData = {'optimalCourses': optimalCourses, 'optimalInstructors': optimalInstructors, 'optimalMeetingTimes': optimalMeetingTimes, 'optimalExamTimes': optimalExamTimes, 'rejectedCourses': rejectedCourses, 'rejectedInstructors': rejectedInstructors, 'rejectedMeetingTimes': rejectedMeetingTimes}
 	request.session['processedData'] = processedData
 	processedData['scheduledHTML'] = weeklySchedule(optimalMeetingTimes)
-	
+
 	# Serve the data
 	dajax.assign('#scheduleViewDiv', 'innerHTML', render_to_response('schedulerSchedule.html', processedData).content)
 	dajax.script('$(\'#scheduleViewDiv\').activity(false);')
