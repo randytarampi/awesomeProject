@@ -37,9 +37,12 @@
 </div>
 <div id="courseSchedule">
 <h1>Your Projected Schedule</h1>
+{% if scheduledConflict and course not in scheduledCourses %}
+<ul><h3 class="conflict">{{ scheduledConflict }}</h3></ul>
+{% endif %}
 <div id="existingSchedule">		
 {% if scheduledCourses %}
-<ul class="scheduled courses">
+<ol class="scheduled courses">
 {% for course in scheduledCourses %}
 	<li><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
 	<ul class="scheduled course">
@@ -63,8 +66,9 @@
 			</ul>
 	</ul>
 {% endfor %}
-</ul>
+</ol>
 {% endif %}
+{% if course not in scheduledCourses %}
 <ul class="proposed courses">
 	{% if not scheduledConflict %}
 		<li><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
@@ -88,32 +92,31 @@
 			{% endfor %}
 			</ul>
 	</ul>
-	{% else %}
-		{% if not course in scheduledCourses %}<li><span class="conflict">{{ scheduledConflict }}</span></li>{% endif %}
 	{% endif %}
 </ul>
+{% endif %}
 </div>
 <h2>Your Exam Schedule</h2>
 <div id="scheduleViewExams">
-	{% if not scheduledExamTimes and not proposedExamTimes %}
+	{% if scheduledExamTimes %}
 		<ol class="scheduled exams">
 		{% for meetingTime in scheduledExamTimes %}
 			<li class="exam">{{ meetingTime.course.subject}} {{ meetingTime.course.number}} {{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
 		{% endfor %}
 		</ol>
+	{% endif %}
+	{% if course not in scheduledCourses %}
 		<ul class="proposed exams">
 		{% for meetingTime in proposedExamTimes %}
 			<li class="proposed exam">{{ meetingTime.course.subject}} {{ meetingTime.course.number}} {{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
 		{% endfor %}
 		</ul>
-	{% else %}
+	{% endif %}
+	{% if not scheduledExamTimes and not proposedExamTimes %}
 		<span class="noexam">No Exams Scheduled!</span>
 	{% endif %}
 </div>
 <h2>Your Projected Week</h2>
-{% if scheduledConflict and course not in scheduledCourses %}
-<ul><li><span class="conflict">{{ scheduledConflict }}</span></li></ul>
-{% endif %}
 <table id="scheduleTable">
 	<colgroup span="1" width="10%" align="center" valign="center"></colgroup>
 	<colgroup span="6" width="15%" align="center" valign="center"></colgroup>
