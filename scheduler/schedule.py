@@ -195,7 +195,7 @@ def checkIfTimeDayConflictV2(startTime, endTime, timeSlotArray, campus):
 		#make sure that if we set the course we aren't preventing the student from getting to later classes	
 		for i in range (endTime+1, endTime+7):
 			if i < 144:
-				burnabyListOfPossibleSlots = [0,1,2,3,4,5]
+				burnabyListOfPossibleSlots = [0,1,2,3,4,5,12]
 				if timeSlotArray[i] not in burnabyListOfPossibleSlots:
 		    			return True
 		return False	        
@@ -209,7 +209,7 @@ def checkIfTimeDayConflictV2(startTime, endTime, timeSlotArray, campus):
 		
 		for i in range (endTime+1, endTime+7):
 			if i < 144:
-				surreyListOfPossibleSlots = [0,1,2,6,7,8]
+				surreyListOfPossibleSlots = [0,1,2,6,7,8, 12]
 				if timeSlotArray[i] not in surreyListOfPossibleSlots:
 		    			return True
 		return False	
@@ -223,7 +223,7 @@ def checkIfTimeDayConflictV2(startTime, endTime, timeSlotArray, campus):
 		
 		for i in range (endTime+1, endTime+7):
 			if i < 144:
-				vancouverListOfPossibleSlots = [0,1,2,9,10,11]
+				vancouverListOfPossibleSlots = [0,1,2,9,10,11, 12]
 				if timeSlotArray[i] not in vancouverListOfPossibleSlots:
 		    			return True
 		return False	
@@ -335,7 +335,7 @@ def lockSlotThrough(startTime, endTime, timeSlotArray):
 		timeSlotArray[x] = 2
 def lockSlotThroughUnavailable(startTime, endTime, timeSlotArray):	
 	for x in range (startTime, endTime):
-		timeSlotArray[x] = 2
+		timeSlotArray[x] = 12#12 = unavailable...
 
 def setSlotThrough(startTime, endTime, timeSlotArray):
     	for x in range (startTime, endTime+1):

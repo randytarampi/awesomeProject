@@ -153,7 +153,6 @@ def handleUnavailableMeetingTimes(unavailableMeetingTimes, schedule):
 		weekday = unavailableMeetingTime[0]	
 		startTime = convertTimeToTimeSlot(unavailableMeetingTime[1])
 		endTime = convertTimeToTimeSlot(unavailableMeetingTime[2])
-		#lockMeetingTime #startTime, endTime, weekday):
 		#Locks the schedule through to a certain point...
 		schedule.lockMeetingTimeUnavailable(startTime, endTime, weekday)
 		#def lockMeetingTimeUnavailable(self, startTime, endTime, weekday):
@@ -398,7 +397,6 @@ def examConflict(examOne, examTwo):
 		exam1EndTime = convertTimeToTimeSlot(examOne.end_time)
 		exam2StartTime = convertTimeToTimeSlot(examTwo.start_time)
 		exam2EndTime = convertTimeToTimeSlot(examTwo.end_time)
-		#if timeConflict(examOne.startTime, examOne.endTime, examTwo.startTime, examTwo.endTime) == True:
 		if timeConflict(exam1StartTime, exam1EndTime, exam2StartTime, exam2EndTime) == True:
 			#print "examConflict()..."
 	    		return True
@@ -422,7 +420,6 @@ def lockCourse(course, schedule, poolOfPotentialCourses):
         	for i in range (0, len(course.meetingTimes)):
             		meetingTime = course.meetingTimes[i]
             		#print "Locking MeetingTime"
-            		#schedule.lockMeetingTime(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday)
 			startTime = convertTimeToTimeSlot(meetingTime.start_time)
 			endTime = convertTimeToTimeSlot(meetingTime.end_time)
 	    		#schedule.lockMeetingTimeCampus(meetingTime.startTime, meetingTime.endTime, meetingTime.weekday, campus)
