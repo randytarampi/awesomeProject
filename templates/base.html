@@ -66,21 +66,25 @@
 		</ul>
 	{% endblock %}
 	</div>
-	
-	<div id="sidebar">
-		{% block sidebar %}
-		<ul class="side">
-			<li>Loaded at: {% now "g:i a" %}</li>
-			{% block extraside %}{% endblock %}
-			<li>{% now "F jS, Y" %}</li>
-			<li class="break"></li>
-			<li>Data for: Spring 2013</li>
-		</ul>
-		{% endblock %}
-	</div>
 
-	<div id="content">
-		{% block content %}	{% endblock %}
+	<div id="centre">
+		<div id="breadCrumbs">
+			{% block breadCrumbs %}BreadCrumbs PlaceHolder{% endblock %}
+		</div>
+		<div id="content">
+		{% block content %}{% endblock %}
+		</div>
+		<div id="sidebar">
+			{% block sidebar %}
+			<ul class="side">
+				<li>Loaded at: {% now "g:i a" %}</li>
+				{% block extraside %}{% endblock %}
+				<li>{% now "F jS, Y" %}</li>
+				<li class="break"></li>
+				<li>Data for: Spring 2013</li>
+			</ul>
+			{% endblock %}
+		</div>
 	</div>
 {% endblock %}
 </div>

@@ -108,6 +108,11 @@ li.instructor {
 	text-align: center;
 }
 
+.wasRejected {
+	color: red;
+	font-weight: bold;
+}
+
 .proposed {
 	font-weight: bold;
 }
@@ -257,6 +262,7 @@ li.break {
 	width: 170px;
 	text-align: right;
 	overflow: hidden;
+	clear: right;
 }
 
 #sidebar .side li {
@@ -267,9 +273,20 @@ li.break {
 	padding: 0;
 }
 
+#breadCrumbs {
+	padding: 3px;
+	background-color: #6D6D64;
+}
+
+#centre {
+	overflow: hidden;
+}
+
 #content {
 	min-height: 600px;
-	padding: 12px;
+	width: 590px;
+	float: left;
+	padding: 6px 12px 12px 12px;
 	background-color: white;
 	overflow: hidden;
 }

@@ -1,6 +1,6 @@
 function jQueryEffects() {
 	// Rejected Courses & Times
-	$("li.rejected").toggle(
+	$("li.rejected.collapsible").toggle(
 		function() {
 			$(this).next().show('fast');
 			$(this).removeClass('toggleExpand');
@@ -14,7 +14,7 @@ function jQueryEffects() {
  	);
  	
  	// Optimal Courses
-	$("li.optimal").toggle(
+	$("li.optimal.collapsible").toggle(
 		function() {
 			$(this).next().hide('slow');
 			$(this).removeClass('toggleCollapse');
@@ -31,7 +31,7 @@ function jQueryEffects() {
 $(document).ready(
 	function () {
 		// Rejected Courses & Times
-		$("li.rejected").toggle(
+		$("li.rejected.collapsible").toggle(
 			function() {
 				$(this).next().show('fast');
 				$(this).removeClass('toggleExpand');
@@ -45,7 +45,7 @@ $(document).ready(
 	 	);
 	 	
 	 	// Optimal Courses
-		$("li.optimal").toggle(
+		$("li.optimal.collapsible").toggle(
 			function() {
 				$(this).next().hide('slow');
 				$(this).removeClass('toggleCollapse');

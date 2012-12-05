@@ -20,8 +20,15 @@ def largeTest():
 	selectedCourses = Course.objects.filter(subject="CMPT", number=125) | Course.objects.filter(subject="CMPT", number=150) | Course.objects.filter(subject="CMPT", number=165) | Course.objects.filter(subject="MACM", number=201) | Course.objects.filter(subject="POL", number=100)
 	#createOptimalSchedule(5, selectedCourses)
 	cmpt165List = Course.objects.filter(subject="CMPT", number=165)
+	macm201List = Course.objects.filter(subject="MACM", number=201)
 	cmpt125List = Course.objects.filter(subject="CMPT", number=125)
-	cmpt165 = cmpt165List[0]
+	cmpt150List = Course.objects.filter(subject="CMPT", number=150)
+
+	pol349List = Course.objects.filter(subject="POL", number=349)
+	pol433List = Course.objects.filter(subject="POL", number=443)
+	selectedPolCourses = pol349List|pol433List|cmpt150List
+	#cmpt125List = Course.objects.filter(subject="CMPT", number=125)
+	#cmpt165 = cmpt165List[0]
 	#return createOptimalSchedule(1, cmpt165List)
 	
 
@@ -41,8 +48,10 @@ def largeTest():
 		for i in range (0, len (startArray)):	
 			unavailableTimeFromArrays = (weekdayArray[i], convertStringToTime(startArray[i]), convertStringToTime(endArray[i]))
 			listUnavailableMeetingTimes.append(unavailableTimeFromArrays)
-	#return createOptimalSchedule(4, cmpt125List, selectedCourses, listUnavailableMeetingTimes)
-	return createOptimalSchedule(4, selectedCourses, listUnavailableMeetingTimes)
+	#return createOptimalSchedule(2, cmpt125List, listUnavailableMeetingTimes, selectedCourses)
+	return createOptimalSchedule(3, selectedPolCourses, listUnavailableMeetingTimes)
+	
+	#return createOptimalSchedule(4, selectedCourses, listUnavailableMeetingTimes)
 	
 	
 	
@@ -71,7 +80,7 @@ selectedCourses = Course.objects.filter(subject="CMPT", number=125) | Course.obj
 print "Len selectedCourses = " + str(len(selectedCourses))
 newSelectedCourses = []
 for i in range (0, len(selectedCourses)):
-	newCourse = convertCourseModelToCourseObject(selectedCourses[i], False)
+	newCourse = convertCourseModelToCourseObject(selectedCourses[i])
 	if (newCourse != False):
 		handleLabsForCourse(newCourse, newSelectedCourses)
 print "Len newSelectedCourses = " + str(len(newSelectedCourses))
@@ -87,23 +96,39 @@ for i in range (0, pastLen):
 schedule = Schedule()
 compPast = completePasturize(newSelectedCourses, schedule, 4)
 #findPasturizeTopPickDarwinism(listOfPotentialSchedules, schedule):
-bestP = findPasturizeTopPickDarwinism(compPast, schedule)
+bestP = findPasturizeTopPickDarwinism(compPast[0], schedule)
 #output = conradTest()
 #simpleTest()
 #Tests for behemoth algorithm output
 output = largeTest()
+
+
+
+# tests for bug
+cmpt150List = Course.objects.filter(subject="CMPT", number=150)
+#
+cmpt150 = cmpt150List[0]
+for i in range (0, len(cmpt150List)):
+	print "courseFitsWithMeetingTimeList " + str(i)
+	print courseFitsWithMeetingTimeList(cmpt150List[i],output[0])
+#conradsBug = courseFitsWithMeetingTimeList(cmpt150,output[0])
+
+# tests
+
+
+
 meet = output[0]
 for i in range (0, len (meet)):
 	print meet[i].type
 c1 = output[1][0]
-c2 = output[1][1]
-c3 = output[1][2]
-c4 = output[1][3]
+#c2 = output[1][1]
+#c3 = output[1][2]
+#c4 = output[1][3]
 #c5 = output[1][4]
 mt1 = MeetingTime.objects.filter(course = c1.id)
-mt2 = MeetingTime.objects.filter(course = c2.id)
-mt3 = MeetingTime.objects.filter(course = c3.id)
-mt4 = MeetingTime.objects.filter(course = c4.id)
+#mt2 = MeetingTime.objects.filter(course = c2.id)
+#mt3 = MeetingTime.objects.filter(course = c3.id)
+#mt4 = MeetingTime.objects.filter(course = c4.id)
 #mt5 = MeetingTime.objects.filter(course = c5.id)
 
 #mtList1 = [mt1] 
@@ -129,7 +154,7 @@ sunday = schedule.sundayTimeSlotAvailability
 
 
 c = Course.objects.get(id = 2562)
-ac = convertCourseModelToCourseObject(c, False)
+ac = convertCourseModelToCourseObject(c)
 s = Schedule()
 
 
