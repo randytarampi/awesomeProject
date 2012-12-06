@@ -90,14 +90,14 @@ function addUnavailableToSession() {
 	return false;
 }
 
-function deleteCourseFromSession(course, number) {
-	Dajaxice.scheduler.deleteCourseFromSession(Dajax.process, {'course':course, 'number':number});
+function deleteCourseFromSession(course, number, title) {
+	Dajaxice.scheduler.deleteCourseFromSession(Dajax.process, {'course':course, 'number':number, 'title':title});
 	Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
 	return false;
 }
 
-function deleteCourseByProfFromSession(course, prof, number) {
-	Dajaxice.scheduler.deleteCourseByProfFromSession(Dajax.process, {'course':course, 'prof':prof, 'number':number});
+function deleteCourseByProfFromSession(course, prof, number, title) {
+	Dajaxice.scheduler.deleteCourseByProfFromSession(Dajax.process, {'course':course, 'prof':prof, 'number':number, 'title':title});
 	Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
 	return false;
 }

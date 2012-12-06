@@ -129,7 +129,7 @@
 	<form id="scheduleForm" method="POST">
 	{% csrf_token %}
 		<div>
-			Of the selected classes, how many are you considering?
+			How many classes do you want to take next semester?
 			<select id="numClasses" name="numClasses" size="1">
 			</select>
 		</div>
@@ -143,7 +143,7 @@
 		<ul id="addCourseList">
 			{% if byCourse %}
 				{% for i in byCourse %}
-					<li>{{ i.0 }} {{ i.1 }} <a onclick="deleteCourseFromSession('{{ i.0 }}', '{{ i.1 }}')">remove</a></li>
+					<li>{{ i.0 }} {{ i.1 }} - {{ i.2 }} <a onclick="deleteCourseFromSession('{{ i.0 }}', '{{ i.1 }}', '{{ i.2}}')">remove</a></li>
 				{% endfor %}
 			{% else %}
 				<span>There are no courses specified by subject and number.</span>
@@ -152,7 +152,7 @@
 		<ul id="addCourseByProfList">
 			{% if byProf %}
 				{% for i in byProf %}
-					<li>{{ i.0 }} {{ i.2 }} taught by: {{ i.1 }} <a onclick="deleteCourseByProfFromSession('{{ i.0 }}', '{{ i.1 }}', '{{ i.2 }}')">remove</a></li>
+					<li>{{ i.0 }} {{ i.2 }} - {{ i.3 }}, taught by: {{ i.1 }} <a onclick="deleteCourseByProfFromSession('{{ i.0 }}', '{{ i.1 }}', '{{ i.2 }}', '{{ i.3 }}')">remove</a></li>
 				{% endfor %}
 			{% else %}
 				<span>There are no courses specified with respect to instructor.</span>

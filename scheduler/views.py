@@ -21,7 +21,7 @@ def index(request):
 
 	# More initial values, w.r.t. instructor form this time 	
 	c = Course.objects.filter(subject=firstSubject)
-	initialProfs = Instructor.objects.filter(course__in=c).order_by('last_name').distinct()
+	initialProfs = Instructor.objects.filter(course__in=c).exclude(first_name__startswith=".").order_by('last_name').distinct()
 
 	instructorsCourses = []
 	d = Instructor.objects.filter(userid=initialProfs[0])
