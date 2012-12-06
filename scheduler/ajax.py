@@ -100,7 +100,7 @@ def addCourseToSession(request, form):
 
 	if 'byCourse' in request.session:
 		if courseTuple in request.session['byCourse']:
-			dajax.alert('You have already selected %s %s - %s!' % courseTuple)
+			dajax.assign('#warningDiv', 'innerHTML', 'You have already selected %s %s - %s!' % courseTuple)
 			return dajax.json()
 		sessionList = request.session['byCourse']
 		sessionList.append(courseTuple)
@@ -147,7 +147,7 @@ def addCourseByProfToSession(request, form):
 	
 	if 'byProf' in request.session:
 		if courseTuple in request.session['byProf']:
-			dajax.alert('You have already selected %s %s - %s, with %s %s!' % (courseTuple[0], courseTuple[2], courseTuple[3], courseTuple[4], courseTuple[5]))
+			dajax.assign('#warningDiv', 'innerHTML', 'You have already selected %s %s - %s, taught by: %s %s!' % (courseTuple[0], courseTuple[2], courseTuple[3], courseTuple[4], courseTuple[5]))
 			return dajax.json()
 		sessionList = request.session['byProf']
 		sessionList.append(courseTuple)
@@ -206,20 +206,16 @@ def addUnavailableToSession(request, form):
 	timeTuple = (d, t1, t2, listOfDays[d])
 	
 	if 'timesUnavailable' in request.session:
-		if timeTuple in request.session['timesUnavailable']:
-			dajax.alert('You have already marked %s from %i:%s %s to %i:%s %s as unavailable' % (listOfDays[d], changeFrom24To12(int(form['startHour'])), form['startMinute'], hourIsAMorPM(int(form['startHour'])), changeFrom24To12(int(form['endHour'])), form['endMinute'], hourIsAMorPM(int(form['endHour']))))
-			return dajax.json()
-
 		if goingBackInTime(t1, t2):
-			dajax.alert('The entered time\'s start time is larger than its end time')
+			dajax.assign('#warningDiv', 'innerHTML', 'The entered time\'s start time is larger than its end time!')
 			return dajax.json()
 		if t1.hour == t2.hour:
 			if t1.minute == t2.minute:
-				dajax.alert('The entered time\'s start time is the same as its end time')
+				dajax.assign('#warningDiv', 'innerHTML', 'The entered time\'s start time is the same as its end time!')
 				return dajax.json()
 
 		if overlappingTimes(d, t1, t2, request.session['timesUnavailable']):
-			dajax.alert('The entered time overlaps with a time already in the list')
+			dajax.assign('#warningDiv', 'innerHTML', 'The entered time overlaps with a time already in the list!')
 			return dajax.json()
 
 		sessionList = request.session['timesUnavailable']
