@@ -131,6 +131,9 @@
 		<div>
 			How many classes do you want to take next semester?
 			<select id="numClasses" name="numClasses" size="1">
+				{% for i in numCourses %}
+					<option value="{{ i }}">{{ i }}</option>
+				{% endfor %}
 			</select>
 		</div>
 		<input id="scheduleSubmit" type="button" value="Generate Schedule" onclick="generateSchedule()"/>
