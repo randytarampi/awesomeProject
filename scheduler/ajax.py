@@ -58,6 +58,7 @@ def flushSessionData(request):
 	dajax.assign('#addCourseByProfList', 'innerHTML', '<span>There are no courses specified with respect to instructor.</span>')
 	dajax.clear('#addCourseByIDList', 'innerHTML')
 	dajax.assign('#addTimeList', 'innerHTML', '<span>There are no times specified.</span>')
+	dajax.clear('#warningDiv', 'innerHTML')
 
 	return dajax.json()
 
@@ -74,6 +75,7 @@ def deleteCourseByIDFromSession(request, courseID, subj, numb, titl, sect):
 		out.append("<li>%s %s - %s, %s <a onclick=\"deleteCourseByIDFromSession('%s', '%s', '%s', '%s', '%s')\">(remove)</a></li>" % (i[1], i[2], i[3], i[4], i[0], i[1], i[2], i[3], i[4]))
 
 	dajax.assign('#addCourseByIDList', 'innerHTML', ''.join(out))
+	dajax.clear('#warningDiv', 'innerHTML')
 
 	return dajax.json()
 
@@ -93,6 +95,7 @@ def deleteCourseFromSession(request, course, number, title):
 		out.append("<span>There are no courses specified by subject and number.</span>")
 
 	dajax.assign('#addCourseList', 'innerHTML', ''.join(out))
+	dajax.clear('#warningDiv', 'innerHTML')
 
 	return dajax.json()
 
@@ -119,6 +122,7 @@ def addCourseToSession(request, form):
 		out.append("<li>%s %s - %s <a onclick=\"deleteCourseFromSession('%s', '%s', '%s')\">(remove)</a></li>" % (i[0], i[1], i[2], i[0], i[1], i[2]))
 
 	dajax.assign('#addCourseList', 'innerHTML', ''.join(out))
+	dajax.clear('#warningDiv', 'innerHTML')
 
 	return dajax.json()
 
@@ -138,6 +142,7 @@ def deleteCourseByProfFromSession(request, course, prof, number, title, firstNam
 		out.append("<span>There are no courses specified with respect to instructor.</span>")
 
 	dajax.assign('#addCourseByProfList', 'innerHTML', ''.join(out))
+	dajax.clear('#warningDiv', 'innerHTML')
 
 	return dajax.json()
 
@@ -166,6 +171,7 @@ def addCourseByProfToSession(request, form):
 		out.append("<li>%s %s - %s, taught by: %s %s <a onclick=\"deleteCourseByProfFromSession('%s', '%s', '%s', '%s', '%s', '%s')\">(remove)</a></li>" % (i[0], i[2], i[3], i[4], i[5], i[0], i[1], i[2], i[3], i[4], i[5]))
 
 	dajax.assign('#addCourseByProfList', 'innerHTML', ''.join(out))
+	dajax.clear('#warningDiv', 'innerHTML')
 
 	return dajax.json()
 
@@ -198,6 +204,7 @@ def deleteUnavailableFromSession(request, day, startMinute, startHour, endMinute
 		out.append("<span>There are no times specified.</span>")
 
 	dajax.assign('#addTimeList', 'innerHTML', ''.join(out))
+	dajax.clear('#warningDiv', 'innerHTML')
 
 	return dajax.json()
 
@@ -246,6 +253,7 @@ def addUnavailableToSession(request, form):
 		out.append("<li>%s from %s:%s %s to %s:%s %s <a onclick=\"Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'%s', 'startMinute':'%s', 'startHour':'%s', 'endMinute':'%s', 'endHour':'%s' })\">(remove)</a></li>" % (i[3], changeFrom24To12(i[1].hour), firstMinute, hourIsAMorPM(i[1].hour), changeFrom24To12(i[2].hour), lastMinute, hourIsAMorPM(i[2].hour), i[0], i[1].minute, i[1].hour, i[2].minute, i[2].hour))
 
 	dajax.assign('#addTimeList', 'innerHTML', ''.join(out))
+	dajax.clear('#warningDiv', 'innerHTML')
 
 	return dajax.json()
 
@@ -302,6 +310,7 @@ def generateSchedule(request, form):
 	dajax.script('$(document).ready(jQueryEffects());')
 	dajax.remove_css_class('#scheduleViewDiv', 'emptySchedule');
 	dajax.add_css_class('#scheduleViewDiv', 'fullSchedule');
+	dajax.clear('#warningDiv', 'innerHTML')
 	return dajax.json()
 
 @dajaxice_register
