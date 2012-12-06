@@ -58,36 +58,6 @@ def flushSessionData(request):
 	dajax.assign('#addCourseByProfList', 'innerHTML', '<span>There are no courses specified with respect to instructor.</span>')
 	dajax.clear('#addCourseByIDList', 'innerHTML')
 	dajax.assign('#addTimeList', 'innerHTML', '<span>There are no times specified.</span>')
-	dajax.assign('#numClasses', 'innerHTML', '<option value="1">1</option>')
-
-	return dajax.json()
-
-@dajaxice_register
-def determineNumberTakingField(request):
-	dajax = Dajax()
-	out = []
-	byCourseList = []
-	byProfList = []
-
-	if 'byCourse' in request.session:
-		for course in request.session['byCourse']:
-			byCourseList.append(course)
-
-	if 'byProf' in request.session:
-		for course in request.session['byProf']:
-			byProfList.append(course)
-
-	duplicate = 0
-	for e1 in byCourseList:
-		for e2 in byProfList:
-			if e1[0] == e2[0] and e1[1] == e2[2]:
-				duplicate += 1
-
-	length = byCourseList.__len__() + byProfList.__len__() - duplicate
-	for i in range(1, length + 1):
-		out.append("<option value='%s'>%s</option>" % (i, i))
-
-	dajax.assign('#numClasses', 'innerHTML', ''.join(out))
 
 	return dajax.json()
 
@@ -103,7 +73,7 @@ def deleteCourseByIDFromSession(request, courseID, subj, numb, titl, sect):
 	for i in request.session['byId']:
 		out.append("<li>%s %s - %s, %s <a onclick=\"deleteCourseByIDFromSession('%s', '%s', '%s', '%s', '%s')\">remove</a></li>" % (i[1], i[2], i[3], i[4], i[0], i[1], i[2], i[3], i[4]))
 
-	dajax.assign('#addCourseByIDList')
+	dajax.assign('#addCourseByIDList', 'innerHTML', ''.join(out))
 
 	return dajax.json()
 

@@ -10,25 +10,6 @@ from scheduler.ajax import *
 
 def index(request):
 	context = {}
-	
-	out = []
-	byCourseList = []
-	byProfList = []
-	if 'byCourse' in request.session:
-		for course in request.session['byCourse']:
-			byCourseList.append(course)
-	if 'byProf' in request.session:
-		for course in request.session['byProf']:
-			byProfList.append(course)
-	duplicate = 0
-	for e1 in byCourseList:
-		for e2 in byProfList:
-			if e1[0] == e2[0] and e1[1] == e2[2]:
-				duplicate += 1
-	length = byCourseList.__len__() + byProfList.__len__() - duplicate
-	for i in range(1, length + 1):
-		out.append(i)
-	context['numCourses'] = out
 
 	listOfDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
