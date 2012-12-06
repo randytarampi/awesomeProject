@@ -441,12 +441,11 @@ def courseNameConflict(courseOne, courseTwo):
 	#the number of courses a student wants to take
 
 def iterateBEHEMOTH(schedule, poolOfPotentialCourses, maxSize):
-"""
-Takes a schedule, a pool of courses, and a max size
-Fills the schedule with an optimal set of courses of max size 
-that are a subset of the pool of courses
-"""
-	#print "Iterate Behemoth"    	
+	"""
+	Takes a schedule, a pool of courses, and a max size
+	Fills the schedule with an optimal set of courses of max size 
+	that are a subset of the pool of courses
+	"""   	
 	if len(schedule.poolOfLockedCourses) < maxSize:
         	orignialTimeGap = schedule.getTotalTimeGap()
         	originalNumberDays =  schedule.getTotalDays()
@@ -489,7 +488,7 @@ that are a subset of the pool of courses
 		    				elif (currentChoiceStats.totalGap < currentBestChoiceStats.totalGap):
                             				currentBestChoiceStats = currentChoiceStats
                             				currentPositionOfChoice = i
-            		#get the Course that has risen above all others and solidify its position in the schedule
+			#Lock the course that has been determined to by the best choice
             		courseThatHasRisenAboveAllOthers = poolOfPotentialCourses[currentPositionOfChoice]
             		lockCourse(courseThatHasRisenAboveAllOthers, schedule, poolOfPotentialCourses)
 		#if we only have one option, then just lock the course into the schedule
@@ -505,8 +504,11 @@ that are a subset of the pool of courses
 #=======================================================================================================
 
 
-#divide everything into groups based on the course title
+
 def regroupCoursesForPasturize(inputCoursesList):
+	"""
+	divide everything into groups based on the course title
+	"""
 	#Find out what the different titles of the courses are	
 	listOfCourseTitles = []
 	for i in range (0, len(inputCoursesList)):
@@ -532,6 +534,9 @@ def regroupCoursesForPasturize(inputCoursesList):
 
 #number of courses that we need to add...
 def completePasturize(inputCoursesList, schedule, numberOfCourses):
+	"""
+	Pasturize algorithm, finds courses that would make an optimal schedule
+	"""
 	regroupedCourses = regroupCoursesForPasturize(inputCoursesList)
 	numberOfGroups = len(regroupedCourses)
 	outPutList = []
@@ -553,10 +558,15 @@ def completePasturize(inputCoursesList, schedule, numberOfCourses):
 	return outPutList
 
 
-#for each pairing of two
-#	for each attempted to add course
-#		try to add taht course
 def handleOneIterationOfPasturize(attemptedAddedCourseList, inputCoursePairingList, schedule):
+	"""
+	Uses a list of pairings of courses and a list of additional courses 
+
+	THe list of pairings of courses represent all possible schedules of size N that we have so far
+	
+	For each pairing of courses, it will to find any courses from the other list that do not conflict
+	It will append the courses that do not conflict to the pairing, giving a potential schedule of size N+
+	"""
 	outputList = []	
 	#For each pairing
 	for i in range (0, len(inputCoursePairingList)):
@@ -608,6 +618,11 @@ def handleOneIterationOfPasturizeExtraHeavy(attemptedAddedCourseList, inputCours
 
 
 def checkCourseConflictsWithPairing(inputCourse, inputPairingOfCourses, schedule):
+	"""
+	Checks if a course can 'fit in' with another set of courses, 
+	by not conflicting with them
+
+	"""
 	listCoursesToUnlock = []
 	originalPairingLength = len(inputPairingOfCourses)
 	#inputPairingOfCoursesClone = copy.deepcopy(inputPairingOfCourses)
@@ -624,8 +639,11 @@ def checkCourseConflictsWithPairing(inputCourse, inputPairingOfCourses, schedule
 	return outputBoolean
 
 
-#Finds the best solution out of the picks we have				
+				
 def findPasturizeTopPickDarwinism(listOfPotentialSchedules, schedule):
+	"""
+	Finds the best solution out of the picks we have
+	"""
 	numberOfOptions = len(listOfPotentialSchedules)
 	#gather stats
 	listOfOptionsStats = []
@@ -645,6 +663,9 @@ def findPasturizeTopPickDarwinism(listOfPotentialSchedules, schedule):
 	
 #gather stats for pasturize
 def gatherStatsOnPotentialCourseSchedule(potentialCourses, schedule):
+	"""
+	Finds the stats of all possible sets of courses outputted by the pasturize algorithm
+	"""
 	for i in range (0, len(potentialCourses)):
 		courseWeWantToSet = potentialCourses[i]
 		setCourse(courseWeWantToSet, schedule)
