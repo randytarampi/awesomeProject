@@ -274,7 +274,7 @@ def generateSchedule(request, form):
 		dajax.script('$(\'#scheduleViewDiv\').activity(false);')
 		dajax.remove_css_class('#scheduleViewDiv', 'emptySchedule');
 		return dajax.json()
-	if numClasses < len(selectedCourses):
+	if numClasses > len(selectedCourses):
 		dajax.alert("Only %i class(es) meet your course selection. Please specify more classes" % len(selectedCourses))
 		dajax.script('$(\'#scheduleViewDiv\').activity(false);')
 		dajax.remove_css_class('#scheduleViewDiv', 'emptySchedule');

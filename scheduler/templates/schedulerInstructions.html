@@ -5,5 +5,20 @@
 {% block content %}
 <h1>Scheduler Instructions</h1>
 <p class="disclaimer">This app is pretty buggy, so use at your own risk.</p>
-<p>That said, we </p>
+<p>That said, this was always going to be more of a proof of concept than workable application.</p>
+<p>This application's most basic functions are presented right up front and centre on the <a href="{% url scheduler_index %}">scheduler home</a> page. We hope it's intuitive enough, but just in case, the user has to do two things:</p>
+<ol>
+	<li>Select some set of classes, either
+		<ul>
+			<li>by specifying a subject and course number (e.g. <a href="{% url scheduler_coursesSubjectNumber 'CMPT' '300' %}">CMPT 300</a>) or</li>
+			<li>by specifying a subject an instructor and then a course number (e.g. <a href="{% url scheduler_coursesSubjectNumber 'CMPT' '320' %}">CMPT 320</a> by <a href="{% url scheduler_instructor 'cbastone' %}">Christopher Bastone</a>).</li>
+		</ul>
+	</li>
+	<li> Clicking 'Generate Schedule'
+		<ul>
+			Generally this will popup some sort of weekly schedule below, under the 'Your Optimal Schedule' heading with some information.
+		</ul>
+	</li>
+</ol>
+<p>Should the user feel more adventurous he or she can search for classes by <a href="{% url scheduler_courses %}">subject</a> or <a href="{% url scheduler_instructors %}">instructor</a>. The user may also notice that the URLs are pretty hackable - the URL to find <a href="{% url scheduler_instructor 'stevenp' %}">Steven Pearce</a>'s details ends with his SFU computing ID, 'stevenp', and to find all offered sections of CMPT 300, one need only to tack <a href="{% url scheduler_coursesSubjectNumber 'CMPT' '300' %}">'/subject/CMPT/300'</a> to our home page <a href="{% url scheduler_index %}">URL</a>. Note that if only one section is offered, the user will be redirected directly to the course detail page as in the case of <a href="{% url scheduler_coursesSubjectNumber 'CMPT' '320' %}">CMPT 320</a>.</p>
 {% endblock %}
