@@ -31,6 +31,12 @@ def amORpmEnd(request, option):
 	return dajax.json()
 
 @dajaxice_register
+def flushSessionData(request):
+	dajax = Dajax()
+
+	return dajax.json()
+
+@dajaxice_register
 def determineNumberTakingField(request):
 	dajax = Dajax()
 	out = []
@@ -159,7 +165,7 @@ def deleteUnavailableFromSession(request, day, startMinute, startHour, endMinute
 	t1 = time(int(startHour), int(startMinute))
 	t2 = time(int(endHour), int(endMinute))
 	sesList = request.session['timesUnavailable']
-	sesList.remove((int(day), t1, t2))
+	sesList.remove((int(day), t1, t2, listOfDays[int(day)]))
 	request.session['timesUnavailable'] = sesList
 
 	out = []
@@ -174,7 +180,7 @@ def deleteUnavailableFromSession(request, day, startMinute, startHour, endMinute
 		else:
 			lastMinute = str(i[2].minute)
 
-		out.append("<li>%s from %s:%s %s to %s:%s %s <a onclick=\"Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'%s', 'startMinute':'%s', 'startHour':'%s', 'endMinute':'%s', 'endHour':'%s' })\">remove</a></li>" % (listOfDays[i[0]], changeFrom24To12(i[1].hour), firstMinute, hourIsAMorPM(i[1].hour), changeFrom24To12(i[2].hour), lastMinute, hourIsAMorPM(i[2].hour), i[0], i[1].minute, i[1].hour, i[2].minute, i[2].hour))
+		out.append("<li>%s from %s:%s %s to %s:%s %s <a onclick=\"Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'%s', 'startMinute':'%s', 'startHour':'%s', 'endMinute':'%s', 'endHour':'%s' })\">remove</a></li>" % (i[3], changeFrom24To12(i[1].hour), firstMinute, hourIsAMorPM(i[1].hour), changeFrom24To12(i[2].hour), lastMinute, hourIsAMorPM(i[2].hour), i[0], i[1].minute, i[1].hour, i[2].minute, i[2].hour))
 
 	if not request.session['timesUnavailable']:
 		out.append("<span>There are no times specified.</span>")
@@ -191,7 +197,7 @@ def addUnavailableToSession(request, form):
 	d = int(form['day'])
 	t1 = time(int(form['startHour']), int(form['startMinute']))
 	t2 = time(int(form['endHour']), int(form['endMinute']))
-	timeTuple = (d, t1, t2)
+	timeTuple = (d, t1, t2, listOfDays[d])
 	
 	if 'timesUnavailable' in request.session:
 		if timeTuple in request.session['timesUnavailable']:
@@ -229,7 +235,7 @@ def addUnavailableToSession(request, form):
 		else:
 			lastMinute = str(i[2].minute)
 
-		out.append("<li>%s from %s:%s %s to %s:%s %s <a onclick=\"Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'%s', 'startMinute':'%s', 'startHour':'%s', 'endMinute':'%s', 'endHour':'%s' })\">remove</a></li>" % (listOfDays[i[0]], changeFrom24To12(i[1].hour), firstMinute, hourIsAMorPM(i[1].hour), changeFrom24To12(i[2].hour), lastMinute, hourIsAMorPM(i[2].hour), i[0], i[1].minute, i[1].hour, i[2].minute, i[2].hour))
+		out.append("<li>%s from %s:%s %s to %s:%s %s <a onclick=\"Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'%s', 'startMinute':'%s', 'startHour':'%s', 'endMinute':'%s', 'endHour':'%s' })\">remove</a></li>" % (i[3], changeFrom24To12(i[1].hour), firstMinute, hourIsAMorPM(i[1].hour), changeFrom24To12(i[2].hour), lastMinute, hourIsAMorPM(i[2].hour), i[0], i[1].minute, i[1].hour, i[2].minute, i[2].hour))
 
 	dajax.assign('#addTimeList', 'innerHTML', ''.join(out))
 

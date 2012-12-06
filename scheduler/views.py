@@ -55,11 +55,8 @@ def index(request):
 	if 'byProf' in request.session:
 		context['byProf'] = request.session['byProf']
 
-	dayTupleList = []
 	if 'timesUnavailable' in request.session:
-		for x in request.session['timesUnavailable']:
-			dayTupleList.append((x[0], x[1], x[2], listOfDays[x[0]]))
-		context['timesUnavailable'] = dayTupleList
+		context['timesUnavailable'] = request.session['timesUnavailable']
 
 	# Build the context
 	if 'processedData' in request.session:
