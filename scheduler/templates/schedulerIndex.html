@@ -6,59 +6,74 @@
 <script src="{{STATIC_PREFIX}}schedulerIndex.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
 
+{% block extracss %}
+	<link rel="stylesheet" type="text/css" href="{{STATIC_PREFIX}}conrad.css" />
+{% endblock %}
+
 {% block content %}
 <div id="scheduleFormDiv">
-	<h1>Build a Schedule</h1>
-
-	<form id="addCourseForm" method="POST">
+	<h1 class="conradsClass">Build a Schedule</h1>
+<ul>
+	<form id="addCourseForm" method="POST" class="conradsTextForForm">
 	{% csrf_token %}
-			Add a course: 
-			<select id="courseSubject" name="courseSubject" onchange="Dajaxice.scheduler.listOfNumbers(Dajax.process, {'option':this.value})">
+		Add a course: 
+		<div id="courseSelectFormDiv" class="conradsRowDivClass">
+			<div id="courseSelectConradFormRowOneDivOne" class="conradsRowSubDiv1Class">
+			<select id="courseSubject" name="courseSubject" onchange="Dajaxice.scheduler.listOfNumbers(Dajax.process, {'option':this.value})" class = "conradsSecondClass">
 				{% for op in subjects %}
 				<option value="{{ op }}">{{ op }}</option>
 				{% endfor %}
 			</select>
 			&nbsp;
-			<select id="courseNumber" name="courseNumber">
+			<select id="courseNumber" name="courseNumber" class="conradFirstRowSecondItemClass">
 				{% for op in initNums %}
 				<option value="{{ op }}">{{ op }}</option>
 				{% endfor %}
 			</select>
-			&nbsp;
-			<input id="courseSubmit" type="button" value="Submit!" onclick="addCourseToSession()"/>
+			</div>
+
+			<div class="conradsRowSubDiv2Class">
+			<input id="courseSubmit" type="button" value="Add Course" onclick="addCourseToSession()"/>
+			</div>
+		</div>
 	</form>
 
 	<form id="addCourseByProfForm" method="POST">
 	{% csrf_token %}
-		<div id="addByProf">
 			Add a course by instructor:
-			<select id="courseSubjectByProf" name="courseSubjectByProf" onchange="Dajaxice.scheduler.listOfProfs(Dajax.process, {'option':this.value})">
+			<div id="addByProf" class="conradsRowDivClass">
+			<div class="conradsRowSubDiv1Class">
+			<select id="courseSubjectByProf" name="courseSubjectByProf" onchange="Dajaxice.scheduler.listOfProfs(Dajax.process, {'option':this.value})" class="conradsSecondRowClass">
 				{% for op in subjects %}
 				<option value="{{ op }}">{{ op }}</option>
 				{% endfor %}
 			</select>
 			&nbsp;
-			<select id="subjectProfs" name="subjectProfs" onchange="Dajaxice.scheduler.listOfNumbersByProf(Dajax.process, {'option':this.value, 'subj':$('#courseSubjectByProf option:selected').text()})">
+			<select id="subjectProfs" name="subjectProfs" onchange="Dajaxice.scheduler.listOfNumbersByProf(Dajax.process, {'option':this.value, 'subj':$('#courseSubjectByProf option:selected').text()})" class="conradsSecondRowSecondItemClass">
 				{% for i in initProfs %}
 				<option value="{{ i.userid }}">{{ i.first_name }} {{ i.last_name }}</option>
 				{% endfor %}
 			</select>
 			&nbsp;
-			<select id="courseNumberByProf" name="courseNumberByProf">
+			<select id="courseNumberByProf" name="courseNumberByProf" class="conradsSecondRowThirdItemClass">
 				{% for i in initNumsByProf %}
 				<option value="{{ i.number }}">{{ i.number }}</option>
 				{% endfor %}
 			</select>
 			&nbsp;
-			<input id="courseSubmitByProf" type="button" value="Submit!" onclick="addCourseByProfToSession()"/>
+		</div>
+		<div class="conradsRowSubDiv2Class">
+			<input id="courseSubmitByProf" type="button" value="Add Course" onclick="addCourseByProfToSession()"/>
+		</div>
 		</div>
 	</form>
 
-	<form id="addUnavailableForm" method="POST">
+	<form id="addUnavailableForm" method="POST" class = "conradsTextForForm">
 	{% csrf_token %}
-		<div id="addUnavailableTime">
 			Add a time you are unavailable:
-			<select id="day" name="day">
+			<div id="addUnavailableTime" class="conradsRowDivClass"> 
+				<div class="conradsRowSubDiv1Class">
+			<select id="day" name="day" class="conradsThirdRowClassFirstItem">
 				<option value="0">Monday</option>
 				<option value="1">Tuesday</option>
 				<option value="2">Wednesday</option>
@@ -67,7 +82,7 @@
 				<option value="5">Saturday</option>
 			</select>
 			at
-			<select id="startHour" name="startHour" onchange="Dajaxice.scheduler.amORpmStart(Dajax.process, {'option':this.value})">
+			<select id="startHour" name="startHour" onchange="Dajaxice.scheduler.amORpmStart(Dajax.process, {'option':this.value})" class="conradsThirdRowClassSecondItem">
 				<option value="8">8</option>
 				<option value="9">9</option>
 				<option value="10">10</option>
@@ -85,7 +100,7 @@
 				<option value="22">10</option>
 			</select>
 			<span>:</span>
-			<select id="startMinute" name="startMinute">
+			<select id="startMinute" name="startMinute" class="conradsThirdRowClassThirdItem">
 				<option value="00">00</option>
 				<option value="10">10</option>
 				<option value="20">20</option>
@@ -95,7 +110,7 @@
 			</select>
 			<span id="startT">a.m.</span>
 			to
-			<select id="endHour" name="endHour" onchange="Dajaxice.scheduler.amORpmEnd(Dajax.process, {'option':this.value})">
+			<select id="endHour" name="endHour" onchange="Dajaxice.scheduler.amORpmEnd(Dajax.process, {'option':this.value})" class="conradsThirdRowClassFourthItem">
 				<option value="8">8</option>
 				<option value="9">9</option>
 				<option value="10">10</option>
@@ -113,7 +128,7 @@
 				<option value="22">10</option>
 			</select>
 			<span>:</span>
-			<select id="endMinute" name="endMinute">
+			<select id="endMinute" name="endMinute" class="conradsThirdRowClassFifthItem">
 				<option value="00">00</option>
 				<option value="10">10</option>
 				<option value="20">20</option>
@@ -122,13 +137,16 @@
 				<option value="50">50</option>
 			</select>
 			<span id="endT">a.m.</span>
-			<input id="timeUnavailable" type="button" value="Submit!" onclick="addUnavailableToSession()"/>
+		</div>
+		<div class="conradsRowSubDiv2Class">
+			<input id="timeUnavailable" type="button" value="Add Time  " onclick="addUnavailableToSession()"/>
+		</div>
 		</div>
 	</form>
 
 	<form id="scheduleForm" method="POST">
 	{% csrf_token %}
-		<div>
+		<div class="conradsRowDivClass">
 			How many classes do you want to take next semester?
 			<select id="numClasses" name="numClasses" size="1">
 					<option value="1">1</option>
@@ -142,11 +160,12 @@
 			</select>
 		</div>
 		<input id="scheduleSubmit" type="button" value="Generate Schedule" onclick="generateSchedule()"/>
+		<input id="flushSession" type="button" value="Reset Form" onclick="flushSessionData()" class="conradsResetButton"/>
 	</form>
 </div>
 
-<div id="warningDiv"></div>
-
+<div id="warningDiv" class = "conradWarningDivClass"></div>
+</ul>
 <div id="mainCartDiv">
 <h1>Your Schedule Selections</h1>
 	<div id="coursesCart">
@@ -189,7 +208,6 @@
 			{% endif %}
 		</ul>
 	</div>
-	<input id="flushSession" type="button" value="Reset Form" onclick="flushSessionData()"/>
 </div>
 {% if processedHTML %}
 <div class="fullSchedule" id="scheduleViewDiv">
