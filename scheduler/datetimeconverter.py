@@ -3,22 +3,6 @@
 
 from datetime import datetime
 
-#b = "2012-10-12"
-
-
-#later dates are greater than earlier dates
-# more recent dates > older dates
-def comparedate(date1, date2): 
-    if date1 > date2:
-        print 'Date 1 is more recent'
-
-#Ensures properinputs
-def ensuresproperinputs(startdate1, enddate1):
-    if startdate1 <= enddate1:
-        print 'True'
-    else:
-        print 'False'
-
 def convertStringToDate(inputString):
     outputdate = datetime.strptime(inputString, '%Y-%m-%d')
     #print outputdate
@@ -28,7 +12,6 @@ def convertStringToTime(inputString):
     outputdate = datetime.strptime(inputString, '%H:%M:%S')
     #print outputdate
     return outputdate
-
 
 #Tests two sets of start and end dates to see if they overlap and conflict
 # This can work for time and for dates
@@ -52,82 +35,18 @@ def datetimeconflict(startdate1, enddate1, startdate2, enddate2):
          print 'Improper inputs'
 
 
-#This checks for conflicts in the schedule in terms of dates
-def dayconflict(day1, day2):
-    if int(day1) == int(day2):
-        print 'We have a day conflict'
-    else:
-        print 'We do not have a day conflict'
-
-#first check dates,....... then day, then time"
-# i.e.
-    #if date conflict:
-        #check for day conflict
-        #if time conflict
-            #then we have an actual conflict
-    # else ... then we do not have a conflict
-#I still need to factor in the travel time in between campuses
-#I also need to factor in the time to get between classes
-
-def sameCampusTravelConflict(time1, time2):
-    if (time1-time2).seconds <= 600 or (time2-time1).seconds <= 600:
-        return True
-    else:
-        return False
-
-def DifferentCampusTravelConflict(time1, time2):
-    if (time1-time2).seconds <= 3600 or (time2-time1).seconds <= 3600:
-        return True
-    else:
-        return False
-#(time2-time1).seconds = 600
-#(time2-time1).seconds = 3600
-
-#
 def timeConflict(starttime1, endtime1, starttime2, endtime2):
     if starttime1 <= endtime1 and starttime2 <= endtime2:
         if starttime1 < starttime2:
             if endtime1 < starttime2:
-                #print 'No Conflict first time happens before second dates'
-                #if (starttime2-endtime1).seconds < 3600:
-                #    print 'We can not travel between campuses'
 		return False
             else :
-                #print 'There is a conflict'
 		return True
         else:
             if endtime2 < starttime1:
                 #print 'No Conflict time 2 happens before time 1'
 		return False
-                #if (endtime2-starttime1).seconds < 3600:
-                #    print 'We can not travel between campuses'
             else:
-                #print 'Timeconflict() conflict!'
-		#print "Start time1 = " + str(starttime1)
-		#print "Start time2 = " + str(starttime1)
-		#print "end time1 = " + str(endtime1)
-		#print "end time2 = " + str(endtime2)
-			
 		return True
     else:
          print 'Improper inputs'
-
-def timeConflictExpansive(starttime1, endtime1, starttime2, endtime2):
-    if starttime1 <= endtime1 and starttime2 <= endtime2:
-        if starttime1 < starttime2:
-            if endtime1 < starttime2:
-                print 'No Conflict first time happens before second dates'
-                if (starttime2-endtime1).seconds < 3600:
-                    print 'We can not travel between campuses'
-            else :
-                print 'There is a conflict'
-        else:
-            if endtime2 < starttime1:
-                print 'No Conflict time 2 happens before time 1'
-                if (endtime2-starttime1).seconds < 3600:
-                    print 'We can not travel between campuses'
-            else:
-                print 'There is a conflict'
-    else:
-         print 'Improper inputs'
-

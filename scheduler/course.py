@@ -9,18 +9,6 @@ class SchedulingCourse:
 		self.labs = labs
 		self.campus = campus # 1 = Burnaby, 2 = surrey, 3 = vancouver, 0 = something else
 		self.dataBaseCourse = dataBaseCourse
-        #we may want to include the id in course here...
     	def addMeetingTime(self, meetingTime):
         	self.meetingTimes.append(meetingTime)
-
-
-class SchedulingMeetingTime:
-	def __init__(self, startTime, endTime, weekday, startDate, endDate, meetingType, meetingTimeID):
-		self.startTime = startTime
-		self.endTime = endTime
-		self.weekday = weekday
-		self.meetingType = meetingType
-		self.startDate = startDate
-		self.endDate = endDate
-		self.meetingTimeID = meetingTimeID
 

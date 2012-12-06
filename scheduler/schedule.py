@@ -11,7 +11,6 @@ class Schedule:
    	sundayS = [0] * 144
 	poolOfLockedCourses = []
 	poolOfCutCourses = []
-	#TimeSlotAvailability
    	def __init__(self):  
    		self.mondayS = [0] * 144
    		self.tuesdayS = [0] * 144
@@ -74,24 +73,10 @@ class Schedule:
 	def getTotalDays(self):
 		totalDays = 0
 		listtocompare = [1, 2, 4, 5, 7,8,10,11]
-		#for i in range (0, 7):
-		#	if len(list(set(listtocompare) & set(getTimeGapForDay(self.convertWeekDayToProperArray(i)))))) != 0:
-	    	#		totalDays += 1
-			#weekTotalTimeGap += getTimeGapForDay(self.convertWeekDayToProperArray(i))
-		if len(list(set(listtocompare) & set(self.mondayS))) != 0:
-	    		totalDays += 1
-		if len(list(set(listtocompare) & set(self.tuesdayS))) != 0:
-			totalDays += 1
-		if len(list(set(listtocompare) & set(self.wednesdayS))) != 0:
-			totalDays += 1
-		if len(list(set(listtocompare) & set(self.thursdayS))) != 0:
-			totalDays += 1
-		if len(list(set(listtocompare) & set(self.fridayS))) != 0:
-			totalDays += 1
-		if len(list(set(listtocompare) & set(self.saturdayS))) != 0:
-			totalDays += 1
-		if len(list(set(listtocompare) & set(self.sundayS))) != 0:
-			totalDays += 1
+		for i in range (0, 7):
+			temporaryTimeSlotArray = self.convertWeekDayToProperArray(i)
+			if len(list(set(listtocompare) & set(temporaryTimeSlotArray))) != 0:
+	    			totalDays += 1
 		return totalDays
     
 	def getTotalCrossCampusTravels(self):
@@ -101,39 +86,15 @@ class Schedule:
 		return weekTotalCampusTravels
 
     	def totalPurge(self):
-		self.mondayS = [0] * 144
-		self.tuesdayS = [0] * 144
-		self.wednesdayS = [0] * 144
-		self.thursdayS = [0] * 144
-		self.fridayS = [0] * 144
-		self.saturdayS = [0] * 144
-		self.sundayS = [0] * 144
-	#needs to be reworked for ... multiple campuses    	
+		for i in range (0, 7):
+			temporaryTimeSlotArray = self.convertWeekDayToProperArray(i)
+			temporaryTimeSlotArray = [0] * 144   	
 	def clearSchedule(self):
-        	for i in range (0, len(self.mondayS)):
-          		if self.mondayS[i] in [1, 4, 7, 10]:
-                		self.mondayS[i] = 0 
-        	for i in range (0, len(self.tuesdayS)):
-           		if self.tuesdayS[i] in [1, 4, 7, 10]:
-                		self.tuesdayS[i] = 0
-		for i in range (0, len(self.wednesdayS)):
-		    	if self.wednesdayS[i] in [1, 4, 7, 10]:
-		        	self.wednesdayS[i] = 0
-		for i in range (0, len(self.thursdayS)):
-			if self.thursdayS[i] in [1, 4, 7, 10]:
-				self.thursdayS[i] = 0
-		for i in range (0, len(self.fridayS)):
-		    	if self.fridayS[i] in [1, 4, 7, 10]:
-		        	self.fridayS[i] = 0
-		for i in range (0, len(self.saturdayS)):
-		    	if self.saturdayS[i] in [1, 4, 7, 10]:
-		       		self.saturdayS[i] = 0
-		for i in range (0, len(self.sundayS)):
-			if self.sundayS[i] in [1, 4, 7, 10]:
-		       		self.sundayS[i] = 0
-                
-    #totalPurge and clear schedule should be methods here
-
+		for i in range (0, 7):
+			temporaryTimeSlotArray = self.convertWeekDayToProperArray(i)
+			for i in range (0, len(temporaryTimeSlotArray)):
+          			if temporaryTimeSlotArray[i] in [1, 4, 7, 10]:
+                			temporaryTimeSlotArray[i] = 0 
 
 
 
