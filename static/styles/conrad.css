@@ -1,0 +1,86 @@
+
+
+.conradsResetButton{
+	margin-left: 34px;
+	position:relative;
+}
+.conradWarningDivClass{
+	color:red;
+	margin-left: 10px;
+}
+
+.conradsSecondClass{
+	margin-left: 10px;
+}
+
+.conradFirstRowSecondItemClass{
+	margin-left: 40px;
+}
+
+.conradsSecondRowClass{
+	margin-left: 10px;
+}
+
+.conradsSecondRowSecondItemClass{
+	margin-left: 42px;
+	width: 196px;
+}
+.conradsSecondRowThirdItemClass{
+	margin-left: -5px;
+}
+
+.conradsThirdRowClassFirstItem{
+	margin-left: 10px;
+	margin-right: 3px;
+}
+.conradsThirdRowClassSecondItem{
+	margin-left: 3px;
+}.conradsThirdRowClassThirdItem{
+	margin-right: 5px;
+}.conradsThirdRowClassFourthItem{
+	margin-left: 5px;
+}
+.conradsRowDivClass{
+	padding: 6px;
+	padding-bottom: 30px;
+}
+.conradsFourthRowDivClass{
+	padding: 6px;
+	padding-bottom: 10px;
+}
+
+.conradsRowSubDiv1Class{
+	width:420px;
+	float: left;
+}
+.conradsRowSubDiv2Class{
+	width:115px;
+	float: right;
+}
+
+.conradsRowSubDiv2Class{
+	width:115px;
+	float: right;
+}
+
+.conradsThirdRowSubDiv1Class{
+	width:420px;
+	float: left;
+}
+.conradsThirdRowSubDiv2Class{
+	width:115px;
+	float: right;
+}
+
+.conradFourthRowsNumClasses{
+	left:34px;
+	position:relative;
+}
+.conradsFlushButtonClass{
+	left:34px;
+	position:relative;
+}
+
+.conradsButtonClass3{
+	position:relative;
+}
