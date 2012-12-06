@@ -133,6 +133,8 @@
 			<select id="numClasses" name="numClasses" size="1">
 				{% for i in numCourses %}
 					<option value="{{ i }}">{{ i }}</option>
+				{% empty %}
+					<option value="1">1</option>
 				{% endfor %}
 			</select>
 		</div>

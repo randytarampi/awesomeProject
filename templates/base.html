@@ -68,8 +68,8 @@
 	</div>
 
 	<div id="centre">
-		<div id="breadCrumbs">
-			{% block breadCrumbs %}
+		<div id="breadcrumbs">
+			{% block breadcrumbs %}
 				{% for breadcrumb in request.breadcrumbs %}
 					<a class="breadcrumb" href="{{ breadcrumb.url }}">{{ breadcrumb.name }}</a>{% if not forloop.last %} &raquo; {% endif %}
 				{% endfor %}
@@ -82,10 +82,33 @@
 			{% block sidebar %}
 			<ul class="side">
 				<li>Loaded at: {% now "g:i a" %}</li>
-				{% block extraside %}{% endblock %}
 				<li>{% now "F jS, Y" %}</li>
 				<li class="break"></li>
 				<li>Data for: Spring 2013</li>
+				<li class="break"></li>
+				<ul class="cart">
+					<li><a class="cart" href="{% url scheduler_index %}#Courses">Selected Courses</a>:
+						{% if request.session.byCourse or request.session.byProf %}
+							{% for selection in request.session.byCourse %}
+								<li class="cart"><a href="{% url scheduler_coursesSubjectNumber selection.0 selection.1 %}">{{ selection.0 }} {{ selection.1 }}</a><br />{{ selection.2 }}</li>
+							{% endfor %}
+							{% for selection in request.session.byProf %}
+								<li class="cart"><a href="{% url scheduler_coursesSubjectNumber selection.0 selection.2 %}">{{ selection.0 }} {{ selection.2 }}</a><br />{{ selection.3 }}<br />with <a href="{% url scheduler_instructor selection.1 %}">{{ selection.4 }} {{ selection.5 }}</a></li>
+							{% endfor %}
+						{% else %}
+							<li class="cart">None Selected</li>
+						{% endif %}
+					</li>
+					<li class="break"></li>
+					<li><a class="cart" href="{% url scheduler_index %}#Times">Unavailable Times</a>:
+						{% for time in request.session.timesUnavailable %}
+							<li class="cart">{{ time.3 }}s<br/>{{ time.1 }} to {{ time.2 }}</li>
+						{% empty %}
+							<li class="cart">None Specified</li>
+						{% endfor %}
+					</li>
+				</ul>
+				{% block extraside %}{% endblock %}
 			</ul>
 			{% endblock %}
 		</div>

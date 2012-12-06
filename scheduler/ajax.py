@@ -272,6 +272,11 @@ def generateSchedule(request, form):
 	if 'timesUnavailable' in request.session:
 		for time in request.session['timesUnavailable']:
 			timesUnavailable.append(time)
+	if not selectedCourses:
+		dajax.alert("Please select at least one class")
+		dajax.script('$(\'#scheduleViewDiv\').activity(false);')
+		dajax.remove_css_class('#scheduleViewDiv', 'emptySchedule');
+		return dajax.json()
 	
 	# Process the data
 	processedCourses = createOptimalSchedule(numClasses, selectedCourses, timesUnavailable)

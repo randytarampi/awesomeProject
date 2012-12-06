@@ -70,8 +70,34 @@
 {% endfor %}
 </ol>
 {% endif %}
-{% if course not in scheduledCourses %}
+{% if course not in scheduledCourses and scheduledCourses %}
 <ul class="proposed courses">
+	{% if not scheduledConflict %}
+		<li class="proposed course"><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
+		<ul class="proposed course">
+	{% for instructor in course.instructor_set.all|dictsort:'last_name' %}
+		<li>Instructor: {% if instructor.userid != '. Tbd' and instructor.userid != '. Sessional' and instructor.userid != '. Faculty' and " " not in instructor.userid %} <a href="{% url scheduler_instructor instructor.pk %}">{{ instructor.name }}</a> {% else %} {{ instructor.userid }} {% endif %}</li>
+	{% endfor %}
+		<li>Campus: {{ course.campusChoice }}</li>
+		<li>Meeting Times:</li>
+			<ul class="scheduled times">
+			{% for meetingTime in proposedSchedule %}
+				{% if meetingTime.course == course %}
+					{% if meetingTime.type == "LEC" or meetingTime.type == "LAB" %}
+						<li class="classOrLab time">{{ meetingTime.typeChoice }} : {{ meetingTime.dayChoice }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }} in {{ meetingTime.room }}</li>
+					{% else %}
+						<li class="exam time">{{ meetingTime.typeChoice }} : {{ meetingTime.start_day|date:"l F d" }} - {{ meetingTime.start_time }} to {{ meetingTime.end_time }}</li>
+					{% endif %}
+				{% endif %}
+			{% empty %}
+				<li>No meetings scheduled.</li>
+			{% endfor %}
+			</ul>
+	</ul>
+	{% endif %}
+</ul>
+{% else %}
+<ul>
 	{% if not scheduledConflict %}
 		<li class="proposed course"><a href="{% url scheduler_course course.id %}">{{ course }} - {{ course.section }}</a></li>
 		<ul class="proposed course">
@@ -115,7 +141,9 @@
 		</ul>
 	{% endif %}
 	{% if not scheduledExamTimes and not proposedExamTimes %}
-		<span class="noexam">No Exams Scheduled!</span>
+		<ul>
+			<span class="noexam">No Exams Scheduled!</span>
+		</ul>
 	{% endif %}
 </div>
 <h2>Your Projected Week</h2>
