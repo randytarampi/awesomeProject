@@ -103,7 +103,7 @@ def deleteCourseByIDFromSession(request, courseID, subj, numb, titl, sect):
 	for i in request.session['byId']:
 		out.append("<li>%s %s - %s, %s <a onclick=\"deleteCourseByIDFromSession('%s', '%s', '%s', '%s', '%s')\">remove</a></li>" % (i[1], i[2], i[3], i[4], i[0], i[1], i[2], i[3], i[4]))
 
-	dajax.assign('#addCourseByIDList')
+	dajax.assign('#addCourseByIDList', 'innerHTML', ''.join(out))
 
 	return dajax.json()
 
