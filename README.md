@@ -9,6 +9,8 @@ We've made some sort of class schedule optimizer - it uses Django and is located
 
 Interested in what we had at our checkpoint evaluation? Check out the [checkpoint](https://github.com/randytarampi/awesomeProject/tree/checkpoint) tag.
 
+Looking for our final submission for CMPT 470? Check out the [final](https://github.com/randytarampi/awesomeProject/tree/final) tag. A dump of the DB was added afterwards, though due to the nature of the data, it would probably just be best to drop all the scheduler_* tables and run awesomeProject/scripts/deployForApacheFromScratch.sh which will pull the courses data from CourSys and populate the DB as specified in the settings.py file. We wish we could've automated it, but that would've required regular maintenance to keep up with the rate the the information from the feed changes, which is often apparently. See the below comments in "To Do" for more details about the data's cleanliness.
+
 What It Does:
 -------------
 
