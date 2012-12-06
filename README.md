@@ -21,7 +21,7 @@ To Do:
 
 Lots! We need to do lots of testing and general beautifying. As far as we're concerned, this is a bit more than a proof of concept, but substantially less than a polished, final product.
 
-That said, we to do lots of work on the algorithm. The general styling and setup of the actual "[app](http://cmpt470.csil.sfu.ca:9017/scheduler/)" shouldn't be too much work - we're thinking about doing a bit experimenting with it depending on what we think looks "best", by no means is what you see finalized.
+That said, we had to do lots of work on the algorithm. By no means is what you see finalized - it definitely doens't look as good as it could be.
 
 The data we're using has a few errors, like lectures that are scheduled like final exams, which tends to screw things up - see [MATH 152](http://cmpt470.csil.sfu.ca:9017/courses/MATH/152/). Since this data is from GoSFU (via Greg Baker's coursys), we can't really do much about it, nor do we think we should.
 
