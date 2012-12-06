@@ -179,6 +179,8 @@ LOGGING = {
     }
 }
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 # For the django-debug-toolbar
 INTERNAL_IPS = ('127.0.0.1', )
 
