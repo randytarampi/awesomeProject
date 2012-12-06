@@ -101,3 +101,8 @@ function deleteCourseByProfFromSession(course, prof, number, title, firstName, l
 	Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
 	return false;
 }
+
+function flushSessionData() {
+	Dajaxice.scheduler.flushSessionData(Dajax.process);
+	Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
+}
