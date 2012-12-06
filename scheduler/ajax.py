@@ -295,7 +295,7 @@ def generateSchedule(request, form):
 			selectedCourses = selectedCourses | Instructor.objects.get(userid=profTuple[1]).course.filter(subject=profTuple[0], number=profTuple[2])
 	if 'byId' in request.session:
 		for idTuple in request.session['byId']:
-			selectedCourses = selectedCourses | Course.objects.get(id=idTuple[0])
+			selectedCourses = selectedCourses | Course.objects.filter(id=idTuple[0])
 	if 'timesUnavailable' in request.session:
 		for time in request.session['timesUnavailable']:
 			timesUnavailable.append(time)
@@ -310,7 +310,6 @@ def generateSchedule(request, form):
 		dajax.remove_css_class('#scheduleViewDiv', 'emptySchedule');
 		return dajax.json()
 
-	
 	# Process the data
 	processedCourses = createOptimalSchedule(numClasses, selectedCourses, timesUnavailable)
 
