@@ -34,6 +34,20 @@ def amORpmEnd(request, option):
 def flushSessionData(request):
 	dajax = Dajax()
 
+	request.session.flush()
+
+	out = []
+	out.append("<span>There are no courses specified by subject and number.</span>")
+	dajax.assign('#addCourseList', 'innerHTML', ''.join(out))
+
+	out2 = []
+	out2.append("<span>There are no courses specified with respect to instructor.</span>")
+	dajax.assign('#addCourseByProfList', 'innerHTML', ''.join(out2))
+
+	out3 = []
+	out3.append("<span>There are no times specified.</span>")
+	dajax.assign('#addTimeList', 'innerHTML', ''.join(out3))
+
 	return dajax.json()
 
 @dajaxice_register
