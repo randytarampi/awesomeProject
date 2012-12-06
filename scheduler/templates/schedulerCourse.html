@@ -116,7 +116,7 @@
 					{% endif %}
 				{% endif %}
 			{% empty %}
-				<li>No meetings scheduled.</li>
+				<li>No Meetings Scheduled</li>
 			{% endfor %}
 			</ul>
 	</ul>
@@ -142,11 +142,12 @@
 	{% endif %}
 	{% if not scheduledExamTimes and not proposedExamTimes %}
 		<ul>
-			<span class="noexam">No Exams Scheduled!</span>
+			<span class="noexam">No Exams Scheduled</span>
 		</ul>
 	{% endif %}
 </div>
 <h2>Your Projected Week</h2>
+{% if scheduledHTML %}
 <table id="scheduleTable">
 	<colgroup span="1" width="10%" align="center" valign="center"></colgroup>
 	<colgroup span="6" width="15%" align="center" valign="center"></colgroup>
@@ -174,6 +175,11 @@
 		</tr>
 	</tfoot>
 </table>
+{% else %}
+<ul>
+	<span class="nomeeting">No Weekly Meetings Scheduled</span>
+</ul>
+{% endif %}
 </div>
 <div id="courseCart">
 </div>
