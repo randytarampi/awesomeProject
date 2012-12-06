@@ -69,7 +69,11 @@
 
 	<div id="centre">
 		<div id="breadCrumbs">
-			{% block breadCrumbs %}BreadCrumbs PlaceHolder{% endblock %}
+			{% block breadCrumbs %}
+				{% for breadcrumb in request.breadcrumbs %}
+					<a class="breadcrumb" href="{{ breadcrumb.url }}">{{ breadcrumb.name }}</a>{% if not forloop.last %} &raquo; {% endif %}
+				{% endfor %}
+			{% endblock %}
 		</div>
 		<div id="content">
 		{% block content %}{% endblock %}

@@ -55,19 +55,50 @@ def index(request):
 	return render_to_response('schedulerIndex.html', context, context_instance=RequestContext(request))
 
 def instructions(request):
-	return render_to_response('schedulerInstructions.html')
+	request.breadcrumbs("Scheduler Instructions", request.path_info)
+	return render_to_response('schedulerInstructions.html', context_instance=RequestContext(request))
 
 def examples(request):
-	return render_to_response('schedulerExamples.html')
-    
+	request.breadcrumbs("Scheduler Examples", request.path_info)
+	return render_to_response('schedulerExamples.html', context_instance=RequestContext(request))
+
+class instructorListView(ListView):
+	context_object_name = "instructors"
+	template_name = "schedulerInstructors.html"
+
+	def get_queryset(self):
+		self.request.breadcrumbs("By Instructor", self.request.path_info)
+		queryset = get_list_or_404(Instructor.objects.order_by('last_name', 'first_name').exclude(first_name__startswith="."))
+		return queryset
+
+class instructorDetailView(DetailView):
+	model = Instructor
+	template_name = "schedulerInstructor.html"
+	
+	def get_object(self):
+		object = super(instructorDetailView, self).get_object()
+		self.request.breadcrumbs(("By Instructor", reverse("scheduler_instructors")), (object.name, self.request.path_info))
+		return object
+
+class courseListView(ListView):
+	context_object_name = "courses"
+	template_name = "schedulerCourses.html"
+
+	def get_queryset(self):
+		self.request.breadcrumbs("By Subject", self.request.path_info)
+		queryset = get_list_or_404(Course.objects.order_by('subject').values('subject', 'number', 'title').distinct())
+		return queryset
+
 class courseSubjectListView(ListView):
 	context_object_name = "courses"
 	template_name = "schedulerCoursesSubject.html"
 
 	def get_queryset(self):
+		self.request.breadcrumbs(("By Subject", reverse("scheduler_courses")), (self.kwargs['subject'], self.request.path_info))
 		queryset = get_list_or_404(Course.objects.values('subject', 'number', 'title').distinct(), subject=self.kwargs['subject'])
 		for course in queryset:
 			course['level'] = course['number'][0]
+		self.request.breadcrumbs("%s" % self.kwargs['subject'], reverse("scheduler_coursesSubject", args=(self.kwargs['subject'],)))
 		return queryset
 
 	def get_context_data(self, **kwargs):
@@ -80,6 +111,7 @@ class courseSubjectNumberListView(ListView):
 	template_name = "schedulerCoursesSubjectNumber.html"
 
 	def get_queryset(self):
+		self.request.breadcrumbs(("By Subject", reverse("scheduler_courses")), (self.kwargs['subject'], reverse("scheduler_coursesSubject", args=(self.kwargs['subject'],))), ("%s %s" % (self.kwargs['subject'], self.kwargs['number']), reverse("scheduler_coursesSubjectNumber", args=(self.kwargs['subject'], self.kwargs['number'],))))
 		return get_list_or_404(Course, subject=self.kwargs['subject'], number=self.kwargs['number'])
 
 	def get_context_data(self, **kwargs):
@@ -96,6 +128,11 @@ class courseSubjectNumberListView(ListView):
 class courseDetailView(DetailView):
 	model = Course
 	template_name = "schedulerCourse.html"
+	
+	def get_object(self):
+		object = super(courseDetailView, self).get_object()
+		self.request.breadcrumbs(("By Subject", reverse("scheduler_courses")), (object.subject, reverse("scheduler_coursesSubject", args=(object.subject,))), (object, reverse("scheduler_coursesSubjectNumber", args=(object.subject, object.number,))), ("Section %s" % object.section, self.request.path_info))
+		return object
 	
 	def get_context_data(self, **kwargs):
 		context = super(courseDetailView, self).get_context_data(**kwargs)

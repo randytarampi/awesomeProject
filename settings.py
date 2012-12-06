@@ -122,6 +122,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'breadcrumbs.middleware.BreadcrumbsMiddleware',
+    'breadcrumbs.middleware.FlatpageFallbackMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -147,6 +149,7 @@ INSTALLED_APPS = (
     # See https://docs.djangoproject.com/en/1.3/ref/contrib/webdesign/#ref-contrib-webdesign
     'django.contrib.webdesign',
     'debug_toolbar',
+    'breadcrumbs',
     'dajaxice',
     'dajax',
     'about',
@@ -176,4 +179,9 @@ LOGGING = {
     }
 }
 
+# For the django-debug-toolbar
 INTERNAL_IPS = ('127.0.0.1', )
+
+# For django-breadcrumbs
+BREADCRUMBS_AUTO_HOME = True
+BREADCRUMBS_HOME_TITLE = "Scheduler Home"

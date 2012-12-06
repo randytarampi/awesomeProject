@@ -102,6 +102,10 @@ li.instructor {
 	padding-top: 10px;
 }
 
+.breadcrumb {
+	color: white;
+}
+
 .conflict {
 	color: red;
 	font-weight: bold;
@@ -274,7 +278,7 @@ li.break {
 }
 
 #breadCrumbs {
-	padding: 3px;
+	padding: 5px 7px;
 	background-color: #6D6D64;
 }
 
