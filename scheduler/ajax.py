@@ -102,16 +102,16 @@ def addCourseToSession(request, form):
 	return dajax.json()
 
 @dajaxice_register
-def deleteCourseByProfFromSession(request, course, prof, number, title):
+def deleteCourseByProfFromSession(request, course, prof, number, title, firstName, lastName):
 	dajax = Dajax()
 
 	sesList = request.session['byProf']
-	sesList.remove((course, prof, number, title))
+	sesList.remove((course, prof, number, title, firstName, lastName))
 	request.session['byProf'] = sesList
 
 	out = []
 	for i in request.session['byProf']:
-		out.append("<li>%s %s - %s, taught by: %s <a onclick=\"deleteCourseByProfFromSession('%s', '%s', '%s', '%s')\">remove</a></li>" % (i[0], i[2], i[3], i[1], i[0], i[1], i[2], i[3]))
+		out.append("<li>%s %s - %s, taught by: %s %s <a onclick=\"deleteCourseByProfFromSession('%s', '%s', '%s', '%s', '%s', '%s')\">remove</a></li>" % (i[0], i[2], i[3], i[4], i[5], i[0], i[1], i[2], i[3], i[4], i[5]))
 
 	dajax.assign('#addCourseByProfList', 'innerHTML', ''.join(out))
 
@@ -122,12 +122,14 @@ def addCourseByProfToSession(request, form):
 	dajax = Dajax()
 	sessionList = []
 	c = Course.objects.filter(subject=form['courseSubjectByProf'], number=form['courseNumberByProf'])[0].title
-	print c
-	courseTuple = (form['courseSubjectByProf'], form['subjectProfs'], form['courseNumberByProf'], c)
+	d = Instructor.objects.filter(userid=form['subjectProfs'])
+	firstName = d[0].first_name
+	lastName = d[0].last_name
+	courseTuple = (form['courseSubjectByProf'], form['subjectProfs'], form['courseNumberByProf'], c, firstName, lastName)
 	
 	if 'byProf' in request.session:
 		if courseTuple in request.session['byProf']:
-			dajax.alert('You have already selected %s %s - %s, with %s!' % (courseTuple[0], courseTuple[2], courseTuple[3], courseTuple[1]))
+			dajax.alert('You have already selected %s %s - %s, with %s %s!' % (courseTuple[0], courseTuple[2], courseTuple[3], courseTuple[4], courseTuple[5]))
 			return dajax.json()
 		sessionList = request.session['byProf']
 		sessionList.append(courseTuple)
@@ -137,7 +139,7 @@ def addCourseByProfToSession(request, form):
 
 	out = []
 	for i in request.session['byProf']:
-		out.append("<li>%s %s - %s, taught by: %s <a onclick=\"deleteCourseByProfFromSession('%s', '%s', '%s', '%s')\">remove</a></li>" % (i[0], i[2], i[3], i[1], i[0], i[1], i[2], i[3]))
+		out.append("<li>%s %s - %s, taught by: %s %s <a onclick=\"deleteCourseByProfFromSession('%s', '%s', '%s', '%s', '%s', '%s')\">remove</a></li>" % (i[0], i[2], i[3], i[4], i[5], i[0], i[1], i[2], i[3], i[4], i[5]))
 
 	dajax.assign('#addCourseByProfList', 'innerHTML', ''.join(out))
 
