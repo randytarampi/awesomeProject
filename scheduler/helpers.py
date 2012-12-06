@@ -6,7 +6,6 @@ from scheduler.algorithm import *
 
 # A file that holds helper functions
 
-#depending on the integer you want the day
 def hourIsAMorPM(h):
 	if h >= 12:
 		out = "p.m."

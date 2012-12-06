@@ -73,17 +73,31 @@ function generateSchedule() {
 function addCourseToSession() {
 	data = $('#addCourseForm').serializeObject();
 	Dajaxice.scheduler.addCourseToSession(Dajax.process, {'form': data});
+	Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
 	return false;
 }
 
 function addCourseByProfToSession() {
 	data = $('#addCourseByProfForm').serializeObject();
 	Dajaxice.scheduler.addCourseByProfToSession(Dajax.process, {'form': data});
+	Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
 	return false;
 }
 
 function addUnavailableToSession() {
 	data = $('#addUnavailableForm').serializeObject();
 	Dajaxice.scheduler.addUnavailableToSession(Dajax.process, {'form': data});
+	return false;
+}
+
+function deleteCourseFromSession(course, number) {
+	Dajaxice.scheduler.deleteCourseFromSession(Dajax.process, {'course':course, 'number':number});
+	Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
+	return false;
+}
+
+function deleteCourseByProfFromSession(course, prof, number) {
+	Dajaxice.scheduler.deleteCourseByProfFromSession(Dajax.process, {'course':course, 'prof':prof, 'number':number});
+	Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
 	return false;
 }

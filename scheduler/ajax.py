@@ -31,6 +31,35 @@ def amORpmEnd(request, option):
 	return dajax.json()
 
 @dajaxice_register
+def determineNumberTakingField(request):
+	dajax = Dajax()
+	out = []
+	byCourseList = []
+	byProfList = []
+
+	if 'byCourse' in request.session:
+		for course in request.session['byCourse']:
+			byCourseList.append(course)
+
+	if 'byProf' in request.session:
+		for course in request.session['byProf']:
+			byProfList.append(course)
+
+	duplicate = 0
+	for e1 in byCourseList:
+		for e2 in byProfList:
+			if e1[0] == e2[0] and e1[1] == e2[2]:
+				duplicate += 1
+
+	length = byCourseList.__len__() + byProfList.__len__() - duplicate
+	for i in range(1, length + 1):
+		out.append("<option value='%s'>%s</option>" % (i, i))
+
+	dajax.assign('#numClasses', 'innerHTML', ''.join(out))
+
+	return dajax.json()
+
+@dajaxice_register
 def deleteCourseFromSession(request, course, number):
 	dajax = Dajax()
 
@@ -40,7 +69,7 @@ def deleteCourseFromSession(request, course, number):
 
 	out = []
 	for i in request.session['byCourse']:
-		out.append("<li>%s %s <a onclick=\"Dajaxice.scheduler.deleteCourseFromSession(Dajax.process, { 'course':'%s', 'number':'%s' })\">remove</a></li>" % (i[0], i[1], i[0], i[1]))
+		out.append("<li>%s %s <a onclick=\"deleteCourseFromSession('%s', '%s')\">remove</a></li>" % (i[0], i[1], i[0], i[1]))
 
 	dajax.assign('#addCourseList', 'innerHTML', ''.join(out))
 
@@ -64,7 +93,7 @@ def addCourseToSession(request, form):
 
 	out = []
 	for i in request.session['byCourse']:
-		out.append("<li>%s %s <a onclick=\"Dajaxice.scheduler.deleteCourseFromSession(Dajax.process, { 'course':'%s', 'number':'%s' })\">remove</a></li>" % (i[0], i[1], i[0], i[1]))
+		out.append("<li>%s %s <a onclick=\"deleteCourseFromSession('%s', '%s')\">remove</a></li>" % (i[0], i[1], i[0], i[1]))
 
 	dajax.assign('#addCourseList', 'innerHTML', ''.join(out))
 
@@ -80,7 +109,7 @@ def deleteCourseByProfFromSession(request, course, prof, number):
 
 	out = []
 	for i in request.session['byProf']:
-		out.append("<li>%s %s taught by: %s <a onclick=\"Dajaxice.scheduler.deleteCourseByProfFromSession(Dajax.process, { 'course':'%s', 'prof':'%s', 'number':'%s' })\">remove</a></li>" % (i[0], i[2], i[1], i[0], i[1], i[2]))
+		out.append("<li>%s %s taught by: %s <a onclick=\"deleteCourseByProfFromSession('%s', '%s', '%s')\">remove</a></li>" % (i[0], i[2], i[1], i[0], i[1], i[2]))
 
 	dajax.assign('#addCourseByProfList', 'innerHTML', ''.join(out))
 
@@ -104,7 +133,7 @@ def addCourseByProfToSession(request, form):
 
 	out = []
 	for i in request.session['byProf']:
-		out.append("<li>%s %s taught by: %s <a onclick=\"Dajaxice.scheduler.deleteCourseByProfFromSession(Dajax.process, { 'course':'%s', 'prof':'%s', 'number':'%s' })\">remove</a></li>" % (i[0], i[2], i[1], i[0], i[1], i[2]))
+		out.append("<li>%s %s taught by: %s <a onclick=\"deleteCourseByProfFromSession('%s', '%s', '%s'})\">remove</a></li>" % (i[0], i[2], i[1], i[0], i[1], i[2]))
 
 	dajax.assign('#addCourseByProfList', 'innerHTML', ''.join(out))
 

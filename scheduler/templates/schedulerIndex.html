@@ -1,5 +1,7 @@
 {% extends "schedulerBase.html" %}
 
+{% block title %}Home | {{ block.super }}{% endblock %}
+
 {% block extrajs %}
 <script src="{{STATIC_PREFIX}}schedulerIndex.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
@@ -126,20 +128,11 @@
 
 	<form id="scheduleForm" method="POST">
 	{% csrf_token %}
-		<span>How many classes are you considering?
+		<div>
+			Of the selected classes, how many are you considering?
 			<select id="numClasses" name="numClasses" size="1">
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="4">4</option>
-				<option value="5">5</option>
-				<option value="6">6</option>
-				<option value="7">7</option>
-				<option value="8">8</option>
-				<option value="9">9</option>
-				<option value="10">10</option>
 			</select>
-		</span>
+		</div>
 		<input id="scheduleSubmit" type="button" value="Generate Schedule" onclick="generateSchedule()"/>
 	</form>
 </div>
@@ -150,7 +143,7 @@
 		<ul id="addCourseList">
 			{% if byCourse %}
 				{% for i in byCourse %}
-					<li>{{ i.0 }} {{ i.1 }} <a onclick="Dajaxice.scheduler.deleteCourseFromSession(Dajax.process, { 'course':'{{ i.0 }}', 'number':'{{ i.1 }}' })">remove</a></li>
+					<li>{{ i.0 }} {{ i.1 }} <a onclick="deleteCourseFromSession('{{ i.0 }}', '{{ i.1 }}')">remove</a></li>
 				{% endfor %}
 			{% else %}
 				<span>There are no courses specified by subject and number.</span>
@@ -159,7 +152,7 @@
 		<ul id="addCourseByProfList">
 			{% if byProf %}
 				{% for i in byProf %}
-					<li>{{ i.0 }} {{ i.2 }} taught by: {{ i.1 }} <a onclick="Dajaxice.scheduler.deleteCourseByProfFromSession(Dajax.process, { 'course':'{{ i.0 }}', 'prof':'{{ i.1 }}', 'number':'{{ i.2 }}' })">remove</a></li>
+					<li>{{ i.0 }} {{ i.2 }} taught by: {{ i.1 }} <a onclick="deleteCourseByProfFromSession('{{ i.0 }}', '{{ i.1 }}', '{{ i.2 }}')">remove</a></li>
 				{% endfor %}
 			{% else %}
 				<span>There are no courses specified with respect to instructor.</span>
