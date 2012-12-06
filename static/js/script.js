@@ -102,6 +102,13 @@ function deleteCourseByProfFromSession(course, prof, number, title, firstName, l
 	return false;
 }
 
+function deleteCourseByIDFromSession(courseID, subject, number, title, section) {
+	Dajaxice.scheduler.deleteCourseByIDFromSession(Dajax.process, {'courseID':courseID, 'subj':subject, 'numb':number, 'titl':title, 'sect':section});
+	Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
+	return false;
+}
+
 function flushSessionData() {
 	Dajaxice.scheduler.flushSessionData(Dajax.process);
+	return false;
 }

@@ -55,6 +55,9 @@ def index(request):
 	if 'byProf' in request.session:
 		context['byProf'] = request.session['byProf']
 
+	if 'byId' in request.session:
+		context['byId'] = request.session['byId']
+
 	if 'timesUnavailable' in request.session:
 		context['timesUnavailable'] = request.session['timesUnavailable']
 

@@ -72,6 +72,22 @@ def determineNumberTakingField(request):
 	return dajax.json()
 
 @dajaxice_register
+def deleteCourseByIDFromSession(request, courseID, subj, numb, titl, sect):
+	dajax = Dajax()
+
+	sesList = request.session['byId']
+	sesList.remove((int(courseID), subj, numb, titl, sect))
+	request.session['byId'] = sesList
+
+	out = []
+	for i in request.session['byId']:
+		out.append("<li>%s %s - %s, %s <a onclick=\"deleteCourseByIDFromSession('%s', '%s', '%s', '%s', '%s')\">remove</a></li>" % (i[1], i[2], i[3], i[4], i[0], i[1], i[2], i[3], i[4]))
+
+	dajax.assign('#addCourseByIDList')
+
+	return dajax.json()
+
+@dajaxice_register
 def deleteCourseFromSession(request, course, number, title):
 	dajax = Dajax()
 
