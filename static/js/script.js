@@ -78,14 +78,14 @@ function addThisCourseToSession(classId) {
 function addCourseToSession() {
 	data = $('#addCourseForm').serializeObject();
 	Dajaxice.scheduler.addCourseToSession(Dajax.process, {'form': data});
-	Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
+	//Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
 	return false;
 }
 
 function addCourseByProfToSession() {
 	data = $('#addCourseByProfForm').serializeObject();
 	Dajaxice.scheduler.addCourseByProfToSession(Dajax.process, {'form': data});
-	Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
+	//Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
 	return false;
 }
 
@@ -97,19 +97,19 @@ function addUnavailableToSession() {
 
 function deleteCourseFromSession(course, number, title) {
 	Dajaxice.scheduler.deleteCourseFromSession(Dajax.process, {'course':course, 'number':number, 'title':title});
-	Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
+	//Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
 	return false;
 }
 
 function deleteCourseByProfFromSession(course, prof, number, title, firstName, lastName) {
 	Dajaxice.scheduler.deleteCourseByProfFromSession(Dajax.process, {'course':course, 'prof':prof, 'number':number, 'title':title, 'firstName':firstName, 'lastName':lastName});
-	Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
+	//Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
 	return false;
 }
 
 function deleteCourseByIDFromSession(courseID, subject, number, title, section) {
 	Dajaxice.scheduler.deleteCourseByIDFromSession(Dajax.process, {'courseID':courseID, 'subj':subject, 'numb':number, 'titl':title, 'sect':section});
-	Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
+	//Dajaxice.scheduler.determineNumberTakingField(Dajax.process);
 	return false;
 }
 

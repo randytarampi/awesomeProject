@@ -58,7 +58,7 @@ def flushSessionData(request):
 	dajax.assign('#addCourseByProfList', 'innerHTML', '<span>There are no courses specified with respect to instructor.</span>')
 	dajax.clear('#addCourseByIDList', 'innerHTML')
 	dajax.assign('#addTimeList', 'innerHTML', '<span>There are no times specified.</span>')
-	dajax.assign('#numClasses', 'innerHTML', '<option value="1">1</option>')
+	#dajax.assign('#numClasses', 'innerHTML', '<option value="1">1</option>')
 
 	return dajax.json()
 
