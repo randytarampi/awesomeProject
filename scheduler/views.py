@@ -154,6 +154,7 @@ class courseDetailView(DetailView):
 		context = super(courseDetailView, self).get_context_data(**kwargs)
 		course = kwargs['object']
 		courseMeetingTimes = course.meetingtime_set.all()
+		print course, courseMeetingTimes
 		if 'processedData' in self.request.session:
 			if 'proposedSchedule' in context: del context['proposedSchedule']
 			if 'proposedMeetingTimes' in context: del context['proposedMeetingTimes']
@@ -173,6 +174,6 @@ class courseDetailView(DetailView):
 				context['scheduledConflict'] = "Sorry, but %s %s conflicts with at least one of the classes in your schedule." % (course.subject, course.number)
 				context['scheduledHTML'] = weeklySchedule(context['scheduledMeetingTimes'])
 		else:
-			context['scheduledHTML'] = weeklySchedule([], courseMeetingTimes.exclude(type="EXAM").exclude(type="MIDT"))
+			if courseMeetingTimes.exclude(type="EXAM").exclude(type="MIDT"): context['scheduledHTML'] = weeklySchedule([], courseMeetingTimes.exclude(type="EXAM").exclude(type="MIDT"))
 		return context
 

@@ -145,6 +145,10 @@ li.instructor {
     font-weight: bold;
 }
 
+.nomeeting {
+    font-weight: bold;
+}
+
 .side a:hover {
 	color: #B5111B;
 	text-decoration: none;	
