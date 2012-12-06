@@ -88,12 +88,15 @@
 				<li class="break"></li>
 				<ul class="cart">
 					<li><a class="cart" href="{% url scheduler_index %}#Courses">Selected Courses</a>:
-						{% if request.session.byCourse or request.session.byProf %}
+						{% if request.session.byCourse or request.session.byProf or request.session.byId %}
 							{% for selection in request.session.byCourse %}
 								<li class="cart"><a href="{% url scheduler_coursesSubjectNumber selection.0 selection.1 %}">{{ selection.0 }} {{ selection.1 }}</a><br />{{ selection.2 }}</li>
 							{% endfor %}
 							{% for selection in request.session.byProf %}
 								<li class="cart"><a href="{% url scheduler_coursesSubjectNumber selection.0 selection.2 %}">{{ selection.0 }} {{ selection.2 }}</a><br />{{ selection.3 }}<br />with <a href="{% url scheduler_instructor selection.1 %}">{{ selection.4 }} {{ selection.5 }}</a></li>
+							{% endfor %}
+							{% for selection in request.session.byId %}
+								<li class="cart"><a href="{% url scheduler_coursesSubjectNumber selection.1 selection.2 %}">{{ selection.1 }} {{ selection.2 }}</a><br />{{ selection.3 }}<br />Section <a href="{% url scheduler_course selection.0 %}">{{ selection.4 }}</li>
 							{% endfor %}
 						{% else %}
 							<li class="cart">None Selected</li>

@@ -2,6 +2,13 @@
 
 {% block title %}{{ course }} | {{ block.super }}{% endblock %}
 
+{% block extraside %}
+{% if not course in request.session.processedData.optimalCourses %}
+<li class="break"></li>
+<li><a onclick="addThisCourseToSession({{ course.id }});">Add this Class</a></li>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <h1>{{ course }}</h1>
 <div id="courseInfo">

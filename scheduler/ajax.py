@@ -11,14 +11,18 @@ from scheduler.helpers import *
 @dajaxice_register
 def addThisCourseToSession(request, classId):
 	dajax = Dajax()
-	
+	sessionList = []	
+
 	course = Course.objects.get(id=int(classId))
-	
+	idTuple = (course.id, course.subject, course.number, course.title, course.section)
+
 	if 'byId' in request.session:
-		request.session['byId'] += [(course.id, course.subject, course.number, course.title, course.section)]
+		sessionList = request.session['byId']
+		sessionList.append(idTuple)
 	else:
-		request.session['byId'] = [(course.id, course.subject, course.number, course.title, course.section)]
-	print request.session
+		sessionList.append(idTuple)
+	request.session['byId'] = sessionList
+
 	dajax.script('location.reload(true);');
 	return dajax.json()
 
@@ -127,7 +131,7 @@ def addCourseToSession(request, form):
 	dajax = Dajax()
 	sessionList = []
 	c = Course.objects.filter(subject=form['courseSubject'], number=form['courseNumber'])[0].title
-	print c
+
 	courseTuple = (form['courseSubject'], form['courseNumber'], c)
 
 	if 'byCourse' in request.session:
