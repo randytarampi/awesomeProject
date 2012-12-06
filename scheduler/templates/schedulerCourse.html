@@ -3,7 +3,8 @@
 {% block title %}{{ course }} | {{ block.super }}{% endblock %}
 
 {% block extraside %}
-{% if not course in request.session.processedData.optimalCourses %}
+{% if course in request.session.processedData.optimalCourses or course in request.session.byId %}
+{% else %}
 <li class="break"></li>
 <li><a onclick="addThisCourseToSession({{ course.id }});">Add this Class</a></li>
 {% endif %}

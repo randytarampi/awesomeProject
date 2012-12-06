@@ -87,7 +87,7 @@
 				<li>Data for: Spring 2013</li>
 				<li class="break"></li>
 				<ul class="cart">
-					<li><a class="cart" href="{% url scheduler_index %}#Courses">Selected Courses</a>:
+					<li><a class="cart" href="{% url scheduler_index %}#coursesCart">Selected Courses</a>:
 						{% if request.session.byCourse or request.session.byProf or request.session.byId %}
 							{% for selection in request.session.byCourse %}
 								<li class="cart"><a href="{% url scheduler_coursesSubjectNumber selection.0 selection.1 %}">{{ selection.0 }} {{ selection.1 }}</a><br />{{ selection.2 }}</li>
@@ -103,7 +103,7 @@
 						{% endif %}
 					</li>
 					<li class="break"></li>
-					<li><a class="cart" href="{% url scheduler_index %}#Times">Unavailable Times</a>:
+					<li><a class="cart" href="{% url scheduler_index %}#unavailableTimesCart">Unavailable Times</a>:
 						{% for time in request.session.timesUnavailable %}
 							<li class="cart">{{ time.3 }}s<br/>{{ time.1 }} to {{ time.2 }}</li>
 						{% empty %}

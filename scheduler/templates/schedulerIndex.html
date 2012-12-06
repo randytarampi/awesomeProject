@@ -154,7 +154,7 @@
 		<ul id="addCourseList">
 			{% if byCourse %}
 				{% for i in byCourse %}
-					<li>{{ i.0 }} {{ i.1 }} - {{ i.2 }} <a onclick="deleteCourseFromSession('{{ i.0 }}', '{{ i.1 }}', '{{ i.2}}')">remove</a></li>
+					<li>{{ i.0 }} {{ i.1 }} - {{ i.2 }} <a onclick="deleteCourseFromSession('{{ i.0 }}', '{{ i.1 }}', '{{ i.2}}')">(remove)</a></li>
 				{% endfor %}
 			{% else %}
 				<span>There are no courses specified by subject and number.</span>
@@ -163,7 +163,7 @@
 		<ul id="addCourseByProfList">
 			{% if byProf %}
 				{% for i in byProf %}
-					<li>{{ i.0 }} {{ i.2 }} - {{ i.3 }}, taught by: {{ i.4 }} {{ i.5 }} <a onclick="deleteCourseByProfFromSession('{{ i.0 }}', '{{ i.1 }}', '{{ i.2 }}', '{{ i.3 }}', '{{ i.4 }}', '{{ i.5 }}')">remove</a></li>
+					<li>{{ i.0 }} {{ i.2 }} - {{ i.3 }}, taught by: {{ i.4 }} {{ i.5 }} <a onclick="deleteCourseByProfFromSession('{{ i.0 }}', '{{ i.1 }}', '{{ i.2 }}', '{{ i.3 }}', '{{ i.4 }}', '{{ i.5 }}')">(remove)</a></li>
 				{% endfor %}
 			{% else %}
 				<span>There are no courses specified with respect to instructor.</span>
@@ -172,7 +172,7 @@
 		<ul id="addCourseByIDList">
 			{% if byId %}
 				{% for i in byId %}
-					<li>{{ i.1 }} {{ i.2 }} - {{ i.3 }}, {{ i.4 }} <a onclick="deleteCourseByIDFromSession('{{ i.0 }}', '{{ i.1 }}', '{{ i.2 }}', '{{ i.3 }}', '{{ i.4 }}')">remove</a></li>
+					<li>{{ i.1 }} {{ i.2 }} - {{ i.3 }}, {{ i.4 }} <a onclick="deleteCourseByIDFromSession('{{ i.0 }}', '{{ i.1 }}', '{{ i.2 }}', '{{ i.3 }}', '{{ i.4 }}')">(remove)</a></li>
 				{% endfor %}
 			{% endif %}
 		</ul>
@@ -182,7 +182,7 @@
 		<ul id="addTimeList">
 			{% if timesUnavailable %}
 				{% for i,j,k,l in timesUnavailable %}
-					<li>{{ l }} from {{ j }} to {{ k }} <a onclick="Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'{{ i }}', 'startMinute':'{{ j.minute }}', 'startHour':'{{ j.hour }}', 'endMinute':'{{ k.minute }}', 'endHour':'{{ k.hour }}' })">remove</a></li>
+					<li>{{ l }} from {{ j }} to {{ k }} <a onclick="Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'{{ i }}', 'startMinute':'{{ j.minute }}', 'startHour':'{{ j.hour }}', 'endMinute':'{{ k.minute }}', 'endHour':'{{ k.hour }}' })">(remove)</a></li>
 				{% endfor %}
 			{% else %}
 				<span>There are no times specified.</span>

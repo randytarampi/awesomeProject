@@ -71,7 +71,7 @@ def deleteCourseByIDFromSession(request, courseID, subj, numb, titl, sect):
 
 	out = []
 	for i in request.session['byId']:
-		out.append("<li>%s %s - %s, %s <a onclick=\"deleteCourseByIDFromSession('%s', '%s', '%s', '%s', '%s')\">remove</a></li>" % (i[1], i[2], i[3], i[4], i[0], i[1], i[2], i[3], i[4]))
+		out.append("<li>%s %s - %s, %s <a onclick=\"deleteCourseByIDFromSession('%s', '%s', '%s', '%s', '%s')\">(remove)</a></li>" % (i[1], i[2], i[3], i[4], i[0], i[1], i[2], i[3], i[4]))
 
 	dajax.assign('#addCourseByIDList', 'innerHTML', ''.join(out))
 
@@ -87,7 +87,7 @@ def deleteCourseFromSession(request, course, number, title):
 
 	out = []
 	for i in request.session['byCourse']:
-		out.append("<li>%s %s - %s <a onclick=\"deleteCourseFromSession('%s', '%s', '%s')\">remove</a></li>" % (i[0], i[1], i[2], i[0], i[1], i[2]))
+		out.append("<li>%s %s - %s <a onclick=\"deleteCourseFromSession('%s', '%s', '%s')\">(remove)</a></li>" % (i[0], i[1], i[2], i[0], i[1], i[2]))
 
 	if not request.session['byCourse']:	
 		out.append("<span>There are no courses specified by subject and number.</span>")
@@ -116,7 +116,7 @@ def addCourseToSession(request, form):
 
 	out = []
 	for i in request.session['byCourse']:
-		out.append("<li>%s %s - %s <a onclick=\"deleteCourseFromSession('%s', '%s', '%s')\">remove</a></li>" % (i[0], i[1], i[2], i[0], i[1], i[2]))
+		out.append("<li>%s %s - %s <a onclick=\"deleteCourseFromSession('%s', '%s', '%s')\">(remove)</a></li>" % (i[0], i[1], i[2], i[0], i[1], i[2]))
 
 	dajax.assign('#addCourseList', 'innerHTML', ''.join(out))
 
@@ -132,7 +132,7 @@ def deleteCourseByProfFromSession(request, course, prof, number, title, firstNam
 
 	out = []
 	for i in request.session['byProf']:
-		out.append("<li>%s %s - %s, taught by: %s %s <a onclick=\"deleteCourseByProfFromSession('%s', '%s', '%s', '%s', '%s', '%s')\">remove</a></li>" % (i[0], i[2], i[3], i[4], i[5], i[0], i[1], i[2], i[3], i[4], i[5]))
+		out.append("<li>%s %s - %s, taught by: %s %s <a onclick=\"deleteCourseByProfFromSession('%s', '%s', '%s', '%s', '%s', '%s')\">(remove)</a></li>" % (i[0], i[2], i[3], i[4], i[5], i[0], i[1], i[2], i[3], i[4], i[5]))
 
 	if not request.session['byProf']:	
 		out.append("<span>There are no courses specified with respect to instructor.</span>")
@@ -163,7 +163,7 @@ def addCourseByProfToSession(request, form):
 
 	out = []
 	for i in request.session['byProf']:
-		out.append("<li>%s %s - %s, taught by: %s %s <a onclick=\"deleteCourseByProfFromSession('%s', '%s', '%s', '%s', '%s', '%s')\">remove</a></li>" % (i[0], i[2], i[3], i[4], i[5], i[0], i[1], i[2], i[3], i[4], i[5]))
+		out.append("<li>%s %s - %s, taught by: %s %s <a onclick=\"deleteCourseByProfFromSession('%s', '%s', '%s', '%s', '%s', '%s')\">(remove)</a></li>" % (i[0], i[2], i[3], i[4], i[5], i[0], i[1], i[2], i[3], i[4], i[5]))
 
 	dajax.assign('#addCourseByProfList', 'innerHTML', ''.join(out))
 
@@ -192,7 +192,7 @@ def deleteUnavailableFromSession(request, day, startMinute, startHour, endMinute
 		else:
 			lastMinute = str(i[2].minute)
 
-		out.append("<li>%s from %s:%s %s to %s:%s %s <a onclick=\"Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'%s', 'startMinute':'%s', 'startHour':'%s', 'endMinute':'%s', 'endHour':'%s' })\">remove</a></li>" % (i[3], changeFrom24To12(i[1].hour), firstMinute, hourIsAMorPM(i[1].hour), changeFrom24To12(i[2].hour), lastMinute, hourIsAMorPM(i[2].hour), i[0], i[1].minute, i[1].hour, i[2].minute, i[2].hour))
+		out.append("<li>%s from %s:%s %s to %s:%s %s <a onclick=\"Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'%s', 'startMinute':'%s', 'startHour':'%s', 'endMinute':'%s', 'endHour':'%s' })\">(remove)</a></li>" % (i[3], changeFrom24To12(i[1].hour), firstMinute, hourIsAMorPM(i[1].hour), changeFrom24To12(i[2].hour), lastMinute, hourIsAMorPM(i[2].hour), i[0], i[1].minute, i[1].hour, i[2].minute, i[2].hour))
 
 	if not request.session['timesUnavailable']:
 		out.append("<span>There are no times specified.</span>")
@@ -243,7 +243,7 @@ def addUnavailableToSession(request, form):
 		else:
 			lastMinute = str(i[2].minute)
 
-		out.append("<li>%s from %s:%s %s to %s:%s %s <a onclick=\"Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'%s', 'startMinute':'%s', 'startHour':'%s', 'endMinute':'%s', 'endHour':'%s' })\">remove</a></li>" % (i[3], changeFrom24To12(i[1].hour), firstMinute, hourIsAMorPM(i[1].hour), changeFrom24To12(i[2].hour), lastMinute, hourIsAMorPM(i[2].hour), i[0], i[1].minute, i[1].hour, i[2].minute, i[2].hour))
+		out.append("<li>%s from %s:%s %s to %s:%s %s <a onclick=\"Dajaxice.scheduler.deleteUnavailableFromSession(Dajax.process, { 'day':'%s', 'startMinute':'%s', 'startHour':'%s', 'endMinute':'%s', 'endHour':'%s' })\">(remove)</a></li>" % (i[3], changeFrom24To12(i[1].hour), firstMinute, hourIsAMorPM(i[1].hour), changeFrom24To12(i[2].hour), lastMinute, hourIsAMorPM(i[2].hour), i[0], i[1].minute, i[1].hour, i[2].minute, i[2].hour))
 
 	dajax.assign('#addTimeList', 'innerHTML', ''.join(out))
 
@@ -310,7 +310,7 @@ def listOfProfs(request, option):
 
 	out = []
 	c = Course.objects.filter(subject=option)
-	d = Instructor.objects.filter(course__in=c).order_by('last_name').distinct()
+	d = Instructor.objects.filter(course__in=c).exclude(first_name__startswith=".").order_by('last_name').distinct()
 	for i in d:
 		out.append("<option value='%s'>%s</option>" % (i.userid, i.name()))
 
