@@ -9,6 +9,21 @@ from scheduler.algorithm import *
 from scheduler.helpers import *
 
 @dajaxice_register
+def addThisCourseToSession(request, classId):
+	dajax = Dajax()
+	
+	course = Course.objects.get(id=int(classId))
+	
+	if 'byId' in request.session:
+		request.session['byId'] += [(course.id, course.subject, course.number, course.title, course.section)]
+	else:
+		request.session['byId'] = [(course.id, course.subject, course.number, course.title, course.section)]
+	print request.session
+	dajax.script('location.reload(true);');
+	return dajax.json()
+
+
+@dajaxice_register
 def amORpmStart(request, option):
 	dajax = Dajax()
 
@@ -37,6 +52,7 @@ def flushSessionData(request):
 	request.session.flush()
 	dajax.assign('#addCourseList', 'innerHTML', '<span>There are no courses specified by subject and number.</span>')
 	dajax.assign('#addCourseByProfList', 'innerHTML', '<span>There are no courses specified with respect to instructor.</span>')
+	dajax.clear('#addCourseByIDList', 'innerHTML')
 	dajax.assign('#addTimeList', 'innerHTML', '<span>There are no times specified.</span>')
 	dajax.assign('#numClasses', 'innerHTML', '<option value="1">1</option>')
 
@@ -273,6 +289,9 @@ def generateSchedule(request, form):
 	if 'byProf' in request.session:
 		for profTuple in request.session['byProf']:
 			selectedCourses = selectedCourses | Instructor.objects.get(userid=profTuple[1]).course.filter(subject=profTuple[0], number=profTuple[2])
+	if 'byId' in request.session:
+		for idTuple in request.session['byId']:
+			selectedCourses = selectedCourses | Course.objects.get(id=idTuple[0])
 	if 'timesUnavailable' in request.session:
 		for time in request.session['timesUnavailable']:
 			timesUnavailable.append(time)
@@ -281,6 +300,12 @@ def generateSchedule(request, form):
 		dajax.script('$(\'#scheduleViewDiv\').activity(false);')
 		dajax.remove_css_class('#scheduleViewDiv', 'emptySchedule');
 		return dajax.json()
+	if numClasses < len(selectedCourses):
+		dajax.alert("Only %i class(es) meet your course selection. Please specify more classes" % len(selectedCourses))
+		dajax.script('$(\'#scheduleViewDiv\').activity(false);')
+		dajax.remove_css_class('#scheduleViewDiv', 'emptySchedule');
+		return dajax.json()
+
 	
 	# Process the data
 	processedCourses = createOptimalSchedule(numClasses, selectedCourses, timesUnavailable)

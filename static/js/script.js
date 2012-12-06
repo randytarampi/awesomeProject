@@ -70,6 +70,11 @@ function generateSchedule() {
 	return false;
 }
 
+function addThisCourseToSession(classId) {
+	Dajaxice.scheduler.addThisCourseToSession(Dajax.process, {'classId': classId});
+	return false;
+}
+
 function addCourseToSession() {
 	data = $('#addCourseForm').serializeObject();
 	Dajaxice.scheduler.addCourseToSession(Dajax.process, {'form': data});
