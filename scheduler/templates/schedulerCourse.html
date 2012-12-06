@@ -1,5 +1,7 @@
 {% extends "schedulerBase.html" %}
 
+{% block title %}{{ course }} | {{ block.super }}{% endblock %}
+
 {% block content %}
 <h1>{{ course }}</h1>
 <div id="courseInfo">

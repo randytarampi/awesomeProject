@@ -1,5 +1,7 @@
 {% extends "aboutBase.html" %}
 
+{% block title %}About | {{ block.super }}{% endblock %}
+
 {% block content %}
 <h1>About the Scheduler</h1>
 <p>There really isn't much to say here, it just schedules tries to schedule a selection of classes "optimally". You can find our proposal <a href="{{STATIC_PREFIX}}projectProposal.pdf">here</a>.</p>

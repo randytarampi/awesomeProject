@@ -1,5 +1,7 @@
 {% extends "schedulerBase.html" %}
 
+{% block title %}{{ instructor.name }} | {{ block.super }}{% endblock %}
+
 {% block content %}
 <h1>{{ instructor.name }}</h1>
 {% if instructor.userid != '. Tbd' and instructor.userid != '. Sessional' and instructor.userid != '. Faculty' and " " not in instructor.userid %}<ul>
