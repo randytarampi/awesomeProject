@@ -1,7 +1,7 @@
 #!/bin/bash
 
 projDir=~/awesomeProject
-semesterNum=1131
+semesterNum=1137
 
 rm $projDir/static/courses.json
 wget -O $projDir/static/courses.json https://courses.cs.sfu.ca/data/courses/$semesterNum
