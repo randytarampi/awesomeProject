@@ -2,6 +2,7 @@
 *.log
 *.pot
 *.pyc
+/static
 local_settings.py
 
 # For Randy because he likes to use Emacs
